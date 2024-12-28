@@ -14,7 +14,7 @@
           >ຊື່ຜູ້ໃຊ້ງານ / Username</label
         >
         <v-text-field
-          class="rounded-lg"
+          class=" rounded-lg"
           id="username"
           v-model="username"
           label="ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້ງານ"
@@ -94,7 +94,7 @@ export default {
       }).then(() => {
         Swal.fire({
           icon: "success",
-          title: "ສໍາເລັດ",
+          title: "ທົດລອງ",
           text: "ເຂົ້າລະບົບສໍາເລັດ!",
         });
       });

@@ -67,14 +67,19 @@
       </v-menu>
   </v-app-bar>
 </template>
-<script>
-  export default {
-    data: () => ({
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  data() {
+    return {
       user: {
         initials: 'S',
         fullName: 'Sone SEEDAVANH',
         email: 'sone@gmail.com',
       },
-    }),
-  }
+    };
+  },
+});
 </script>
