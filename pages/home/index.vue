@@ -3,8 +3,8 @@
 <template>
   <section
     style="min-height: 100vh"
-    class="d-flex flex-wrap align-center justify-center"
+    class="d-flex flex-column justify-center align-center"
   >
-    <Login />
+    <Home />
   </section>
 </template>

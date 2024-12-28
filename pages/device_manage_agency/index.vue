@@ -1,10 +1,8 @@
-<script lang="ts" setup></script>
-
 <template>
-  <section
+    <section
     style="min-height: 100vh"
     class="d-flex flex-wrap align-center justify-center"
   >
-    <Login />
+    <DeviceManahementAgency />
   </section>
 </template>
