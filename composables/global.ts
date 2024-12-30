@@ -12,3 +12,9 @@ export const UseGetFormatDatePicker = (date: any) => {
     return date;
   }
 };
+
+export const goPath = (path: string | null) => {
+  if (path !== null) {
+    window.location.href = path;
+  }
+};
