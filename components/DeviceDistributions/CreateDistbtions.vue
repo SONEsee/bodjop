@@ -12,11 +12,19 @@
         <p class="ml-2 mr-3">ອັບໂຫຼດຟາຍ</p></v-btn
       >
     </div>
+
+    <v-form ref="form" @submit.prevent="Create">
+
+    
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="3">
           <label for="id"><p class="ml-2">ເລືອກອຸປະກອນ / Devices</p></label>
           <v-select
+            v-model="device"
+            @click:append-inner="DeviceDistributions"
+            :rules="[v => !!v || 'ກະລຸນາປ້ອນອຸປະກອນ']"
+
             :items="['POS-001', 'POS-002', 'POS-003']"
             placeholder="ເລືອກອຸປະກອນ"
             id="id"
@@ -31,6 +39,8 @@
         <v-col cols="12" md="3">
           <label for="code"><p class="ml-2">ຕົວແທນ / Agency</p></label>
           <v-select
+            v-model="agency"
+            :rules="[v => !!v || 'ກະລຸນາປ້ອນຕົວແທນ']"
             placeholder="ເລືອກຕົວແທນ"
             :items="['ຫົວໜ້າ', 'ນິ້ມ', 'ສອນ']"
             id="code"
@@ -44,6 +54,7 @@
         <v-col cols="12" md="3">
           <label for="exdate"><p class="ml-2">ໝາຍເຫດ / Remark</p></label>
           <v-text-field
+            v-model="remark"
             id="exdate"
             density="compact"
             class="pa-2"
@@ -56,8 +67,8 @@
 
         <v-col cols="12" md="3" class="pa-2">
           <v-btn color="primary" class="mt-10 rounded-lg"
-            >ເພີ່ມ<v-icon icon="mdi-plus"></v-icon></v-btn
-          >
+            >ເພີ່ມ<v-icon icon="mdi-plus"></v-icon
+          ></v-btn>
         </v-col>
       </v-row>
     </v-col>
@@ -66,59 +77,65 @@
         <v-col cols="12" md="12">
           <v-divider></v-divider>
           <v-data-table-virtual
-            :headers="headers"
+            :Headers="headers"
             :items="items"
             item-key="name"
             class="elevation-1 mt-4"
           >
             <template v-slot:item.actions="{ item }">
-              <v-icon
-                color="info"
-                class="me-2"
-                size="small"
-                @click="editItem(item)"
-              >
+              <v-icon color="info" class="me-2" size="small">
                 mdi-pencil
               </v-icon>
-              <v-icon color="error" size="small" @click="deleteItem(item)">
-                mdi-delete
-              </v-icon>
+              <v-icon color="error" size="small"> mdi-delete </v-icon>
             </template>
           </v-data-table-virtual>
         </v-col>
       </v-row>
     </v-col>
     <div class="mt-5 d-flex justify-center">
-        <v-btn color="primary" class="ml-3 rounded-lg" style="width: 200px">
-           
-            <p>ບັນທຶກ</p>
-        </v-btn>
-        <v-btn color="error" class="ml-3 rounded-lg" style="width: 200px">
-           
-            <p>ຍົກເລີກ</p>
-        </v-btn>
-
-    </div>
+      <v-btn color="primary" class="ml-3 rounded-lg" style="width: 200px" type="submit">
+        <p>ບັນທຶກ</p>
+      </v-btn>
+      <v-btn color="error" class="ml-3 rounded-lg" style="width: 200px">
+        <p>ຍົກເລີກ</p>
+      </v-btn>
+    </div></v-form>
   </v-container>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
+import { ref } from "vue";
 import { defineComponent } from "vue";
-export default defineComponent({
-  data() {
-    return {
-      headers: [
-        {
-          title: "ລຳດັບ",
-          align: "start",
-          sortable: false,
-          value: "no",
-        },
-        { title: "ລະຫັດຕົວແທນ", value: "branch" },
-        { title: "ລະຫັດອຸປະກອນ  - IMEI", value: "code" },
-        { title: "Action", value: "actions" },
-      ],
-      items: [{ no: "1", branch: "sone", code: "ht-001" }],
-    };
+const form = ref();
+const device = ref("");
+const agency = ref("");
+const remark = ref("");const 
+validate =ref(false);
+const DeviceDistributions = ()=> {
+validate.value = !validate.value;
+}
+const Create = async () => {
+  try{
+    const valid = await form.value.validate();
+    if(valid) {
+      console.log("Device Distributions");
+    }
+  }catch (error) {
+    console.log(error);
+  }
+
+};
+
+
+const headers = [
+  {
+    title: "ລຳດັບ",
+    align: "start",
+    sortable: false,
+    value: "no",
   },
-});
+  { title: "ລະຫັດຕົວແທນ", value: "branch" },
+  { title: "ລະຫັດອຸປະກອນ  - IMEI", value: "code" },
+  { title: "Action", value: "actions" },
+];
+const items = [{ no: "1", branch: "sone", code: "ht-001" }];
 </script>

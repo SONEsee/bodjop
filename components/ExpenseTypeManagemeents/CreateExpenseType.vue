@@ -2,6 +2,9 @@
   <v-container>
     <h3>ເພີ່ມຂໍ້ມູນປະເພດລາຍຈ່າຍ / Create new expense type</h3>
     <v-divider></v-divider>
+    <v-form ref="form" @submit.prevent="Create">
+
+    
     <v-col cols="12">
       <v-row>
         <v-col cols="12" md="6" class="mt-4">
@@ -9,6 +12,9 @@
             <v-col cols="12" md="6">
               <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
               <v-text-field
+                v-model="id"
+@click:append-inner="CheckForm"
+                :rules = "[v => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາລາວ']"
                 id="id"
                 density="compact"
                 class="pa-2"
@@ -24,6 +30,8 @@
                 ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
               >
               <v-text-field
+                v-model="code"
+                :rules = "[v => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ']"
                 id="code"
                 density="compact"
                 class="pa-2"
@@ -38,12 +46,34 @@
       </v-row>
     </v-col>
     <div class="d-flex justify-center">
-      <v-btn color="primary" class="rounded-lg" style="width: 10%"
+      <v-btn color="primary" class="rounded-lg" style="width: 10%" type="submit">
         ><p class="pa-2">ບັນທຶກ</p></v-btn
       >
       <v-btn color="error" class="rounded-lg ml-6" style="width: 10%"
         ><p class="pa-2">ຍົກເລິກ</p></v-btn
       >
-    </div>
+    </div></v-form>
   </v-container>
 </template>
+<script lang="ts" setup>
+import { ref } from "vue";
+const id = ref("");
+const code = ref("");
+const form = ref();
+const validate = ref(false);
+
+const CheckForm = () =>{
+  validate.value = !validate.value;
+}
+const Create = async ()=>{
+  try{
+    const valid = await form.value.validate();
+    if(valid){
+      console.log("Form is valid");
+    }
+  }catch(e){
+    console.log(e);
+  }
+}
+
+</script>

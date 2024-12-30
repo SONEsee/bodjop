@@ -24,6 +24,7 @@
 
         <label class="d-flex text-start">ລະຫັດຜ່ານ / Password</label>
         <v-text-field
+          class="rounded-lg text-start"
           id="password"
           v-model="password"
           :type="visible ? 'text' : 'password'"
