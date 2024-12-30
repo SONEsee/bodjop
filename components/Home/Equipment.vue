@@ -1,7 +1,7 @@
 <template>
   <div v-if="datarespons">
     <div v-for="(value, key) in datarespons" :key="key">
-      <strong>{{ key }}</strong>: {{ value }}
+      <strong>{{ key }}</strong>: {{ datarespons.items.status }}
     </div>
   </div>
   <div v-else>
