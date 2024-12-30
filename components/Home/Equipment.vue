@@ -1,67 +1,55 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import VueApexCharts from 'vue3-apexcharts'
-
-
-const series = ref([
-  {
-    name: 'ເຄືອທີ່ໃຊ້ປົກກະຕິ',
-    data: [80, 50, 30, 40, 100, 20],
-  },
-  {
-    name: 'ເຄື່ອງທີປັນຫາ',
-    data: [20, 30, 40, 80, 20, 80],
-  },
-  {
-    name: 'ເຄື່ອງເພ',
-    data: [44, 76, 78, 13, 43, 10],
-  },
-])
-
-
-const chartOptions = ref({
-  chart: {
-    height: 350,
-    type: 'radar',
-    dropShadow: {
-      enabled: true,
-      blur: 1,
-      left: 1,
-      top: 1,
-    },
-  },
-  title: {
-    text: 'Radar Chart - Multi ສະຖານະ',
-    font: {
-        family: ' Times New Roman, NotoSansLao, Arial, sans-serif',
-        size: 16, 
-        weight: 'normal', 
-      },
-  },
-  stroke: {
-    width: 2,
-  },
-  fill: {
-    opacity: 0.1,
-  },
-  markers: {
-    size: 0,
-  },
-  yaxis: {
-    stepSize: 20,
-  },
-  xaxis: {
-    categories: ['2011', '2012', '2013', '2014', '2015', '2016'],
-  },
-})
-</script>
-
 <template>
-  <div>
-    <vue-apex-charts type="radar" height="350" :series="series" :options="chartOptions" />
+  <div v-if="datarespons">
+    <div v-for="(value, key) in datarespons" :key="key">
+      <strong>{{ key }}</strong>: {{ value }}
+    </div>
+  </div>
+  <div v-else>
+    <p v-if="error">{{ error }}</p>
+    <p v-else>ບໍ່ມີຂໍ້ມູນ</p>
   </div>
 </template>
 
-<style scoped>
+<script lang="ts" setup>
+import axios from "@/helpers/axios";
+import { UsermeModel } from "@/models/";
+import { ref, onMounted } from "vue";
 
-</style>
+const datarespons = ref<UsermeModel.UserMeResponse | null>(null);
+const error = ref<string | null>(null);
+
+const getdata = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      error.value = "Authorization token is missing.";
+      return;
+    }
+    console.log("Token:", localStorage.getItem("token"));
+
+    const res = await axios.get<UsermeModel.UserMeResponse>("/api/v1/users/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.data) {
+      datarespons.value = res.data;
+      console.log("datarespons", datarespons.value);
+    }
+  } catch (err: any) {
+    if (err.response) {
+     
+      error.value = `Error ${err.response.status}: ${err.response.data.message || "ການເຂົ້າເຖິ່ງບໍ່ໄດ້ຮັບອານຸຍາດ."}`;
+    } else {
+      error.value = "Error fetching user data. Please try again.";
+    }
+    console.error("Error fetching user data:", err);
+  }
+};
+
+
+onMounted(() => {
+  getdata();
+});
+</script>

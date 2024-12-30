@@ -164,11 +164,11 @@
                 color="primary"
                 class="me-2"
                 size="small"
-                @click="editItem(item)"
+                
               >
                 mdi-pencil
               </v-icon>
-              <v-icon color="error" size="small" @click="deleteItem(item)">
+              <v-icon color="error" size="small">
                 mdi-delete
               </v-icon>
             </template>
@@ -196,11 +196,11 @@
                 color="primary"
                 class="me-2"
                 size="small"
-                @click="editItem(item)"
+                
               >
                 mdi-pencil
               </v-icon>
-              <v-icon color="error" size="small" @click="deleteItem(item)">
+              <v-icon color="error" size="small" >
                 mdi-delete
               </v-icon>
             </template>
@@ -208,67 +208,36 @@
           </v-data-table-virtual>
         </v-col>
   
-        <!-- <v-col cols="12" md="6">
-          <h4 class="text-h6">ເອກະສານຂໍ້ມູນ / Identifications</h4>
-          <v-data-table
-            :items="identifications"
-            :headers="headers"
-            class="elevation-1"
-          >
-            <template v-slot:top>
-              <v-toolbar flat>
-                <v-toolbar-title>Identifications</v-toolbar-title>
-              </v-toolbar>
-            </template>
-          </v-data-table>
-        </v-col> -->
+        
       </v-row>
     </v-container>
   </template>
   
-  <script lang="ts">
-  import { defineComponent } from "vue";
-  
-  export default defineComponent({
-    data() {
-      return {
-        headers: [
-          { title: "ລຳດັບ", value: "id" },
-          { title: "ປະເພດໃຫ້ການ", value: "type" },
-          { title: "ເປີເຊັນ ຫຼື ຈຳນວນເງິນ", value: "percent" },
-          { title: "ສ່ວນແບ່ງທີ່ໃຫ້", value: "carbs" },
-          { title: "ຈຳນວນເງິນ", value: "money" },
-          { title: "Actions", value: "actions" },
-        ],
-        headers1: [
-          { title: "ລຳດັບ", value: "id" },
-          { title: "ປະເພດໃຫ້ການ", value: "type" },
-          { title: "ເລກທີ", value: "no" },
-          { title: "ຮູບພາບ", value: "image" },
-          { title: "Actions", value: "actions" },
-        ],
-        commissions: [
-          {
-            id: "1",
-            type: 159,
-            percent: 6,
-            carbs: 24,
-            money: 4,
-          },
-        ],
-        identifications: [
-          {
-            id: "1",
-            type: 159,
-            no: 6,
-            image: 24,
-            protein: 4,
-          },
-        ],
-      };
-    },
-  });
-  </script>
+  <script lang="ts" setup>
+import { ref } from 'vue';
+
+const districts = ['ພູຄາ', 'ນາປົງ', 'ປາກລາຍ', 'ວຽງຈັນ'];
+const villages = ['ບ້ານ1', 'ບ້ານ2', 'ບ້ານ3'];
+const provinces = ['ແຂວງ1', 'ແຂວງ2', 'ແຂວງ3'];
+const statuses = ['ສະຖານະ1', 'ສະຖານະ2', 'ສະຖານະ3'];
+
+const headers = [
+  { title: 'ລຳດັບ', value: 'id' },
+  { title: 'ປະເພດໃຫ້ການ', value: 'type' },
+  { title: 'ເປີເຊັນ', value: 'percentage' },
+  { title: 'Actions', value: 'actions', sortable: false },
+];
+
+const headers1 = [
+  { title: 'ລຳດັບ', value: 'id' },
+  { title: 'ປະເພດເອກະສານ', value: 'docType' },
+  { title: 'Actions', value: 'actions', sortable: false },
+];
+
+const commissions = ref([]);
+const identifications = ref([]);
+</script>
+
   
   <style scoped>
   .text-h5 {
