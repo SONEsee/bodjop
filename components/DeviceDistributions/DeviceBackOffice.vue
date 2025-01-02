@@ -93,7 +93,7 @@
         <v-btn color="primary" class="ml-3 rounded-lg" style="width: 200px" type="submit">
           <p>ບັນທຶກ</p>
         </v-btn>
-        <v-btn color="error" class="ml-3 rounded-lg" style="width: 200px">
+        <v-btn color="#90A4AE" class="ml-3 rounded-lg" style="width: 200px">
           <p>ຍົກເລີກ</p>
         </v-btn>
       </div></v-form

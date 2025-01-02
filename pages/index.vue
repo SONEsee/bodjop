@@ -1,21 +1,12 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
 
-
-export default defineComponent({
-  setup() {
-    definePageMeta({
-      layout: "login",
-    });
-  }
-});
 </script>
 
 <template>
   <section
     style="min-height: 100vh"
-    class=""
+    class="d-flex justify-center align-center "
   >
-    <Login />
+    <MainHomePage />
   </section>
 </template>

@@ -3,7 +3,7 @@
     <div class="text-center mb-5">
       <v-avatar color="surface-variant" size="150"></v-avatar>
     </div>
-    <h5 class="text-center mb-5">ເຂົ້າສູ່ລະບົບ 32 Lottery</h5>
+    <h2 class="text-center mb-5">ເຂົ້າສູ່ລະບົບ 32 Lottery</h2>
     <div class="d-flex justify-center">
       <v-form
         style="width: 50%"
@@ -28,7 +28,7 @@
           id="password"
           v-model="password"
           :type="visible ? 'text' : 'password'"
-          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :append-inner-icon="visible ?   'mdi-eye':'mdi-eye-off'"
           @click:append-inner="toggleVisibility"
           :rules="[(v: string) => !!v || 'Password is required']"
           label="ກະລຸນາປ້ອນລະຫັດຜ່ານ"

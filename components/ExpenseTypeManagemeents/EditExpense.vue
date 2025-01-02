@@ -1,79 +1,134 @@
 <template>
   <v-container>
-    <h3>ແກ້ໄຂຂໍ້ມູນປະເພດລາຍຈ່າຍ / Edit expense type</h3>
-    <v-divider></v-divider>
-     <v-form ref="form" @submit.prevent="Create">
+    <h3>{{ isEdit ? 'ແກ້ໄຂປະເພດລາຍຈ່າຍ' : 'ເພີ່ມປະເພດລາຍຈ່າຍໃໝ່' }}</h3>
+    <v-divider class="mb-4"></v-divider>
 
-     
-    <v-col cols="12">
+    <v-form @submit.prevent="handleSubmit" ref="form">
       <v-row>
-        <v-col cols="12" md="6" class="mt-4">
-          <v-row>
-            <v-col cols="12" md="6">
-              <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
-              <v-text-field
-                v-model="id"
-                @click:append-inner="CheckForm"
-                :rules="[v => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາລາວ']"
-                id="id"
-                density="compact"
-                class="pa-2"
-                color="primary"
-                variant="outlined"
-                label="ກະລຸນາປ້ອນຊື່ພາສາລາວ / Name"
-                outlined
-                dense
-              ></v-text-field
-            ></v-col>
-            <v-col cols="12" md="6">
-              <label for="code"
-                ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
-              >
-              <v-text-field
-                v-model="code"
-                :rules="[v => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ']"
-                
-                id="code"
-                density="compact"
-                class="pa-2"
-                color="primary"
-                label="ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ / Name English"
-                variant="outlined"
-                dense
-              ></v-text-field>
-            </v-col>
-          </v-row>
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="formData.name"
+            :rules="[v => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາລາວ']"
+            label="ຊື່ພາສາລາວ"
+            density="compact"
+            variant="outlined"
+          />
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="formData.name_en"
+            :rules="[v => !!v || 'Please enter English name']"
+            label="ຊື່ພາສາອັງກິດ"
+            density="compact"
+            variant="outlined"
+          />
+        </v-col>
+
+        <v-col cols="12">
+          <v-btn
+            color="primary"
+            type="submit"
+            :loading="loading"
+            class="mr-4"
+          >
+            {{ isEdit ? 'ແກ້ໄຂ' : 'ບັນທຶກ' }}
+          </v-btn>
+          <v-btn @click="goBack">
+            ຍົກເລີກ
+          </v-btn>
         </v-col>
       </v-row>
-    </v-col>
-    <div class="d-flex justify-center">
-      <v-btn color="primary" class="rounded-lg" style="width: 10%" type="submit">
-        ><p class="pa-2">ບັນທຶກ</p></v-btn
-      >
-      <v-btn color="error" class="rounded-lg ml-6" style="width: 10%"
-        ><p class="pa-2">ຍົກເລິກ</p></v-btn
-      >
-    </div></v-form>
+    </v-form>
   </v-container>
 </template>
+
 <script lang="ts" setup>
-import { ref } from "vue";
-const id = ref("");
-const code = ref("");
-const validate = ref(false);
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from '@/helpers/axios';
+import type { ExpenseCreateModel } from '@/models/';
+
+const route = useRoute();
+const router = useRouter();
 const form = ref();
-const CheckForm = () => {
-  validate.value = !validate.value;
- 
-};
-const Create = async () => {
+const loading = ref(false);
+
+const isEdit = computed(() => !!route.query.id);
+
+const formData = ref({
+  name: '',
+  name_en: '',
+});
+
+const getExpenseType = async (id: string) => {
   try {
-    const valid = await form.value.validate();
-    if (valid) {
-      console.log("Form is valid");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Authorization token is missing');
+
+    const response = await axios.get<ExpenseCreateModel.ExpenseDetailResponse>(
+      `/api/v1/expense-types/detail/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
+    console.log('response', response);
+
+    if (response.status === 200) {
+      formData.value = {
+        name: response.data.name,
+        name_en: response.data.name_en,
+      };
     }
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error('Failed to fetch expense type:', err);
+
   }
 };
+
+const handleSubmit = async () => {
+  if (!form.value?.validate()) return;
+  
+  loading.value = true;
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Authorization token is missing');
+
+    const url = isEdit.value
+      ? `/api/v1/expense-types/update/${route.query.id}`
+      : '/api/v1/expense-types/create';
+
+    const method = isEdit.value ? 'put' : 'post';
+
+    const response = await axios[method](
+      url,
+      formData.value,
+      
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
+console.log('responseeeee', formData.value);
+    if (response.status === 200) {
+      
+      goBack();
+    }
+  } catch (err) {
+    console.error('Failed to save expense type:', err);
+   
+  } finally {
+    loading.value = false;
+  }
+};
+
+const goBack = () => {
+  router.push('/expense-types');
+};
+
+onMounted(() => {
+  if (route.query.id) {
+    getExpenseType(route.query.id as string);
+  }
+});
 </script>
+Last edited just now

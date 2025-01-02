@@ -31,9 +31,11 @@
                 color="grey lighten-2"
               >
                 <img
+                  v-if="datarespons.items.image_profile"
                   :src="`https://32lottery-api.phouservice.com/${datarespons.items.image_profile}`"
                   alt="Profile Picture"
                 />
+                <v-icon v-else icon="mdi-user"></v-icon>
               </v-avatar>
             </v-col>
             <v-col cols="12"> </v-col>
@@ -158,7 +160,6 @@ const getdata = async () => {
       error.value = "Authorization token is missing.";
       return;
     }
-    console.log("Token:", localStorage.getItem("token"));
 
     const res = await axios.get<UsermeModel.UserMeResponse>(
       "/api/v1/users/me",
@@ -171,7 +172,6 @@ const getdata = async () => {
 
     if (res.data) {
       datarespons.value = res.data;
-      console.log("datarespons", datarespons.value);
     }
   } catch (err: any) {
     if (err.response) {
