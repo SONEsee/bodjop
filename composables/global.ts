@@ -18,3 +18,12 @@ export const goPath = (path: string | null) => {
     window.location.href = path;
   }
 };
+
+export const FormatDatetime = (date: any) => {
+  const dayjs = useDayjs();
+  if (date) {
+    return dayjs(new Date(date)).format("DD-MM-YYYY HH:mm:ss");
+  }
+
+  return date;
+};

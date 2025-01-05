@@ -67,14 +67,32 @@
             <td>{{ item.name }}</td>
 
             <td>{{ item.name_en }}</td>
-            <td>{{ new Date(item.created_at).toLocaleDateString() }}</td>
+            <td>{{ FormatDatetime(item.created_at) }}</td>
             <td>{{ item.status }}</td>
             <td>
-              <a :href="`../expinse_type_managements/edit?id=${item.id}`">
-                <v-icon icon="mdi-pencil" @click=""></v-icon
-              ></a>
-
-              <v-icon icon="mdi-delete" @click="detaildata"></v-icon>
+              <v-btn
+                icon="mdi-eye"
+                variant="text"
+                color="primary"
+                size="small"
+                @click="
+                  goPath(`/expinse_type_managements/detail?id=${item.id}`)
+                "
+              />
+              <v-btn
+                icon="mdi-pencil"
+                size="small"
+                variant="text"
+                color="primary"
+                @click="goPath(`/expinse_type_managements/edit?id=${item.id}`)"
+              />
+              <v-btn
+                icon="mdi-delete-outline"
+                size="small"
+                variant="text"
+                color="error"
+                @click="deleteData(item.id)"
+              />
             </td>
           </tr>
         </template>
@@ -86,10 +104,16 @@
 import { ref, onMounted } from "vue";
 import axios from "@/helpers/axios";
 import { ExpenseCreateModel } from "@/models/";
+import Swal from "sweetalert2";
 
 const datarespons = ref<ExpenseCreateModel.ExpenseCreateResponse | null>(null);
 const data = ref<ExpenseCreateModel.ExpenseDetailResponse | null>(null);
+const item = ref<ExpenseCreateModel.ExpenseCreateResponse | null>(null);
 const error = ref<string | null>(null);
+const request = ref({
+  limit: 20,
+  page: 1,
+});
 const headers = [
   { title: "ຊື່ພາສາລາວ", Value: "name" },
   { title: "ຊື່ພາສາອັງກິດ", Value: "name_en" },
@@ -100,16 +124,11 @@ const headers = [
 ];
 const getdata = async () => {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      error.value = "Authorization token is missing.";
-      return;
-    }
     const res = await axios.get<ExpenseCreateModel.ExpenseCreateResponse>(
-      "/api/v1/expense-types/get-data?limit=60&page=1",
+      "/api/v1/expense-types/get-data",
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
+        params: {
+          ...request.value,
         },
       }
     );
@@ -122,32 +141,60 @@ const getdata = async () => {
     console.log(error);
   }
 };
-const detaildata = async () => {
+const deleteData = async (id: string) => {
   try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      error.value = "Authorization token is missing.";
-      return;
-    }
-    const res = await axios.get<ExpenseCreateModel.ExpenseDetailResponse>(
-      `/api/v1/expense-types/detail/${datarespons.value?.items.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const confirmed = await Swal.fire({
+      title: "ຢືນຢັນການລົບ?",
+      text: "ເຈົ້າຈະບໍ່ສາມາດກູ້ຄືນຂໍ້ມູນນີ້ໄດ້!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ຢືນຢັນ",
+      cancelButtonText: "ຍົກເລີກ",
+    });
 
-    if (res.status === 200) {
-      data.value = res.data;
+    if (confirmed.isConfirmed) {
+      const res = await axios.delete<ExpenseCreateModel.ExpenseCreateResponse>(
+        `/api/v1/expense-types/delete/${id}`
+      );
+      if (res.status === 200) {
+        Swal.fire("ສໍາເລັດ!", "ຂໍ້ມູນຖືກລົບສໍາເລັດ.", "success");
+        await getdata();
+      }
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    Swal.fire("ຜິດພາດ!", "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້.", "error");
   }
 };
 
+// const detaildata = async () => {
+//   try {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       error.value = "Authorization token is missing.";
+//       return;
+//     }
+//     const res = await axios.get<ExpenseCreateModel.ExpenseDetailResponse>(
+//       `/api/v1/expense-types/detail/${datarespons.value?.items.id}`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+
+//     if (res.status === 200) {
+//       data.value = res.data;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 onMounted(() => {
   getdata();
-  detaildata();
+  //   detaildata();
 });
 </script>

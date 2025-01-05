@@ -78,7 +78,7 @@ const Create = async () => {
   try {
     const valid = await form.value.validate();
     if (valid) {
-      console.log("Form is valid");
+      console.log('')
       const respons = await axios.post<ExpenseCreateModel.ExpenseCreateResponse>(
         "/api/v1/expense-types/new",
         {
