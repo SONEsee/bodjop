@@ -16,9 +16,24 @@ export default defineNuxtConfig({
       path: "@/components",
       pathPrefix: false,
     },
+    {
+      path: "@/components/Login/",
+      pathPrefix: true,
+      prefix: "Login",
+    },
+    {
+      path: "@/components/Agency",
+      pathPrefix: true,
+      prefix: "Agency",
+    },
+    {
+      path: "@/components/ExpenseTypeManagements/",
+      pathPrefix: true,
+      prefix: "ExpenTypeManagements",
+    },
   ],
 
-  css: ["~/assets/css/style.scss"],
+  css: ["~/assets/css/style.scss", "~/assets/css/global.css"],
 
   build: {
     transpile: ["vuetify"],
