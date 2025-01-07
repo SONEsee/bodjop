@@ -17,6 +17,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: "@/components/Login/",
+      pathPrefix: true,
+      prefix: "Login",
+    },
+    {
       path: "@/components/Agency",
       pathPrefix: true,
       prefix: "Agency",

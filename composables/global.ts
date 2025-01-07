@@ -1,4 +1,6 @@
 import numeral from "numeral";
+import swal from "sweetalert2";
+import { AxiosError } from "axios";
 export const UseGetFormatDatePicker = (date: any) => {
   if (date) {
     const datenow = new Date(date);
@@ -17,4 +19,12 @@ export const goPath = (path: string | null) => {
   if (path !== null) {
     window.location.href = path;
   }
+};
+
+export const DefaultSwalError = (err: AxiosError) => {
+  return swal.fire({
+    icon: "error",
+    title: "ຜິດພາດ",
+    text: ""
+  });
 };
