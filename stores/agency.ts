@@ -6,7 +6,7 @@ export const UseAgencyStore = defineStore("agency", {
         nick_name: null as string | null,
         phone_number: null as string | null,
         agency_code: null as string | null,
-        role: null as string | null,
+        agency_type: null as string | null,
         province_id: null,
         district_id: null,
         village_id: null,
