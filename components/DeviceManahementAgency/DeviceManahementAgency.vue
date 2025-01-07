@@ -81,7 +81,7 @@
                 size="small"
                 variant="text"
                 color="primary"
-                @click="goPath(`/expinse_type_managements/edit?id=${item.id}`)"
+                @click="goPath(`/device_manage_agency/edit?id=${item.id}`)"
               />
               <v-btn
                 icon="mdi-delete-outline"

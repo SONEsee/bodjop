@@ -1,11 +1,11 @@
 export interface DeviceDetailidResponse {
     error:     null;
-    items:     Items;
+    items:     DeviceDetailidResponseItems;
     status:    number;
     timestamp: string;
 }
 
-export interface Items {
+export interface DeviceDetailidResponseItems {
     id:                  string;
     pos_no:              string;
     imei:                string;
@@ -17,7 +17,7 @@ export interface Items {
     create_nickname:     string;
     status:              number;
     device_locations:    DeviceLocation[];
-    device_transactions: DeviceTransaction[];
+    device_transactions: any[];
 }
 
 export interface DeviceLocation {
@@ -27,12 +27,4 @@ export interface DeviceLocation {
     device_id:  string;
     created_at: Date;
     updated_at: Date;
-}
-
-export interface DeviceTransaction {
-    id:         string;
-    name:       string;
-    name_en:    string;
-    created_at: Date;
-    status:     number;
 }

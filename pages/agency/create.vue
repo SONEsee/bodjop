@@ -1,9 +1,14 @@
+<script lang="ts" setup>
+const globalStore = UseGlobalStore();
+
+onMounted(() => {
+  globalStore.GetProvinceData();
+});
+</script>
 <template>
-    <section
-      style="min-height: 100vh"
-      class="d-flex flex-wrap align-center justify-center"
-    >
-      <CreateNewAgency />
-    </section>
-  </template>
-  
+  <section class="pa-6">
+    <v-card flat min-height="95vh" class="pa-6">
+      <AgencyCreateNewAgency />
+    </v-card>
+  </section>
+</template>
