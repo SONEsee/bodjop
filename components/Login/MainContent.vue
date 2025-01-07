@@ -94,42 +94,5 @@ const handleLogin = async () => {
   } finally {
     loading.value = false;
   }
-
-  // Swal.fire({
-  //   title: "ກຳລັງເຂົ້າສູ່ລະບົບ",
-  //   html: "ກະລຸນາລໍຖ້າ <b></b> ວິທີ",
-  //   timer: 3000,
-  //   timerProgressBar: true,
-  //   didOpen: () => {
-  //     Swal.showLoading();
-  //     const b = Swal.getHtmlContainer().querySelector("b");
-  //     let timerInterval = setInterval(() => {
-  //       if (b) {
-  //         b.textContent = String(Math.ceil(Swal.getTimerLeft() / 1000));
-  //       }
-  //     }, 100);
-  //   },
-  //   willClose: () => {
-  //     clearInterval();
-  //   },
-  // }).then(() => {
-  //   Swal.fire({
-  //     icon: "success",
-  //     title: "ທົດລອງ",
-  //     text: "ເຂົ້າລະບົບສໍາເລັດ!",
-  //   });
-  // });
 };
 </script>
-
-<style scoped>
-.text-center {
-  text-align: center;
-}
-.d-flex {
-  display: flex;
-}
-.text-start {
-  text-align: start;
-}
-</style>
