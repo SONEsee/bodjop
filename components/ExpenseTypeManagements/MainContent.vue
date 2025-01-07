@@ -2,10 +2,7 @@
   <v-container>
     <h3>ໜ້າສະແດງຂໍ້ມູນປະເພດລາຍຈ່າຍ / Detail Expense type</h3>
     <v-divider></v-divider>
-    <div v-for="(item, index) in data">
-      {{ item }}{{ index }}
-      hi
-    </div>
+    
     <v-col cols="12" class="mt-4">
       <v-row>
         <v-col cols="12" md="3 ">

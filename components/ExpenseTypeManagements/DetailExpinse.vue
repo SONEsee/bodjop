@@ -22,6 +22,7 @@
           <label for="code"
             ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
           >
+          
           <v-text-field
             id="code"
             density="compact"
@@ -67,6 +68,7 @@ const GetDetailData = async () => {
     if (id === null) {
       return;
     }
+    
 
     const res = await axios.get<ExpenseCreateModel.ExpenseDetailResponse>(
       `/api/v1/expense-types/detail/${id}`
