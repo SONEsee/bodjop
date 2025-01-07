@@ -17,6 +17,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: "@/components/Global/",
+      pathPrefix: true,
+      prefix: "Global",
+    },
+    {
       path: "@/components/Login/",
       pathPrefix: true,
       prefix: "Login",
