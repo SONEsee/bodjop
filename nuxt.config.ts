@@ -16,6 +16,11 @@ export default defineNuxtConfig({
       path: "@/components",
       pathPrefix: false,
     },
+    {
+      path: "@/components/Agency",
+      pathPrefix: true,
+      prefix: "Agency",
+    },
   ],
 
   css: ["~/assets/css/style.scss"],
