@@ -3,6 +3,9 @@ import * as UsermeModel from "./usersme";
 import * as ExpenseCreateModel from "./expensecreate";
 import * as DeviceModel from "./device";
 import * as DefaultResponseModel from "./responses";
+import * as ProvinceModel from "./provinces";
+import * as DistrictModel from "./districts";
+import * as VillageModel from "./villages";
 
 export {
   UserModel,
@@ -10,4 +13,7 @@ export {
   ExpenseCreateModel,
   DeviceModel,
   DefaultResponseModel,
+  ProvinceModel,
+  DistrictModel,
+  VillageModel,
 };
