@@ -33,7 +33,7 @@ export default defineNuxtConfig({
     },
   ],
 
-  css: ["~/assets/css/style.scss"],
+  css: ["~/assets/css/style.scss", "~/assets/css/global.css"],
 
   build: {
     transpile: ["vuetify"],

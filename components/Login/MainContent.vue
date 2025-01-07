@@ -7,10 +7,10 @@
       <v-card elevation="0" width="560px" class="pa-6">
         <v-row>
           <v-col cols="12">
-            <div class="text-center mb-5">
+            <div class="text-center">
               <v-avatar color="surface-variant" size="150"></v-avatar>
             </div>
-            <h3 class="text-center mb-5">ເຂົ້າສູ່ລະບົບ 32 Lottery</h3>
+            <h3 class="text-center">ເຂົ້າສູ່ລະບົບ 32 Lottery</h3>
           </v-col>
 
           <v-col cols="12">
@@ -46,6 +46,7 @@
               block
               height="40px"
               class="font-weight-black"
+              :loading="loading"
             >
               ເຂົ້າສູ່ລະບົບ
             </v-btn>
@@ -85,12 +86,13 @@ const handleLogin = async () => {
         localStorage.setItem("user", JSON.stringify(res.data.items.user));
 
         setTimeout(() => {
-          goPath("/home");
+          goPath("/");
         }, 1500);
       }
     }
   } catch (error) {
     console.error(error);
+    DefaultSwalError(error);
   } finally {
     loading.value = false;
   }
