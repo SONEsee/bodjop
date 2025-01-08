@@ -1,3 +1,5 @@
+import { AgencyModel } from "@/models";
+import axios from "@/helpers/axios";
 export const UseAgencyStore = defineStore("agency", {
   state() {
     return {
@@ -15,9 +17,47 @@ export const UseAgencyStore = defineStore("agency", {
         confirm_password: null as string | null,
         status: null,
         profile_image: null as File | null,
+        identities: [] as AgencyModel.IdentitiesAgency[],
       },
+
+      identity_request: {
+        type: null as string | null,
+        dialog: false,
+        identity_no: null as string | null,
+        file: null as File | null,
+      },
+
+      request_query_data: {
+        q: null as string | null,
+        limit: 20,
+        page: 1,
+        loading: false,
+      },
+
+      response_query_data: null as AgencyModel.GetAgencyResponseItems | null,
     };
   },
 
-  actions: {},
+  actions: {
+    async GetListData() {
+      try {
+        this.request_query_data.loading = true;
+        const res = await axios.get<AgencyModel.GetAgencyResponse>(
+          "/api/v1/agency/get-data",
+          {
+            params: {
+              ...this.request_query_data,
+            },
+          }
+        );
+        if (res.status === 200) {
+          this.response_query_data = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_query_data.loading = false;
+      }
+    },
+  },
 });

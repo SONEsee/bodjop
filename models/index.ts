@@ -6,7 +6,7 @@ import * as DefaultResponseModel from "./responses";
 import * as ProvinceModel from "./provinces";
 import * as DistrictModel from "./districts";
 import * as VillageModel from "./villages";
-
+import * as AgencyModel from "./agency";
 export {
   UserModel,
   UsermeModel,
@@ -16,4 +16,5 @@ export {
   ProvinceModel,
   DistrictModel,
   VillageModel,
+  AgencyModel,
 };

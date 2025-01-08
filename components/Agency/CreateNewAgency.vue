@@ -1,5 +1,8 @@
 <script lang="ts" setup>
 import axios from "@/helpers/axios";
+import notfounfimages from "@/assets/img/404.png";
+const notfoundref = ref(notfounfimages);
+import { AgencyModel } from "@/models/";
 
 const agencyStore = UseAgencyStore();
 const globalStore = UseGlobalStore();
@@ -53,8 +56,7 @@ const submitForm = async () => {
         if (allowFileKey.includes(key)) {
           if (Array.isArray(value)) {
             //looping for upload
-
-            const files = value as File[];
+            const files = value as unknown as File[];
             if (files) {
               for (let i = 0; i < files.length; i++) {
                 let file = files[i];
@@ -62,13 +64,28 @@ const submitForm = async () => {
               }
             }
           } else {
-            if (file) {
-              let file = value as File;
+            let file = (value as File) ?? null;
+            if (file !== null) {
               formData.append(key, file, file.name);
             }
           }
+        } else if (key === "identities") {
+          formData.append("identities", JSON.stringify(value));
+          if (Array.isArray(value)) {
+            for (let i = 0; i < value.length; i++) {
+              const identity = value[i];
+              if (identity.file !== null) {
+                console.log(`iden`, identity.file.type);
+                formData.append(
+                  "identities_files",
+                  identity.file,
+                  `${i}.${identity.file.type.split("/")[1]}`
+                );
+              }
+            }
+          }
         } else {
-          formData.append(key, value ?? "");
+          formData.append(key, value?.toString() ?? "");
         }
       }
 
@@ -84,7 +101,6 @@ const submitForm = async () => {
           title: "ສຳເລັດ",
           text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
         });
-
         if (notification.isConfirmed) {
           setTimeout(() => {
             goPath("/agency");
@@ -128,7 +144,7 @@ const submitForm = async () => {
                     class="mx-auto"
                     :image="
                       request.profile_image === null
-                        ? ''
+                        ? notfoundref
                         : GetImageUrl(request.profile_image)
                     "
                   >
@@ -313,6 +329,39 @@ const submitForm = async () => {
                     hide-details="auto"
                     class="pb-6"
                   ></v-select>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="12">
+          <v-row>
+            <v-col cols="6"></v-col>
+            <v-col cols="6">
+              <v-row>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap justify-space-between">
+                    <div class="d-flex flex-wrap align-center">
+                      <h4>ເອກະສານລະບຸຕົວຕົນ</h4>
+                    </div>
+
+                    <div>
+                      <v-btn
+                        variant="text"
+                        icon="mdi-note-plus"
+                        size="medium"
+                        @click="agencyStore.identity_request.dialog = true"
+                      ></v-btn>
+                    </div>
+                  </div>
+
+                  <v-col cols="12" class="pa-0 ma-0">
+                    <v-divider color="black" :thickness="2"></v-divider>
+                  </v-col>
+                </v-col>
+                <v-col cols="12">
+                  <AgencyCreateAgencyComponentsIdentitiesTable />
                 </v-col>
               </v-row>
             </v-col>
