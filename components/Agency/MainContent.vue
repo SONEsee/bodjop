@@ -38,7 +38,11 @@ const headers = ref([
               formatnumber(response_data?.pagination?.total_count ?? 0)
             }})
           </h3>
-          <v-btn color="primary" elevation="0">
+          <v-btn
+            color="primary"
+            elevation="0"
+            @click="goPath('/agency/create')"
+          >
             <v-icon class="mr-2"> mdi-plus</v-icon>
             ເພີ່ມຂໍ້ມູນຂອງຕົວແທນ
           </v-btn>
@@ -69,6 +73,7 @@ const headers = ref([
                 color="primary"
                 icon="mdi-eye"
                 variant="text"
+                @click="goPath(`/agency/detail?id=${item.id}`)"
                 size="small"
               ></v-btn>
 

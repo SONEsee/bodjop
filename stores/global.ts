@@ -88,6 +88,25 @@ export const UseGlobalStore = defineStore("global", {
       if (district_id === null) return;
       await this.GetVillagesData(district_id, query);
     }),
+
+    async GetFileData(fileLink: string) {
+      try {
+        const res = await axios.get("/api/v1/files/get-file", {
+          params: {
+            q: fileLink,
+          },
+          responseType: "blob",
+        });
+
+        if (res.status === 200) {
+          return URL.createObjectURL(res.data);
+        }
+        return "";
+      } catch (error) {
+        console.error(error);
+        return "";
+      }
+    },
   },
   getters: {},
 });

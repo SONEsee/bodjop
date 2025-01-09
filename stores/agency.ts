@@ -35,6 +35,8 @@ export const UseAgencyStore = defineStore("agency", {
       },
 
       response_query_data: null as AgencyModel.GetAgencyResponseItems | null,
+      response_detail_query_data:
+        null as AgencyModel.GetDetailAgencyResponse | null,
     };
   },
 
@@ -57,6 +59,23 @@ export const UseAgencyStore = defineStore("agency", {
         console.error(error);
       } finally {
         this.request_query_data.loading = false;
+      }
+    },
+
+    async GetDetailAgencyData(id: string | null) {
+      try {
+        if (id === null || id == "") {
+          return;
+        }
+
+        const res = await axios.get<AgencyModel.GetAgencyDetailResponse>(
+          `/api/v1/agency/get-detail/${id}`
+        );
+        if (res.status === 200) {
+          this.response_detail_query_data = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
   },

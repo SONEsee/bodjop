@@ -68,6 +68,16 @@ export const GetAgencyType = () => {
   ];
 };
 
+export const GetAgencyTypeLabel = (type: string): string => {
+  const list_of_agency_label = {
+    PROVINCE: "ຕົວແທນແບບແຂວງ (Province Agency)",
+    DISTRICT: "ຕົວແທນແບບເມືອງ (District Agency)",
+    UNIT: "ຕົວແທນແບບບຸກຄົນ (Unit Agency)",
+  } as { [key: string]: string };
+
+  return list_of_agency_label?.[type] ?? "N/A";
+};
+
 export const GetDefaultStatus = () => {
   return [
     { title: "ເປີດໃຊ້ງານ", value: 1 },
@@ -110,6 +120,14 @@ export const GetIdentitiesList = () => {
       value: 3,
     },
   ];
+};
+export const GetIdentitiesLabel = (type: number): string => {
+  const list_indetities_label = {
+    1: "ບັດປະຈຳຕົວ",
+    2: "ພາສປອດ / Passport",
+    3: "ສຳມະໂນຄົວ",
+  } as { [key: number]: string };
+  return list_indetities_label?.[type] ?? "N/A";
 };
 
 export const formatnumber = (value: number | string) => {

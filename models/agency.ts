@@ -1,3 +1,5 @@
+import type { GetIdentitiesResponse } from "./identities";
+
 export interface IdentitiesAgency {
   type: string;
   identity_no: string;
@@ -7,6 +9,13 @@ export interface IdentitiesAgency {
 export interface GetAgencyResponse {
   error: null;
   items: GetAgencyResponseItems;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetAgencyDetailResponse {
+  error: null;
+  items: GetDetailAgencyResponse | null;
   status: number;
   timestamp: string;
 }
@@ -34,6 +43,27 @@ export interface GetAgencyResponseItemsListData {
   image_profile: string;
   username: string;
   village: Village;
+}
+
+export interface GetDetailAgencyResponse {
+  id: string;
+  agent_code: string;
+  village_id: number;
+  fullname: string;
+  nick_name: string;
+  phone_number: string;
+  agent_type: string;
+  created_at: Date;
+  updated_at: Date;
+  created_by_user_id: string;
+  role: string;
+  status: number;
+  money_outstanding: number;
+  gender: number;
+  image_profile: string;
+  username: string;
+  village: Village;
+  user_identities: GetIdentitiesResponse[];
 }
 
 export interface Pagination {
