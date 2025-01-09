@@ -1,4 +1,5 @@
 import axios from "@/helpers/axios";
+import notfoundImage from "@/assets/img/404.png";
 import { ProvinceModel, DistrictModel, VillageModel } from "@/models/";
 
 export const UseGlobalStore = defineStore("global", {
@@ -110,10 +111,10 @@ export const UseGlobalStore = defineStore("global", {
         if (res.status === 200) {
           return URL.createObjectURL(res.data);
         }
-        return "";
+        return notfoundImage;
       } catch (error) {
         console.error(error);
-        return "";
+        return notfoundImage;
       }
     },
   },

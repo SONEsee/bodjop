@@ -124,5 +124,31 @@ export const UseAgencyStore = defineStore("agency", {
 
       Object.assign(this.identity_request, obj);
     },
+
+    async OndeleteAgency(id: string): Promise<string | Error> {
+      const globalStore = UseGlobalStore();
+      try {
+        const notification = await CallSwal({
+          icon: "warning",
+          title: "ຄຳເຕືອນ",
+          text: `ທ່ານກຳລັງລົບຂໍ້ມູນທ່ານແນ່ໃຈແລ້ວບໍ່?`,
+          showCancelButton: true,
+          confirmButtonText: "ຕົກລົງ",
+          cancelButtonText: "ຍົກເລີກ",
+        });
+        if (notification.isConfirmed) {
+          globalStore.loading_overlay = true;
+          const res = await axios.delete(`/api/v1/users/delete/${id}`);
+          if (res.status === 200) {
+            return id;
+          }
+        }
+
+        return "";
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
   },
 });

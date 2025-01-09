@@ -27,6 +27,25 @@ const headers = ref([
   { title: "ສະຖານະ", key: "status", sortable: false },
   { title: "Actions", key: "actions", sortable: false },
 ]);
+
+const onDeleteUser = async (id: string) => {
+  const res = await agencyStore.OndeleteAgency(id);
+  if (res instanceof Error) {
+    return DefaultSwalError(res.message);
+  }
+
+  const notification = await CallSwal({
+    icon: "success",
+    title: "ສຳເລັດ",
+    text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
+  });
+
+  if (notification.isConfirmed) {
+    await agencyStore.GetListData();
+  } else {
+    await agencyStore.GetListData();
+  }
+};
 </script>
 <template>
   <div class="pa-6">
@@ -56,6 +75,12 @@ const headers = ref([
           >
             <template v-slot:item.no="{ item, index }">
               {{ index + 1 }}
+            </template>
+
+            <template v-slot:item.image="{ item }">
+              <div class="pa-2">
+                <GlobalMenuSpanImage :image="item.image_profile" />
+              </div>
             </template>
 
             <template v-slot:item.villages="{ item }">
@@ -90,6 +115,7 @@ const headers = ref([
                 icon="mdi-delete"
                 variant="text"
                 size="small"
+                @click="onDeleteUser(item.id)"
               ></v-btn>
             </template>
 
