@@ -18,7 +18,7 @@
     
     <v-col cols="12">
       <v-row>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="id"><p class="ml-2">ເລືອກອຸປະກອນ / Devices</p></label>
           <v-select
             v-model="device"
@@ -36,7 +36,7 @@
             dense
           ></v-select>
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="code"><p class="ml-2">ຕົວແທນ / Agency</p></label>
           <v-select
             v-model="agency"
@@ -51,7 +51,7 @@
             dense
           ></v-select>
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="exdate"><p class="ml-2">ໝາຍເຫດ / Remark</p></label>
           <v-text-field
             v-model="remark"
@@ -94,10 +94,10 @@
     </v-col>
     <div class="mt-5 d-flex justify-center">
       <v-btn color="primary" class="ml-3 rounded-lg" style="width: 200px" type="submit">
-        <p>ບັນທຶກ</p>
+        ບັນທຶກ
       </v-btn>
       <v-btn color="#90A4AE" class="ml-3 rounded-lg" style="width: 200px">
-        <p>ຍົກເລີກ</p>
+        ຍົກເລີກ
       </v-btn>
     </div></v-form>
   </v-container>

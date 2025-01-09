@@ -5,9 +5,9 @@
     <v-form ref="form" @submit.prevent="Create">
       <v-col cols="12">
         <v-row>
-          <v-col cols="12" md="6" class="mt-4">
+          <v-col cols="6"  class="mt-4">
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="6" >
                 <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
                 <v-text-field
                   v-model="name"
@@ -23,7 +23,7 @@
                   dense
                 ></v-text-field
               ></v-col>
-              <v-col cols="12" md="6">
+              <v-col cols="6" >
                 <label for="code"
                   ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
                 >
@@ -51,10 +51,10 @@
           type="submit"
         >
           
-          <p class="pa-2">ບັນທຶກ</p></v-btn
+          ບັນທຶກ</v-btn
         >
         <v-btn color="#90A4AE" class="rounded-lg ml-6" style="width: 10%"
-          ><p class="pa-2">ຍົກເລິກ</p></v-btn
+          >ຍົກເລິກ</v-btn
         >
       </div></v-form
     >

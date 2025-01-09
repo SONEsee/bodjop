@@ -1,115 +1,70 @@
 <template>
-  <v-container>
-    <h3>ໜ້າສະແດງຂໍ້ມູນປະເພດລາຍຈ່າຍ / Detail Expense type</h3>
-    <v-divider></v-divider>
-    <div v-for="(item, index) in data">
-      {{ item }}{{ index }}
-      hi
-    </div>
-    <v-col cols="12" class="mt-4">
-      <v-row>
-        <v-col cols="12" md="3 ">
-          <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
-          <v-text-field
-            id="id"
-            density="compact"
-            class="pa-2"
-            color="primary"
-            variant="outlined"
-            readonly
-            outlined
-            dense
-            >sone</v-text-field
-          >
-        </v-col>
-        <v-col cols="12" md="3">
-          <label for="code"
-            ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
-          >
-          <v-text-field
-            id="code"
-            density="compact"
-            class="pa-2"
-            color="primary"
-            readonly
-            variant="outlined"
-            dense
-            >sone</v-text-field
-          >
-        </v-col>
-        <v-col cols="12" md="3">
-          <label for="exdate"
-            ><p class="ml-2">ຄົນສ້າງ / Create by user</p></label
-          >
-          <v-text-field
-            id="exdate"
-            density="compact"
-            class="pa-2"
-            color="primary"
-            readonly
-            variant="outlined"
-            dense
-            >Binh xayxana</v-text-field
-          >
-        </v-col>
-      </v-row>
-    </v-col>
-    <v-col cols="12">
-      <v-data-table
-        :headers="headers"
-        :items="datarespons?.items.list_data"
-        density="compact"
-        item-key="name"
-      >
-        <template v-slot:body="{ items }">
-          <tr v-for="(item, index) in items" :key="item.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
+  <section class="pa-6">
+    <v-row>
+      <v-col cols="12">
+        <GlobalTextTitleLine :title="title" />
+      </v-col>
 
-            <td>{{ item.name_en }}</td>
-            <td>{{ FormatDatetime(item.created_at) }}</td>
-            <td>{{ item.status }}</td>
-            <td>
-              <v-btn
-                icon="mdi-eye"
-                variant="text"
-                color="primary"
-                size="small"
-                @click="
-                  goPath(`/expinse_type_managements/detail?id=${item.id}`)
-                "
-              />
-              <v-btn
-                icon="mdi-pencil"
-                size="small"
-                variant="text"
-                color="primary"
-                @click="goPath(`/expinse_type_managements/edit?id=${item.id}`)"
-              />
-              <v-btn
-                icon="mdi-delete-outline"
-                size="small"
-                variant="text"
-                color="error"
-                @click="deleteData(item.id)"
-              />
-            </td>
-          </tr>
-        </template>
-      </v-data-table>
-    </v-col>
-  </v-container>
+      <v-col cols="12">
+        <v-data-table
+          :headers="headers"
+          :items="datarespons?.items.list_data"
+          density="comfortable"
+        >
+          <template v-slot:body="{ items }">
+            <tr v-for="(item, index) in items" :key="item.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ item.name }}</td>
+
+              <td>{{ item.name_en }}</td>
+              <td>{{ FormatDatetime(item.created_at) }}</td>
+              <td>
+                <GlobalDefaultStatusChip :status="item.status" />
+              </td>
+              <td>
+                <v-btn
+                  icon="mdi-eye"
+                  variant="text"
+                  color="primary"
+                  size="small"
+                  @click="
+                    goPath(`/expense_type_managements/detail?id=${item.id}`)
+                  "
+                />
+                <v-btn
+                  icon="mdi-pencil"
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  @click="
+                    goPath(`/expense_type_managements/edit?id=${item.id}`)
+                  "
+                />
+
+                <v-btn
+                  icon="mdi-delete-outline"
+                  size="small"
+                  variant="text"
+                  color="error"
+                  @click="deleteData(item.id)"
+                />
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-col>
+    </v-row>
+  </section>
 </template>
+
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import axios from "@/helpers/axios";
 import { ExpenseCreateModel } from "@/models/";
 import Swal from "sweetalert2";
-
 const datarespons = ref<ExpenseCreateModel.ExpenseCreateResponse | null>(null);
-const data = ref<ExpenseCreateModel.ExpenseDetailResponse | null>(null);
-const item = ref<ExpenseCreateModel.ExpenseCreateResponse | null>(null);
-const error = ref<string | null>(null);
+const title = ref("ໜ້າສະແດງຂໍ້ມູນປະເພດລາຍຈ່າຍ / Detail Expense type");
+
 const request = ref({
   limit: 20,
   page: 1,
@@ -165,36 +120,11 @@ const deleteData = async (id: string) => {
     }
   } catch (error) {
     console.error(error);
-    Swal.fire("ຜິດພາດ!", "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້.", "error");
+    DefaultSwalError(error);
   }
 };
 
-// const detaildata = async () => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//       error.value = "Authorization token is missing.";
-//       return;
-//     }
-//     const res = await axios.get<ExpenseCreateModel.ExpenseDetailResponse>(
-//       `/api/v1/expense-types/detail/${datarespons.value?.items.id}`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-
-//     if (res.status === 200) {
-//       data.value = res.data;
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 onMounted(() => {
   getdata();
-  //   detaildata();
 });
 </script>

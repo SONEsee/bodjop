@@ -2,12 +2,15 @@ import * as UserModel from "./users";
 import * as UsermeModel from "./usersme";
 import * as ExpenseCreateModel from "./expensecreate";
 import * as DeviceModel from "./device";
+import * as DeviceDetailModel from "./device";
 import * as DefaultResponseModel from "./responses";
 import * as ProvinceModel from "./provinces";
 import * as DistrictModel from "./districts";
 import * as VillageModel from "./villages";
 import * as AgencyModel from "./agency";
 import * as IdentitiesModel from "./identities";
+import * as DeviceDetailModels from "./devicedetail";
+
 export {
   UserModel,
   UsermeModel,
@@ -19,4 +22,6 @@ export {
   VillageModel,
   AgencyModel,
   IdentitiesModel,
+  DeviceDetailModel,
+  DeviceDetailModels,
 };
