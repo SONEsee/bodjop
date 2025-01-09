@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <section style="min-height: 100vh" class=" ">
-    <ExpenTypeManagementsDetailExpinse />
+  <section>
+    <ExpenTypeManagementsDetailExpense />
   </section>
 </template>

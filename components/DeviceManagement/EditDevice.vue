@@ -3,11 +3,11 @@
     <h3>ການແກ້ໄຂຂໍ້ມູນອຸປະກອນ / Edit Device</h3>
     <v-divider></v-divider>
     <v-form ref="form" @submit.prevent="handleEdit">
-      <v-col cols="12">
+      <v-col cols="12 d-flex flex-wrap" >
         <v-row>
-          <v-col cols="12" md="6" class="mt-4">
+          <v-col cols="6"  class="mt-4">
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col cols="6" >
                 <label for="id"><p class="ml-2">ລະຫັດ POS / Pos No</p></label>
                 <v-text-field
                   v-model="formData.pos_no"
@@ -50,10 +50,10 @@
           style="width: 10%"
           type="submit"
           a
-          ><p class="pa-2">ບັນທຶກ</p></v-btn
+          ><p class="">ບັນທຶກ</p></v-btn
         >
-        <v-btn color="error" class="rounded-lg ml-6" style="width: 10%"
-          ><p class="pa-2">ຍົກເລິກ</p></v-btn
+        <v-btn color="#90A4AE" class="rounded-lg ml-6" style="width: 10%"
+          >ຍົກເລິກ</v-btn
         >
       </div>
     </v-form>

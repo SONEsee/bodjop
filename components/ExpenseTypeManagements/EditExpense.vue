@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-form ref="form" @submit.prevent="handleSubmit">
       <v-row>
-        <v-col cols="12" md="6" class="mt-4">
+        <v-col cols="6"  class="mt-4">
           <label for="name"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
           <v-text-field
             v-model="formData.name"
@@ -17,7 +17,7 @@
             label="ກະລຸນາປ້ອນຊື່ພາສາລາວ / Name"
           />
         </v-col>
-        <v-col cols="12" md="6" class="mt-4">
+        <v-col cols="6"  class="mt-4">
           <label for="name_en"
             ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
           >

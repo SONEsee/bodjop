@@ -3,9 +3,9 @@
     <h3>ໜ້າສະແດງຂໍ້ມູນປະເພດລາຍຈ່າຍ / Detail Expense type</h3>
     <v-divider></v-divider>
 
-    <v-col cols="12" class="mt-4">
+    <v-col cols="12" class="mt-4 d-flex flex-wrap">
       <v-row>
-        <v-col cols="12" md="3 ">
+        <v-col cols="3"  > 
           <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
           <v-text-field
             id="id"
@@ -19,7 +19,7 @@
             >sone</v-text-field
           >
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="code"
             ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
           >
@@ -34,7 +34,7 @@
             >sone</v-text-field
           >
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="exdate"
             ><p class="ml-2">ຄົນສ້າງ / Create by user</p></label
           >

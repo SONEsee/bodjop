@@ -2,8 +2,7 @@
 
 
 <section
-    style="min-height: 100vh"
-    class=""
+    
   >
     <CreateDistbtions />
   </section>

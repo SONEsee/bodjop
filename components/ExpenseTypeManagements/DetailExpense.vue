@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-col cols="12" class="mt-4">
       <v-row>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label>ຊື່ພາສາລາວ / Name</label>
           <v-text-field
             id="id"
@@ -18,11 +18,11 @@
             dense
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="code"
             ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
           >
-          
+
           <v-text-field
             id="code"
             density="compact"
@@ -34,7 +34,7 @@
             :model-value="item?.name_en ?? ''"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="3" >
           <label for="exdate"
             ><p class="ml-2">ຄົນສ້າງ / Create by user</p></label
           >
@@ -82,9 +82,7 @@ const GetDetailData = async () => {
   }
 };
 
-
 onMounted(() => {
- 
   GetDetailData();
 });
 </script>
