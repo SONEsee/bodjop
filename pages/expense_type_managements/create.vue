@@ -1,8 +1,8 @@
 <template>
     <section
-    style="min-height: 100vh"
+    
     
   >
-    <DeviceBackOffice />
+    <ExpenTypeManagementsCreateExpenseType />
   </section>
 </template>

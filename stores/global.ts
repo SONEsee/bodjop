@@ -1,4 +1,5 @@
 import axios from "@/helpers/axios";
+import notfoundImage from "@/assets/img/404.png";
 import { ProvinceModel, DistrictModel, VillageModel } from "@/models/";
 
 export const UseGlobalStore = defineStore("global", {
@@ -8,6 +9,7 @@ export const UseGlobalStore = defineStore("global", {
       provinces: [] as ProvinceModel.GetProvinceResponseItem[],
       districts: [] as DistrictModel.GetDistrictResponseItem[],
       villages: [] as VillageModel.GetVillageResponseItem[],
+      loading_overlay: false,
     };
   },
   actions: {
@@ -88,6 +90,33 @@ export const UseGlobalStore = defineStore("global", {
       if (district_id === null) return;
       await this.GetVillagesData(district_id, query);
     }),
+
+    async GetFileData(fileLink: string | File) {
+      try {
+        if (!fileLink) {
+          return "";
+        }
+
+        if (typeof fileLink === "object") {
+          return URL.createObjectURL(fileLink) ?? "";
+        }
+
+        const res = await axios.get("/api/v1/files/get-file", {
+          params: {
+            q: fileLink,
+          },
+          responseType: "blob",
+        });
+
+        if (res.status === 200) {
+          return URL.createObjectURL(res.data);
+        }
+        return notfoundImage;
+      } catch (error) {
+        console.error(error);
+        return notfoundImage;
+      }
+    },
   },
   getters: {},
 });
