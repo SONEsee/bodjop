@@ -20,7 +20,7 @@
             <v-select
               v-model="device"
               @click:append-inner="BackOffice"
-              :rules="[v => !!v || 'ກະລຸນາເລືອກອຸປະກອນ']"
+              :rules="[(v) => !!v || 'ກະລຸນາເລືອກອຸປະກອນ']"
               :items="['POS-001', 'POS-002', 'POS-003']"
               placeholder="ເລືອກອຸປະກອນ"
               id="id"
@@ -36,7 +36,7 @@
             <label for="code"><p class="ml-2">ຕົວແທນ / Agency</p></label>
             <v-select
               v-model="agency"
-              :rules="[v => !!v || 'ກະລຸນາເລືອກຕົວແທນ']"
+              :rules="[(v) => !!v || 'ກະລຸນາເລືອກຕົວແທນ']"
               placeholder="ເລືອກຕົວແທນ"
               :items="['ຫົວໜ້າ', 'ນິ້ມ', 'ສອນ']"
               id="code"
@@ -51,7 +51,6 @@
             <label for="exdate"><p class="ml-2">ໝາຍເຫດ / Remark</p></label>
             <v-text-field
               v-model="remark"
-              
               id="exdate"
               density="compact"
               class="pa-2"
@@ -90,7 +89,12 @@
         </v-row>
       </v-col>
       <div class="mt-5 d-flex justify-center">
-        <v-btn color="primary" class="ml-3 rounded-lg" style="width: 200px" type="submit">
+        <v-btn
+          color="primary"
+          class="ml-3 rounded-lg"
+          style="width: 200px"
+          type="submit"
+        >
           <p>ບັນທຶກ</p>
         </v-btn>
         <v-btn color="#90A4AE" class="ml-3 rounded-lg" style="width: 200px">
@@ -100,27 +104,27 @@
     >
   </v-container>
 </template>
-<script lang="ts" setup> 
+<script lang="ts" setup>
 import { ref } from "vue";
 const form = ref();
 const device = ref("");
 const agency = ref("");
 const remark = ref("");
 const validate = ref(false);
-const BackOffice = ()=>{
+const BackOffice = () => {
   validate.value = !validate.value;
-}
-const BackOffices = async ()=>{
-  try{
-const valid = await form.value.validate();
-if(valid){
-  console.log("success");
-}
-  }catch(e){
+};
+const BackOffices = async () => {
+  try {
+    const valid = await form.value.validate();
+    if (valid) {
+      console.log("success");
+    }
+  } catch (e) {
     console.log(e);
   }
-}
- 
+};
+
 const headers = [
   {
     title: "ລຳດັບ",

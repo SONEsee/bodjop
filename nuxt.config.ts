@@ -36,6 +36,11 @@ export default defineNuxtConfig({
       pathPrefix: true,
       prefix: "ExpenTypeManagements",
     },
+    {
+      path: "@/components/DeviceManagement/",
+      pathPrefix: true,
+      prefix: "Devices",
+    },
   ],
 
   css: ["~/assets/css/style.scss", "~/assets/css/global.css"],

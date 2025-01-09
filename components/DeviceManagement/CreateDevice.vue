@@ -7,7 +7,7 @@
         <v-row>
           <v-col cols="12" md="6" class="mt-4">
             <v-row>
-              <v-col cols="6" >
+              <v-col cols="6">
                 <label for="id"><p class="ml-2">ລະຫັດ POS / Pos No</p></label>
                 <v-text-field
                   v-model="pos_no"
@@ -23,7 +23,7 @@
                   :rules="[(val) => !!val || 'ກະລຸນາປ້ອນລະຫັດ POS']"
                 ></v-text-field>
               </v-col>
-              <v-col cols="6" >
+              <v-col cols="6">
                 <label for="code"
                   ><p class="ml-2">ລະຫັດ IMEI / IMEI Code</p></label
                 >

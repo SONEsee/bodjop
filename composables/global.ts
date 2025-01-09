@@ -178,3 +178,13 @@ export const GetItemPerPageOptions = () => {
     },
   ];
 };
+
+export const delayGoPath = (path: string) => {
+  if (!path) {
+    return;
+  }
+
+  return setTimeout(() => {
+    window.location.href = path;
+  }, 1200);
+};
