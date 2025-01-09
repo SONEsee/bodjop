@@ -5,4 +5,5 @@ export interface GetIdentitiesResponse {
   identity_no: string;
   created_by_user_id: string;
   image_url: string;
+  status: number;
 }

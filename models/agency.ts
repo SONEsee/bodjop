@@ -48,7 +48,7 @@ export interface GetAgencyResponseItemsListData {
 export interface GetDetailAgencyResponse {
   id: string;
   agent_code: string;
-  village_id: number;
+  village_id: number | null;
   fullname: string;
   nick_name: string;
   phone_number: string;
@@ -60,7 +60,7 @@ export interface GetDetailAgencyResponse {
   status: number;
   money_outstanding: number;
   gender: number;
-  image_profile: string;
+  image_profile: string | File;
   username: string;
   village: Village;
   user_identities: GetIdentitiesResponse[];
@@ -77,7 +77,7 @@ export interface Village {
   id: number;
   vill_name: string;
   vill_name_en: string;
-  district_id: number;
+  district_id: number | null;
   district: District;
 }
 

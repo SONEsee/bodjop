@@ -15,7 +15,6 @@ const submitForm = async () => {
   try {
     const { valid } = await form.value.validate();
     if (valid) {
-      console.log(`success`);
       emit("emitform", form_request.value);
       form_request.value.dialog = false;
     }
@@ -62,6 +61,7 @@ const submitForm = async () => {
                 hide-details="auto"
                 density="comfortable"
                 prepend-icon=""
+                accept="image/png,image/jpeg,image/png"
                 v-model="form_request.file"
               ></v-file-input>
             </v-col>
@@ -75,7 +75,7 @@ const submitForm = async () => {
           <v-btn
             color="grey"
             class="font-weight-black"
-            @click="form_request.dialog = false"
+            @click="agencyStore.onCloseDialogIdentities"
             >ຍົກເລີກ</v-btn
           >
         </v-card-actions>

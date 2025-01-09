@@ -21,7 +21,8 @@ export const UseAgencyStore = defineStore("agency", {
       },
 
       identity_request: {
-        type: null as string | null,
+        id: null as string | null,
+        type: null as number | null,
         dialog: false,
         identity_no: null as string | null,
         file: null as File | null,
@@ -77,6 +78,51 @@ export const UseAgencyStore = defineStore("agency", {
       } catch (error) {
         console.error(error);
       }
+    },
+
+    async onGetAndEditAgency(id: string | null) {
+      const globalStore = UseGlobalStore();
+      try {
+        globalStore.loading_overlay = true;
+        await this.GetDetailAgencyData(id);
+
+        let item = this.response_detail_query_data;
+        if (item != null) {
+          const globalStore = UseGlobalStore();
+          const provinceID = item?.village?.district?.province_id ?? null;
+          const districtId = item?.village?.district_id ?? null;
+          await globalStore.GetVillagesData(
+            districtId?.toString() ?? null,
+            null
+          );
+          await globalStore?.GetDistrictData(provinceID, null);
+          if (
+            item.image_profile !== null &&
+            item.image_profile != "" &&
+            item.image_profile != "N/A"
+          ) {
+            item.image_profile = await globalStore.GetFileData(
+              item.image_profile
+            );
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        globalStore.loading_overlay = false;
+      }
+    },
+
+    onCloseDialogIdentities() {
+      let obj = {
+        id: null,
+        type: null,
+        dialog: false,
+        identity_no: null,
+        file: null,
+      };
+
+      Object.assign(this.identity_request, obj);
     },
   },
 });

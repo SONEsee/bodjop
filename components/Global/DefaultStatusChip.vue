@@ -18,7 +18,7 @@ const statusColor = ref({
 } as { [key: number]: string });
 </script>
 <template>
-  <div v-if="props.status && props.status !== 2">
+  <div v-if="props.status !== null">
     <v-chip :color="statusColor[props.status]">{{
       list_status[props.status]
     }}</v-chip>

@@ -8,6 +8,7 @@ export const UseGlobalStore = defineStore("global", {
       provinces: [] as ProvinceModel.GetProvinceResponseItem[],
       districts: [] as DistrictModel.GetDistrictResponseItem[],
       villages: [] as VillageModel.GetVillageResponseItem[],
+      loading_overlay: false,
     };
   },
   actions: {
@@ -89,8 +90,16 @@ export const UseGlobalStore = defineStore("global", {
       await this.GetVillagesData(district_id, query);
     }),
 
-    async GetFileData(fileLink: string) {
+    async GetFileData(fileLink: string | File) {
       try {
+        if (!fileLink) {
+          return "";
+        }
+
+        if (typeof fileLink === "object") {
+          return URL.createObjectURL(fileLink) ?? "";
+        }
+
         const res = await axios.get("/api/v1/files/get-file", {
           params: {
             q: fileLink,

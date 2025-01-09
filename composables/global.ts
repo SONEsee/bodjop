@@ -97,12 +97,16 @@ export const CallSwal = (options: SweetAlertOptions) => {
   });
 };
 
-export const GetImageUrl = (file: File) => {
+export const GetImageUrl = (file: File | string | null) => {
   if (file) {
-    return URL.createObjectURL(file);
+    if (typeof file === "object") {
+      return URL.createObjectURL(file);
+    } else {
+      return file;
+    }
   }
 
-  return file;
+  return "";
 };
 
 export const GetIdentitiesList = () => {
