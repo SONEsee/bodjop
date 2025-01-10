@@ -2,14 +2,28 @@
   <section>
     <v-row>
       <v-col cols="12">
-        <GlobalTextTitleLine :title="title" />
+        <GlobalTextTitleLine
+          :title="`${title} (${formatnumber(
+            dataget?.items?.pagination?.total_count ?? 0
+          )})`"
+        />
+      </v-col>
+
+      <v-col cols="12" class="d-flex flex-wrap justify-end">
+        <v-btn
+          color="primary"
+          flat
+          width="180px"
+          @click="goPath('/devices/new')"
+        >
+          + ເພີ່ມອຸປະກອນ</v-btn
+        >
       </v-col>
 
       <v-col cols="12">
         <v-data-table
           :headers="headers"
           :items="dataget?.items.list_data ?? []"
-          density="comfortable"
           :loading="loading"
         >
           <template v-slot:body="{ items }">
@@ -50,6 +64,16 @@
               </td>
             </tr>
           </template>
+
+          <template v-slot:bottom>
+            <GlobalTablePaginations
+              :page="request.page"
+              :limit="request.limit"
+              :totalpage="dataget?.items?.pagination?.total_page ?? 1"
+              @onSelectionChange="onSelectChange"
+              @onPagechange="onPageChange"
+            />
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -72,10 +96,22 @@ const headers = [
   { title: "ສະຖານະ", Value: "status" },
   { title: "ການຈັດການ", Value: "actions" },
 ];
+
 const request = ref({
   limit: 20,
   page: 1,
+  q: null as string | null,
 });
+
+const onSelectChange = async (value: number) => {
+  request.value.limit = value;
+  await getdata();
+};
+
+const onPageChange = async (value: number) => {
+  request.value.page = value;
+  await getdata();
+};
 
 const getdata = async () => {
   try {

@@ -46,25 +46,60 @@ const onDeleteUser = async (id: string) => {
     await agencyStore.GetListData();
   }
 };
+
+const onsetinput = async (input: string | null) => {
+  if (request !== null) {
+    request.q = input ?? null;
+    await agencyStore.GetListData();
+  }
+};
 </script>
 <template>
   <div class="pa-6">
     <v-card elevation="0" tile width="100%" min-height="95vh" class="pa-6">
       <v-row>
-        <v-col cols="12" class="d-flex flex-wrap justify-space-between">
-          <h3>
-            ໜ້າຈັດການຂອງຕົວແທນ / Agency's homepage ({{
-              formatnumber(response_data?.pagination?.total_count ?? 0)
-            }})
-          </h3>
-          <v-btn
-            color="primary"
-            elevation="0"
-            @click="goPath('/agency/create')"
-          >
-            <v-icon class="mr-2"> mdi-plus</v-icon>
-            ເພີ່ມຂໍ້ມູນຂອງຕົວແທນ
-          </v-btn>
+        <v-col cols="12">
+          <GlobalTextTitleLine
+            :title="`ໜ້າຈັດການຂອງຕົວແທນ / Agency's homepage (${formatnumber(
+              response_data?.pagination?.total_count ?? 0
+            )})`"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          class="d-flex flex-wrap justify-space-between align-center"
+        >
+          <div class="d-flex flex-wrap">
+            <div style="width: 280px">
+              <GlobalDebounceEventTextField
+                :input="request.q"
+                :label="'ຄົ້ນຫາ'"
+                @setinput="onsetinput"
+              />
+            </div>
+
+            <div class="ml-4 pt-6">
+              <v-btn
+                color="primary"
+                flat
+                :loading="request.loading"
+                @click="agencyStore.GetListData()"
+                >ຄົ້ນຫາ</v-btn
+              >
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap align-center">
+            <v-btn
+              color="primary"
+              elevation="0"
+              @click="goPath('/agency/create')"
+            >
+              <v-icon class="mr-2"> mdi-plus</v-icon>
+              ເພີ່ມຂໍ້ມູນຂອງຕົວແທນ
+            </v-btn>
+          </div>
         </v-col>
 
         <v-col cols="12">

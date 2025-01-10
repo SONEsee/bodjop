@@ -2,14 +2,28 @@
   <section class="pa-6">
     <v-row>
       <v-col cols="12">
-        <GlobalTextTitleLine :title="title" />
+        <GlobalTextTitleLine
+          :title="`${title} (${formatnumber(
+            datarespons?.items?.pagination?.total_count ?? 0
+          )})`"
+        />
+      </v-col>
+
+      <v-col cols="12" class="d-flex flex-wrap justify-end">
+        <v-btn
+          color="primary"
+          flat
+          width="180px"
+          @click="goPath('/expense_type_managements/create')"
+          >+ ເພີ່ມຂໍ້ມູນ</v-btn
+        >
       </v-col>
 
       <v-col cols="12">
         <v-data-table
           :headers="headers"
-          :items="datarespons?.items.list_data"
-          density="comfortable"
+          :items="datarespons?.items.list_data ?? []"
+          :loading="loading"
         >
           <template v-slot:body="{ items }">
             <tr v-for="(item, index) in items" :key="item.id">
@@ -17,6 +31,7 @@
               <td>{{ item.name }}</td>
 
               <td>{{ item.name_en }}</td>
+              <td>{{ item.user?.fullname }}</td>
               <td>{{ FormatDatetime(item.created_at) }}</td>
               <td>
                 <GlobalDefaultStatusChip :status="item.status" />
@@ -51,6 +66,16 @@
               </td>
             </tr>
           </template>
+
+          <template v-slot:bottom>
+            <GlobalTablePaginations
+              :page="request.page"
+              :limit="request.limit"
+              :totalpage="datarespons?.items?.pagination?.total_page ?? 1"
+              @onPagechange="onPageChange"
+              @onSelectionChange="onSelectionChange"
+            />
+          </template>
         </v-data-table>
       </v-col>
     </v-row>
@@ -64,21 +89,35 @@ import { ExpenseCreateModel } from "@/models/";
 import Swal from "sweetalert2";
 const datarespons = ref<ExpenseCreateModel.ExpenseCreateResponse | null>(null);
 const title = ref("ໜ້າສະແດງຂໍ້ມູນປະເພດລາຍຈ່າຍ / Detail Expense type");
+const loading = ref(false);
 
 const request = ref({
   limit: 20,
   page: 1,
 });
 const headers = [
+  { title: "ລຳດັບ", Value: "no" },
   { title: "ຊື່ພາສາລາວ", Value: "name" },
   { title: "ຊື່ພາສາອັງກິດ", Value: "name_en" },
   { title: "ຄົນສ້າງ", Value: "created_by" },
   { title: "ວັນທີສ້າງ", Value: "created_at" },
   { title: "ສະຖານະ", Value: "status" },
-  { title: "ການຈັດການ", Value: "actions" },
+  { title: "actions", Value: "actions" },
 ];
+
+const onPageChange = async (page: number) => {
+  request.value.page = page;
+  await getdata();
+};
+
+const onSelectionChange = async (selection: number) => {
+  request.value.limit = selection;
+  await getdata();
+};
+
 const getdata = async () => {
   try {
+    loading.value = true;
     const res = await axios.get<ExpenseCreateModel.ExpenseCreateResponse>(
       "/api/v1/expense-types/get-data",
       {
@@ -89,13 +128,14 @@ const getdata = async () => {
     );
     if (res.status === 200) {
       datarespons.value = res.data;
-
-      console.log("test", res.data);
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    loading.value = false;
   }
 };
+
 const deleteData = async (id: string) => {
   try {
     const confirmed = await Swal.fire({
