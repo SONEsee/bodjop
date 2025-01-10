@@ -1,110 +1,103 @@
 <template>
-  <v-container>
-    <h3>ເພີ່ມຂໍ້ມູນປະເພດລາຍຈ່າຍ / Create new expense type</h3>
-    <v-divider></v-divider>
-    <v-form ref="form" @submit.prevent="Create">
+  <section>
+    <v-row>
       <v-col cols="12">
-        <v-row>
-          <v-col cols="6"  class="mt-4">
-            <v-row>
-              <v-col cols="6" >
-                <label for="id"><p class="ml-2">ຊື່ພາສາລາວ / Name</p></label>
-                <v-text-field
-                  v-model="name"
-                  @click:append-inner="CheckForm"
-                  :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາລາວ']"
-                  id="id"
-                  density="compact"
-                  class="pa-2"
-                  color="primary"
-                  variant="outlined"
-                  label="ກະລຸນາປ້ອນຊື່ພາສາລາວ / Name"
-                  outlined
-                  dense
-                ></v-text-field
-              ></v-col>
-              <v-col cols="6" >
-                <label for="code"
-                  ><p class="ml-2">ຊື່ພາສາອັງກິດ / Name English</p></label
-                >
-                <v-text-field
-                  v-model="name_en"
-                  :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ']"
-                  id="code"
-                  density="compact"
-                  class="pa-2"
-                  color="primary"
-                  label="ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ / Name English"
-                  variant="outlined"
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
+        <GlobalTextTitleLine
+          :title="'ເພີ່ມຂໍ້ມູນປະເພດລາຍຈ່າຍ / Create new expense type'"
+        />
       </v-col>
-      <div class="d-flex justify-center">
-        <v-btn
-          color="primary"
-          class="rounded-lg"
-          style="width: 10%"
-          type="submit"
-        >
-          
-          ບັນທຶກ</v-btn
-        >
-        <v-btn color="#90A4AE" class="rounded-lg ml-6" style="width: 10%"
-          >ຍົກເລິກ</v-btn
-        >
-      </div></v-form
-    >
-  </v-container>
+
+      <v-col cols="12">
+        <v-form ref="form" @submit.prevent="Create">
+          <v-row>
+            <v-col cols="3">
+              <label>ຊື່ພາສາລາວ / Name</label>
+              <v-text-field
+                v-model="name"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາລາວ']"
+                density="compact"
+                variant="outlined"
+                dense
+              ></v-text-field
+            ></v-col>
+
+            <v-col cols="3">
+              <label>ຊື່ພາສາອັງກິດ / Name English</label>
+              <v-text-field
+                v-model="name_en"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຊື່ພາສາອັງກິດ']"
+                density="compact"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="12" class="d-flex flex-wrap justify-center">
+              <div class="mr-3">
+                <v-btn
+                  color="primary"
+                  flat
+                  width="180px"
+                  type="submit"
+                  :loading="loading"
+                  >ບັນທຶກ</v-btn
+                >
+              </div>
+
+              <div>
+                <v-btn
+                  color="grey"
+                  flat
+                  width="180px"
+                  @click="goPath('/expense_type_managements')"
+                >
+                  ຍົກເລີກ</v-btn
+                >
+              </div>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-col>
+    </v-row>
+  </section>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
 import axios from "@/helpers/axios";
-import type { ExpenseCreateModel } from "~/models";
-import Swal from "sweetalert2";
 
 const name = ref("");
 const name_en = ref("");
 const form = ref();
-const validate = ref(false);
+const loading = ref(false);
 
-const CheckForm = () => {
-  validate.value = !validate.value;
-};
 const Create = async () => {
   try {
-    const valid = await form.value.validate();
+    const { valid } = await form.value.validate();
     if (valid) {
-      console.log('')
-      const respons = await axios.post<ExpenseCreateModel.ExpenseCreateResponse>(
-        "/api/v1/expense-types/new",
-        {
-          name: name.value,
-          name_en: name_en.value,
-        }
+      loading.value = true;
+      const response = await axios.post("/api/v1/expense-types/new", {
+        name: name.value,
+        name_en: name_en.value,
+      });
 
-      );
-      console.log(respons);
-      if (respons.status === 200) {
-        console.log("success sone seedavanh");
-        Swal.fire({
+      if (response.status === 200) {
+        const notification = await CallSwal({
           icon: "success",
           title: "ສຳເລັດ",
           text: "ການເພີ່ມຂໍ້ມູນສຳເລັດ",
         });
-      }else{
-        Swal.fire({
-          icon: "error",
-          title: "ຜິດພາດ",
-          text: "ການເພີ່ມຂໍ້ມູນຜິດພາດ",
-        });
+
+        if (notification.isConfirmed) {
+          delayGoPath("/expense_type_managements");
+        } else {
+          delayGoPath("/expense_type_managements");
+        }
       }
     }
   } catch (e) {
     console.log(e);
+    DefaultSwalError(e);
+  } finally {
+    loading.value = false;
   }
 };
 </script>
