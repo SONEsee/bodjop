@@ -3,6 +3,7 @@ import swal from "sweetalert2";
 import { AxiosError } from "axios";
 import type { SweetAlertOptions } from "sweetalert2";
 import { DefaultResponseModel } from "@/models/";
+import { COMMISSIONS } from "@/enum/commissions";
 
 export const UseGetFormatDatePicker = (date: any) => {
   if (date) {
@@ -25,14 +26,21 @@ export const goPath = (path: string | null) => {
 };
 
 export const DefaultSwalError = (err: any) => {
-  const errors = err as AxiosError;
-  const response_data = errors?.response
-    ?.data as DefaultResponseModel.DefaultErrorResponse;
-  return swal.fire({
-    icon: "error",
-    title: "ຜິດພາດ",
-    text: response_data?.error ?? "",
-  });
+  if (err instanceof AxiosError) {
+    const response_data = err?.response
+      ?.data as DefaultResponseModel.DefaultErrorResponse;
+    return swal.fire({
+      icon: "error",
+      title: "ຜິດພາດ",
+      text: response_data?.error ?? "",
+    });
+  } else {
+    return swal.fire({
+      icon: "error",
+      title: "ຜິດພາດ",
+      text: err?.message ?? "",
+    });
+  }
 };
 
 export const FormatDatetime = (date: any) => {
@@ -125,6 +133,28 @@ export const GetIdentitiesList = () => {
     },
   ];
 };
+
+export const GetCommissionList = () => {
+  return [
+    {
+      title: "ເປີເຊັນພຶ້ນຖານ",
+      value: COMMISSIONS.STANDARD_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນຖອກຕົງ",
+      value: COMMISSIONS.STRAIGHT_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+      value: COMMISSIONS.GOAL_AVERAGE_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+      value: COMMISSIONS.GOAL_DEVICE_COMMISSION,
+    },
+  ];
+};
+
 export const GetIdentitiesLabel = (type: number): string => {
   const list_indetities_label = {
     1: "ບັດປະຈຳຕົວ",
@@ -132,6 +162,16 @@ export const GetIdentitiesLabel = (type: number): string => {
     3: "ສຳມະໂນຄົວ",
   } as { [key: number]: string };
   return list_indetities_label?.[type] ?? "N/A";
+};
+
+export const GetCommissionLabel = (type: string): string => {
+  const list_commission_label = {
+    STANDARD: "ເປີເຊັນພຶ້ນຖານ",
+    STRAIGHT: "ເປີເຊັນຖອກຕົງ",
+    GOAL_AVERAGE: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+    GOAL_DEVICE: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+  } as { [key: string]: string };
+  return list_commission_label?.[type] ?? "N/A";
 };
 
 export const formatnumber = (value: number | string) => {

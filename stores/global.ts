@@ -94,7 +94,7 @@ export const UseGlobalStore = defineStore("global", {
     async GetFileData(fileLink: string | File) {
       try {
         if (!fileLink) {
-          return "";
+          return notfoundImage;
         }
 
         if (typeof fileLink === "object") {

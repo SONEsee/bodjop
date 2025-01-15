@@ -322,7 +322,35 @@ const submitForm = async () => {
 
         <v-col cols="12">
           <v-row>
-            <v-col cols="6"></v-col>
+            <v-col cols="6">
+              <v-row>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap justify-space-between">
+                    <div class="d-flex flex-wrap align-center">
+                      <h4>ການໃຫ້ສ່ວນແບ່ງ / Commissions</h4>
+                    </div>
+
+                    <div>
+                      <v-btn
+                        variant="text"
+                        icon="mdi-ticket-percent"
+                        size="medium"
+                        @click="agencyStore.commission_request.dialog = true"
+                      ></v-btn>
+                    </div>
+                  </div>
+
+                  <v-col cols="12" class="pa-0 ma-0">
+                    <v-divider color="black" :thickness="2"></v-divider>
+                  </v-col>
+                </v-col>
+
+                <v-col cols="12">
+                  <AgencyEditComponentTableCommissions />
+                </v-col>
+              </v-row>
+            </v-col>
+
             <v-col cols="6">
               <v-row>
                 <v-col cols="12">

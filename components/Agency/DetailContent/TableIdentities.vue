@@ -12,7 +12,7 @@ const headers = ref([
 ]);
 </script>
 <template>
-  <section>
+  <section class="pt-4">
     <v-data-table
       :headers="headers"
       :items="response_data?.user_identities ?? []"
