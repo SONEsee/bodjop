@@ -27,8 +27,12 @@ const response_data = computed(() => {
 
           <v-col md="4" class="d-flex align-center justify-center">
             <div>
+               <!-- :image_url="response_data?.image_profile ?? 'N/A'" -->
               <GlobalAvatarProfileImage
-                :image_url="response_data?.image_profile ?? 'N/A'"
+
+              :image_url="typeof response_data?.image_profile === 'string' 
+      ? response_data.image_profile 
+      : 'N/A'"
               />
             </div>
           </v-col>

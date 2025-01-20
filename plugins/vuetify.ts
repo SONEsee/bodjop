@@ -4,8 +4,10 @@ import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 //@ts-ignore
 import colors from "vuetify/lib/util/colors";
+import { VFileUpload } from 'vuetify/labs/VFileUpload'
 
 export default defineNuxtPlugin((app) => {
+  
   const vuetify = createVuetify({
     icons: {
       defaultSet: "mdi",
