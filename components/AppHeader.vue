@@ -75,6 +75,7 @@
 </template>
 
 <script lang="ts" setup>
+
 const user = ref({
   fullName: "bih",
   initials: "n",
@@ -99,6 +100,11 @@ const items = ref([
         text: "ຈັດການຂໍ້ມູນອຸປະກອນ",
         icon: "mdi-devices",
         to: "/devices",
+      },
+      {
+        text: "ຈັດການຜູ້ໃຊ້ງານ",
+        icon: "mdi-account-cog",
+        to: "/user",
       },
     ],
   },

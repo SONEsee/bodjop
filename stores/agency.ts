@@ -81,6 +81,7 @@ export const UseAgencyStore = defineStore("agency", {
 
         const res = await axios.get<AgencyModel.GetAgencyDetailResponse>(
           `/api/v1/agency/get-detail/${id}`
+
         );
         if (res.status === 200) {
           this.response_detail_query_data = res.data.items;
