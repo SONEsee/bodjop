@@ -10,7 +10,8 @@ import * as VillageModel from "./villages";
 import * as AgencyModel from "./agency";
 import * as IdentitiesModel from "./identities";
 import * as DeviceDetailModels from "./devicedetail";
-
+import * as UserCommissionModels from "./user_commissions";
+import * as SaleModels from "./sales";
 export {
   UserModel,
   UsermeModel,
@@ -24,4 +25,6 @@ export {
   IdentitiesModel,
   DeviceDetailModel,
   DeviceDetailModels,
+  UserCommissionModels,
+  SaleModels,
 };

@@ -18,6 +18,7 @@ export const UseAgencyStore = defineStore("agency", {
         status: null,
         profile_image: null as File | null,
         identities: [] as AgencyModel.IdentitiesAgency[],
+        commissions: [] as AgencyModel.CommissionAgency[],
       },
 
       identity_request: {
@@ -26,6 +27,15 @@ export const UseAgencyStore = defineStore("agency", {
         dialog: false,
         identity_no: null as string | null,
         file: null as File | null,
+      },
+
+      commission_request: {
+        id: null as string | null,
+        percentage: 0,
+        active_percentage: 0,
+        type: "",
+        dialog: false,
+        special_commissions: [] as AgencyModel.CommissionSpecialAgency[],
       },
 
       request_query_data: {
@@ -71,6 +81,7 @@ export const UseAgencyStore = defineStore("agency", {
 
         const res = await axios.get<AgencyModel.GetAgencyDetailResponse>(
           `/api/v1/agency/get-detail/${id}`
+
         );
         if (res.status === 200) {
           this.response_detail_query_data = res.data.items;
@@ -123,6 +134,31 @@ export const UseAgencyStore = defineStore("agency", {
       };
 
       Object.assign(this.identity_request, obj);
+    },
+
+    onCloseDialogCommission() {
+      let obj = {
+        percentage: 0,
+        active_percentage: 0,
+        type: "",
+        dialog: false,
+        special_commissions: [],
+      };
+
+      Object.assign(this.commission_request, obj);
+    },
+
+    onAddSpecialCommissions() {
+      this.commission_request.special_commissions.push({
+        percentage: 0,
+        minimum_amount: 0,
+        maximum_amount: 0,
+        id: null,
+      });
+    },
+
+    onDeleteSpecialCommissions(index: number) {
+      this.commission_request.special_commissions.splice(index, 1);
     },
 
     async OndeleteAgency(id: string): Promise<string | Error> {

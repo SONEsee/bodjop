@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import notfoundImage from "@/assets/img/404.png";
+const notfoundRef = ref(notfoundImage);
 const menu = ref(false);
 const globalStore = UseGlobalStore();
 const image_url = ref("" as string | "");

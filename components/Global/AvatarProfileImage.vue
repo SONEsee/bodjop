@@ -5,8 +5,7 @@ const image_url = ref(null as string | null);
 const globalStore = UseGlobalStore();
 const props = defineProps({
   image_url: {
-    type: String,
-    required: false,
+    // required: false,
     default: "N/A",
   },
 });
