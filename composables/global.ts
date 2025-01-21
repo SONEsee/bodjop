@@ -52,6 +52,14 @@ export const FormatDatetime = (date: any) => {
   return date;
 };
 
+export const FormatDate = (date: any) => {
+  const dayjs = useDayjs();
+  if (date) {
+    return dayjs(new Date(date)).format("DD-MM-YYYY");
+  }
+  return date;
+};
+
 export const onLogout = () => {
   localStorage.clear();
   setTimeout(() => {
@@ -178,7 +186,7 @@ export const formatnumber = (value: number | string) => {
   if (value) {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
-    return 0;
+    return "0";
   }
 };
 
@@ -216,6 +224,18 @@ export const GetItemPerPageOptions = () => {
       title: "200",
       value: 200,
     },
+    {
+      title: "300",
+      value: 300,
+    },
+    {
+      title: "500",
+      value: 500,
+    },
+    {
+      title: "1000",
+      value: 1000,
+    },
   ];
 };
 
@@ -227,4 +247,32 @@ export const delayGoPath = (path: string) => {
   return setTimeout(() => {
     window.location.href = path;
   }, 1200);
+};
+
+export const ReturnDate = function (date: number | Date) {
+  if (typeof date === "number") {
+    var utc_days = Math.floor(date - 25569);
+    var utc_value = utc_days * 86400;
+    var date_info = new Date(utc_value * 1000);
+    var fractional_day = date - Math.floor(date) + 0.0000001;
+    var total_seconds = Math.floor(86400 * fractional_day);
+    var seconds = total_seconds % 60;
+    total_seconds -= seconds;
+    var hours = Math.floor(total_seconds / (60 * 60));
+    var minutes = Math.floor(total_seconds / 60) % 60;
+
+    return new Date(
+      date_info.getFullYear(),
+      date_info.getMonth(),
+      date_info.getDate(),
+      hours,
+      minutes,
+      seconds
+    );
+  } else if (typeof date === "string") {
+    const dayjs = useDayjs();
+    return dayjs(date, "DD-MM-YYYY HH:mm:ss").toDate();
+  } else {
+    return new Date(date);
+  }
 };
