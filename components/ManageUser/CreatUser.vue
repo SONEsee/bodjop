@@ -98,7 +98,7 @@ const onFileChange = (event: Event) => {
 </script>
 
 <template>
-  <v-card class="pa-4" elevation="1"  border flat >
+  <v-card class="pa-4" min-height="95vh"   flat >
     <v-col cols="12">
       <GlobalTextTitleLine :title="title" />
     </v-col>
