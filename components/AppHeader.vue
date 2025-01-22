@@ -106,6 +106,11 @@ const items = ref([
         icon: "mdi-account-cog",
         to: "/user",
       },
+      {
+        text: "ສະແກນ Qr Code",
+        icon: "mdi-qrcode",
+        to: "/qr",
+      },
     ],
   },
 ]);
