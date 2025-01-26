@@ -1,4 +1,4 @@
-import { AgencyModel } from "@/models";
+import { AgencyModel, UserModel } from "@/models";
 import axios from "@/helpers/axios";
 export const UseAgencyStore = defineStore("agency", {
   state() {
@@ -48,6 +48,7 @@ export const UseAgencyStore = defineStore("agency", {
       response_query_data: null as AgencyModel.GetAgencyResponseItems | null,
       response_detail_query_data:
         null as AgencyModel.GetDetailAgencyResponse | null,
+      agency_selections: [] as UserModel.User[],
     };
   },
 
@@ -81,7 +82,6 @@ export const UseAgencyStore = defineStore("agency", {
 
         const res = await axios.get<AgencyModel.GetAgencyDetailResponse>(
           `/api/v1/agency/get-detail/${id}`
-
         );
         if (res.status === 200) {
           this.response_detail_query_data = res.data.items;
@@ -184,6 +184,19 @@ export const UseAgencyStore = defineStore("agency", {
       } catch (error) {
         console.error(error);
         throw error;
+      }
+    },
+
+    async GetAgencySelections() {
+      try {
+        const res = await axios.get<AgencyModel.GetAgencySelectionResponse>(
+          "/api/v1/agency/get-selection-data"
+        );
+        if (res.status === 200) {
+          this.agency_selections = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
   },

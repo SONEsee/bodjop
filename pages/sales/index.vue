@@ -101,7 +101,7 @@ onMounted(() => {
                 <div>
                   <v-btn
                     color="error"
-                    icon="mdi-delete"
+                    icon="mdi-cancel"
                     variant="text"
                     size="small"
                     @click="saleStore.OnCancelSale(item.id)"

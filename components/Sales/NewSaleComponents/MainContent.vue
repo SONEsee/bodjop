@@ -36,7 +36,7 @@ async function onFileUpload(event: Event) {
       const reader = new FileReader();
       reader.onload = async (e) => {
         const data = e.target?.result as ArrayBuffer;
-        const result = await onSaleUploadFile(data);
+        const result = await onSaleUploadFile(data, request.sale_date);
         if (result instanceof Error) {
           return DefaultSwalError(result);
         }
@@ -158,7 +158,7 @@ async function onCreateSale() {
         />
       </v-col>
 
-      <v-col cols="12">
+      <v-col cols="12" v-show="saleStore.sale_request_create.items.length > 0">
         <v-data-table
           :headers="headers"
           :items="saleStore.sale_request_create.items ?? []"
@@ -169,15 +169,27 @@ async function onCreateSale() {
             {{ index + 1 }}
           </template>
 
-          <template v-slot:item.actions="{ index }">
-            <div>
-              <v-btn
-                color="error"
-                icon="mdi-delete"
-                variant="text"
-                size="small"
-                @click="saleStore.sale_request_create.items.splice(index, 1)"
-              ></v-btn>
+          <template v-slot:item.actions="{ item, index }">
+            <div class="d-flex flex-wrap">
+              <div class="mr-1">
+                <v-btn
+                  color="primary"
+                  icon="mdi-eye"
+                  variant="text"
+                  size="small"
+                  :disabled="item.winner_sales.length === 0"
+                ></v-btn>
+              </div>
+
+              <div>
+                <v-btn
+                  color="error"
+                  icon="mdi-delete"
+                  variant="text"
+                  size="small"
+                  @click="saleStore.sale_request_create.items.splice(index, 1)"
+                ></v-btn>
+              </div>
             </div>
           </template>
 
