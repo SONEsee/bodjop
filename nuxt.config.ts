@@ -46,6 +46,11 @@ export default defineNuxtConfig({
       pathPrefix: true,
       prefix: "Sales",
     },
+    {
+      path: "@/components/Prints/",
+      pathPrefix: true,
+      prefix: "Prints",
+    },
   ],
 
   css: ["~/assets/css/style.scss", "~/assets/css/global.css"],
