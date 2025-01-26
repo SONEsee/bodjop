@@ -1,21 +1,10 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-
-export default defineComponent({
-  setup() {
-    definePageMeta({
-      layout: "login",
-    });
-  }
-});
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <section
     style="min-height: 100vh"
-    class="d-flex flex-wrap align-center justify-center"
+    class="d-flex flex-wrap justify-center align-center"
   >
-    <Login />
+    <div class="font-weight-black">ກຳລັງພັດທະນາ / Under construction</div>
   </section>
 </template>

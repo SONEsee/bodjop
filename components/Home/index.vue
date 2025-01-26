@@ -1,4 +1,0 @@
-<template>
-  hi
-  <Equipment />
-</template>

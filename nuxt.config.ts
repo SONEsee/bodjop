@@ -17,13 +17,38 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: "@/components/Global/",
+      pathPrefix: true,
+      prefix: "Global",
+    },
+    {
+      path: "@/components/Login/",
+      pathPrefix: true,
+      prefix: "Login",
+    },
+    {
       path: "@/components/Agency",
       pathPrefix: true,
       prefix: "Agency",
     },
+    {
+      path: "@/components/ExpenseTypeManagements/",
+      pathPrefix: true,
+      prefix: "ExpenTypeManagements",
+    },
+    {
+      path: "@/components/DeviceManagement/",
+      pathPrefix: true,
+      prefix: "Devices",
+    },
+    {
+      path: "@/components/Sales/",
+      pathPrefix: true,
+      prefix: "Sales",
+    },
   ],
 
-  css: ["~/assets/css/style.scss"],
+  css: ["~/assets/css/style.scss", "~/assets/css/global.css"],
 
   build: {
     transpile: ["vuetify"],
