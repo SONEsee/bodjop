@@ -12,6 +12,7 @@ import * as IdentitiesModel from "./identities";
 import * as DeviceDetailModels from "./devicedetail";
 import * as UserCommissionModels from "./user_commissions";
 import * as SaleModels from "./sales";
+import * as ExpenseTypeModels from "./expense_types";
 export {
   UserModel,
   UsermeModel,
@@ -27,4 +28,5 @@ export {
   DeviceDetailModels,
   UserCommissionModels,
   SaleModels,
+  ExpenseTypeModels,
 };
