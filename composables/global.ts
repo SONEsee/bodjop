@@ -61,7 +61,9 @@ export const FormatDate = (date: any) => {
 };
 
 export const onLogout = () => {
-  localStorage.clear();
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+
   setTimeout(() => {
     goPath("/login");
   }, 1200);

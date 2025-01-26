@@ -1,4 +1,5 @@
 import type { GetIdentitiesResponse } from "./identities";
+import type { User } from "./users";
 import type { UserCommission } from "./user_commissions";
 
 export interface IdentitiesAgency {
@@ -110,4 +111,11 @@ export interface Province {
   id: number;
   pr_name: string;
   pr_name_en: string;
+}
+
+export interface GetAgencySelectionResponse {
+  error: null;
+  items: User[];
+  status: number;
+  timestamp: string;
 }

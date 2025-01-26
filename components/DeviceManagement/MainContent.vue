@@ -25,6 +25,7 @@
           :headers="headers"
           :items="dataget?.items.list_data ?? []"
           :loading="loading"
+          :itemsPerPage="request.limit"
         >
           <template v-slot:body="{ items }">
             <tr v-for="(item, index) in items" :key="item.id">

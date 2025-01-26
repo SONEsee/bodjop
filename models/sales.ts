@@ -13,6 +13,34 @@ export interface OnSaleCreateModel {
   unit: string;
 }
 
+export interface WinnerSaleCreateModel {
+  pos_code: string;
+  sale_amount: number;
+  sale_date: any;
+  one_digits: number;
+  two_digits: number;
+  three_digits: number;
+  four_digits: number;
+  five_digits: number;
+  six_digits: number;
+  province_name: string;
+  unit: string;
+}
+
+export interface OnSaleCreateModelAndWinnerSale {
+  pos_code: string;
+  sale_amount: number;
+  one_digits: number;
+  two_digits: number;
+  three_digits: number;
+  four_digits: number;
+  five_digits: number;
+  six_digits: number;
+  province_name: string;
+  unit: string;
+  winner_sales: WinnerSaleCreateModel[];
+}
+
 export interface GetSaleListDataResponse {
   error: null;
   items: GetSaleListDataResponseItems;
@@ -91,4 +119,16 @@ export interface User {
   agent_code: string;
   fullname: string;
   nick_name: string;
+}
+
+export interface GetSalePeriodResponse {
+  error: null;
+  items: GetSalePeriodResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetSalePeriodResponseItem {
+  sale_date: Date;
+  id: string;
 }

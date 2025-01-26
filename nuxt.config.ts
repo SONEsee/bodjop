@@ -1,5 +1,4 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import { resolve } from "path";
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: false,
@@ -45,6 +44,11 @@ export default defineNuxtConfig({
       path: "@/components/Sales/",
       pathPrefix: true,
       prefix: "Sales",
+    },
+    {
+      path: "@/components/Invoices/",
+      pathPrefix: true,
+      prefix: "Invoices",
     },
   ],
 

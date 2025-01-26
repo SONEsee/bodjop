@@ -6,8 +6,9 @@ export const UseSaleStore = defineStore("sales", {
     return {
       sale_request_create: {
         sale_date: new Date(),
-        items: [] as SaleModels.OnSaleCreateModel[],
+        items: [] as SaleModels.OnSaleCreateModelAndWinnerSale[],
       },
+      sale_periods: [] as SaleModels.GetSalePeriodResponseItem[],
       request_sale_get_data: {
         page: 1,
         limit: 20,
@@ -99,6 +100,19 @@ export const UseSaleStore = defineStore("sales", {
         DefaultSwalError(error);
       } finally {
         globalStore.loading_overlay = false;
+      }
+    },
+
+    async GetSalePeriodListData() {
+      try {
+        const res = await axios.get<SaleModels.GetSalePeriodResponse>(
+          "/api/v1/sales/get-period-data"
+        );
+        if (res.status === 200) {
+          this.sale_periods = res.data?.items ?? [];
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
   },
