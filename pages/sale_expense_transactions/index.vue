@@ -41,6 +41,16 @@ onMounted(() => {
           <GlobalTextTitleLine :title="`ຈັດການຂໍ້ມູນການເພີ່ມລາຍຈ່າຍ`" />
         </v-col>
 
+        <v-col cols="12" class="d-flex flex-wrap justify-end">
+          <v-btn
+            color="primary"
+            width="165px"
+            flat
+            @click="goPath(`/sale_expense_transactions/new`)"
+            >+ ເພີ່ມຂໍ້ມູນ</v-btn
+          >
+        </v-col>
+
         <v-col cols="12">
           <v-data-table
             :headers="headers"
@@ -70,6 +80,9 @@ onMounted(() => {
                     variant="text"
                     icon="mdi-eye"
                     size="small"
+                    @click="
+                      goPath(`/sale_expense_transactions/detail?id=${item.id}`)
+                    "
                   ></v-btn>
                 </div>
               </div>

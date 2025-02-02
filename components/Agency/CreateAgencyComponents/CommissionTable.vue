@@ -17,6 +17,7 @@ function onSetCommissionForm(item: AgencyModel.CommissionAgency) {
     active_percentage: item.active_percentage,
     special_commissions: item.special_commissions,
     type: item.type,
+    id: null,
   });
 }
 </script>
@@ -36,7 +37,7 @@ function onSetCommissionForm(item: AgencyModel.CommissionAgency) {
       </template>
 
       <template v-slot:item.type="{ item }">
-        {{ GetCommissionLabel(item.type) }}
+        {{ GetCommissionOrExpenseTypeLabel(item.type) ?? "" }}
       </template>
 
       <template v-slot:item.actions="{ item, index }">

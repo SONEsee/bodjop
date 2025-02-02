@@ -2,7 +2,7 @@ import numeral from "numeral";
 import swal from "sweetalert2";
 import { AxiosError } from "axios";
 import type { SweetAlertOptions } from "sweetalert2";
-import { DefaultResponseModel } from "@/models/";
+import { DefaultResponseModel, InvoiceModels } from "@/models/";
 import { COMMISSIONS } from "@/enum/commissions";
 
 export const UseGetFormatDatePicker = (date: any) => {
@@ -162,6 +162,10 @@ export const GetCommissionList = () => {
       title: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
       value: COMMISSIONS.GOAL_DEVICE_COMMISSION,
     },
+    {
+      title: "ເປີເຊັນບິນລາງວັນ",
+      value: COMMISSIONS.WINNER_SALE_COMMISSION,
+    },
   ];
 };
 
@@ -186,7 +190,19 @@ export const GetCommissionLabel = (type: string): string => {
 
 export const formatnumber = (value: number | string) => {
   if (value) {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return "0";
+  }
+};
+
+export const formatnumberV2 = (value: number | string) => {
+  if (value) {
+    const [integerPart, decimalPart] = value.toString().split("."); // Split into integer and decimal parts
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+    return decimalPart
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
   } else {
     return "0";
   }
@@ -276,5 +292,50 @@ export const ReturnDate = function (date: number | Date) {
     return dayjs(date, "DD-MM-YYYY HH:mm:ss").toDate();
   } else {
     return new Date(date);
+  }
+};
+
+export const GetCommissionOrExpenseTypeLabel = (label: string) => {
+  let listOfLabel = {
+    STANDARD: "ເປີເຊັນພຶ້ນຖານ",
+    STRAIGHT: "ເປີເຊັນຖອກຕົງ",
+    GOAL_AVERAGE: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+    GOAL_DEVICE: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+    GOAL_COMMISSION: "ເປີເຊັນເປົ້າ",
+    WINNER_SALE_COMMISSION: "ເປີເຊັນບິນລາງວັນ",
+    WINNER_EXPENSE_SALE: "ບິນລາງວັນ",
+    BORROW_EXPENSE_SALE: "ຕົວແທນຢືມ",
+    COMMITTEE_EXPENSE_SALE: "ຄ່າກຳມະການ",
+    VAT_EXPENSE_SALE: "ອາກອນ",
+    OTHER_EXPENSE_SALE: "ອື່ນໆ",
+  } as { [key: string]: string };
+
+  return listOfLabel[label] ?? "N/A";
+};
+
+export const FilterAmountOfEachTypeInvoice = (
+  sales: InvoiceModels.Sale[],
+  label: string | null
+): string => {
+  try {
+    if (sales.length < 1) {
+      return "";
+    }
+
+    if (label == null) {
+      return "";
+    }
+
+    const filterSale = sales.filter(
+      (d: InvoiceModels.Sale) => d.type === label
+    );
+
+    if (filterSale.length < 1) {
+      return "";
+    }
+    return filterSale[0]["amount"]?.toString() ?? "-";
+  } catch (error) {
+    console.error(error);
+    return "-";
   }
 };

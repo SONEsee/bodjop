@@ -13,6 +13,7 @@ import * as DeviceDetailModels from "./devicedetail";
 import * as UserCommissionModels from "./user_commissions";
 import * as SaleModels from "./sales";
 import * as ExpenseTypeModels from "./expense_types";
+import * as InvoiceModels from "./invoices";
 export {
   UserModel,
   UsermeModel,
@@ -29,4 +30,5 @@ export {
   UserCommissionModels,
   SaleModels,
   ExpenseTypeModels,
+  InvoiceModels,
 };

@@ -67,3 +67,10 @@ export interface Pagination {
   total_count: number;
   total_page: number;
 }
+
+export interface GetSaleExpenseTransasctionDetailResponse {
+  error: null;
+  items: GetSaleExpenseTransasctionListDataResponseItemsListData;
+  status: number;
+  timestamp: string;
+}
