@@ -97,6 +97,11 @@ const items = ref([
         to: "/expense_type_managements",
       },
       {
+        text: "ເພີ່ມຂໍ້ມູນລາຍຈ່າຍ",
+        icon: "mdi-cash-sync",
+        to: "/sale_expense_transactions",
+      },
+      {
         text: "ຈັດການຂໍ້ມູນອຸປະກອນ",
         icon: "mdi-devices",
         to: "/devices",

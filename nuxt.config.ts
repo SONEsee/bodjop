@@ -46,9 +46,19 @@ export default defineNuxtConfig({
       prefix: "Sales",
     },
     {
+      path: "@/components/Prints/",
+      pathPrefix: true,
+      prefix: "Prints",
+    },
+    {
       path: "@/components/Invoices/",
       pathPrefix: true,
       prefix: "Invoices",
+    },
+    {
+      path: "@/components/DeviceMovements/",
+      pathPrefix: true,
+      prefix: "DeviceMovements",
     },
   ],
 

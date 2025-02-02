@@ -3,6 +3,7 @@ import { COMMISSIONS } from "@/enum/commissions";
 const percentageValidate: string[] = [
   COMMISSIONS.STANDARD_COMMISSION.toString() ?? "N/A",
   COMMISSIONS.STRAIGHT_COMMISSION.toString() ?? "N/A",
+  COMMISSIONS.WINNER_SALE_COMMISSION.toString() ?? "N/A",
 ];
 
 const nonpercentageValidate: string[] = [

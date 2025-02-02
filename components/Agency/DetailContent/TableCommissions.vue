@@ -29,7 +29,7 @@ const headers = ref([
       </template>
 
       <template v-slot:item.type="{ item }">
-        {{ GetCommissionLabel(item.type) }}
+        {{ GetCommissionOrExpenseTypeLabel(item.type) }}
       </template>
 
       <template v-slot:item.actions="{ item }">
