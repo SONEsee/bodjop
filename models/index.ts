@@ -14,6 +14,8 @@ import * as UserCommissionModels from "./user_commissions";
 import * as SaleModels from "./sales";
 import * as ExpenseTypeModels from "./expense_types";
 import * as InvoiceModels from "./invoices";
+import * as DeviceModels from "./devices";
+import * as DeviceMovementModels from "./device_movements";
 export {
   UserModel,
   UsermeModel,
@@ -31,4 +33,6 @@ export {
   SaleModels,
   ExpenseTypeModels,
   InvoiceModels,
+  DeviceModels,
+  DeviceMovementModels,
 };
