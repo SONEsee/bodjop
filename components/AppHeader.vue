@@ -89,7 +89,6 @@ const items = ref([
   {
     title: "ຈັດການຂໍ້ມູນ",
     menu: [
-      { text: "ຈັດການຂໍ້ມູນການຂາຍ", icon: "mdi-sale", to: "/sales" },
       { text: "ຈັດການຕົວແທນ", icon: "mdi-account-group", to: "/agency" },
       {
         text: "ຈັດການປະເພດລາຍຈ່າຍ",
@@ -105,6 +104,17 @@ const items = ref([
         text: "ຈັດການຂໍ້ມູນອຸປະກອນ",
         icon: "mdi-devices",
         to: "/devices",
+      },
+      {
+        text: "ກະຈາຍອຸປະກອນ",
+        icon: "mdi-transfer",
+        to: "/devices-movements",
+      },
+      { text: "ຈັດການຂໍ້ມູນການຂາຍ", icon: "mdi-sale", to: "/sales" },
+      {
+        text: "ຈັດການຂໍ້ມູນໃບຮຽກເກັບເງິນ",
+        icon: "mdi-invoice",
+        to: "/invoices",
       },
       {
         text: "ຈັດການຜູ້ໃຊ້ງານ",

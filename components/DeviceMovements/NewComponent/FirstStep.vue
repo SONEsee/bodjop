@@ -30,9 +30,13 @@ const onAddDevice = () => {
   request.device_id = null;
 };
 
+const debounceGetDevice = useDebounceFn((value: string | null) => {
+  deviceStore.GetDeviceSelections(1, value);
+}, 800);
+
 onMounted(() => {
   agencyStore.GetAgencySelections();
-  deviceStore.GetDeviceSelections(1);
+  deviceStore.GetDeviceSelections(1, null);
 });
 </script>
 
@@ -66,7 +70,7 @@ onMounted(() => {
 
         <v-col cols="3">
           <label>ອຸປະກອນ / Devices</label>
-          <v-select
+          <v-autocomplete
             :items="
               devices.filter(
                 (d) => !request.list_device_id.map((d) => d.id).includes(d.id)
@@ -75,6 +79,8 @@ onMounted(() => {
             variant="outlined"
             hide-details
             return-object
+            no-filter
+            @update:search="debounceGetDevice"
             v-model="request.device_id"
             :item-props="
               (item) => {
@@ -90,7 +96,7 @@ onMounted(() => {
             <template v-slot:selection="{ item }">
               {{ item.raw?.pos_code }}
             </template>
-          </v-select>
+          </v-autocomplete>
         </v-col>
 
         <v-col cols="3">

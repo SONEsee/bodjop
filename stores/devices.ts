@@ -16,13 +16,14 @@ export const UseDeviceStore = defineStore("devices", {
   },
 
   actions: {
-    async GetDeviceSelections(deviceStatus: number) {
+    async GetDeviceSelections(deviceStatus: number, q: string | null) {
       try {
         const res = await axios.get<DeviceModels.DeviceSelectionResponse>(
           "/api/v1/devices/get-selections",
           {
             params: {
               device_status: deviceStatus,
+              q: q,
             },
           }
         );

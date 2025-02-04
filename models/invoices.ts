@@ -21,3 +21,82 @@ export interface Sale {
   percentage: number;
   total_amount: number;
 }
+
+export interface GetInvoiceDataResponse {
+  error: null;
+  items: GetInvoiceDataResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetInvoiceDataResponseItem {
+  list_data: ListDatum[];
+  pagination: Pagination;
+}
+
+export interface ListDatum {
+  id: string;
+  created_by_user_id: string;
+  created_at: Date;
+  updated_at: Date;
+  status: number;
+  user: User;
+}
+
+export interface Pagination {
+  current_page: number;
+  limit: number;
+  total_count: number;
+  total_page: number;
+}
+
+export interface GetInvoiceDetailResponse {
+  error: null;
+  items: GetInvoiceDetailResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetInvoiceDetailResponseItem {
+  id: string;
+  created_by_user_id: string;
+  created_at: Date;
+  updated_at: Date;
+  status: number;
+  user: User;
+  invoice_details: InvoiceDetail[];
+}
+
+export interface InvoiceDetail {
+  id: string;
+  agency_id: string;
+  total_devices: number;
+  invoice_id: string;
+  status: number;
+  total_average_amount: number;
+  total_amount: number;
+  total_debt: number;
+  total_sale_amount: number;
+  agency: User;
+  invoice_calculations: InvoiceCalculation[];
+}
+
+export interface User {
+  id: string;
+  agent_code: string;
+  fullname: string;
+  nick_name: string;
+  money_outstanding: number;
+}
+
+export interface InvoiceCalculation {
+  id: string;
+  invoice_detail_id: string;
+  commissions_type: string;
+  amount: number;
+  percentage: number;
+  total_amount: number;
+  created_at: Date;
+  updated_at: Date;
+  is_commission: boolean;
+}

@@ -19,6 +19,7 @@ export interface ListDatum {
   movement_type: string;
   agency_id: string;
   movement_date: Date;
+  status: number;
   user: User;
 }
 
@@ -54,6 +55,7 @@ export interface GetDeviceMovementDetailResponseItem {
   movement_date: Date;
   user: User;
   agency: Agency;
+  status: number;
   device_movement_details: DeviceMovementDetail[];
 }
 
