@@ -50,23 +50,16 @@ export interface ListDatum {
   created_by_user_id: string;
   status: number;
   device_status: number;
-  device_id: DeviceID;
+  device_id: string;
   user: User;
-}
-
-export enum DeviceID {
-  NA = "N/A",
+  lastest_user: User;
 }
 
 export interface User {
   id: string;
-  agent_code: DeviceID;
-  fullname: Fullname;
-  nick_name: DeviceID;
-}
-
-export enum Fullname {
-  Admin32Lottery = "admin@32lottery",
+  agent_code: string;
+  fullname: string;
+  nick_name: string;
 }
 
 export interface Pagination {

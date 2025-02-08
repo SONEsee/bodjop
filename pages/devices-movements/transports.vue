@@ -5,8 +5,8 @@ const deviceStore = UseDeviceStore();
 const request = deviceStore.request_device_movement;
 
 onMounted(() => {
-  agencyStore.GetAgencySelections();
-  deviceStore.GetDeviceSelections(1);
+  agencyStore.GetAgencySelections(null);
+  deviceStore.GetDeviceSelections(1, null);
 });
 </script>
 

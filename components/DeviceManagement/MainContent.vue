@@ -9,15 +9,28 @@
         />
       </v-col>
 
-      <v-col cols="12" class="d-flex flex-wrap justify-end">
-        <v-btn
-          color="primary"
-          flat
-          width="180px"
-          @click="goPath('/devices/new')"
-        >
-          + ເພີ່ມອຸປະກອນ</v-btn
-        >
+      <v-col
+        cols="12"
+        class="d-flex flex-wrap justify-space-between align-center"
+      >
+        <div style="width: 250px">
+          <GlobalDebounceEventTextField
+            :input="request.q"
+            :label="'ຄົ້ນຫາ'"
+            @setinput="onInputChange"
+          />
+        </div>
+
+        <div>
+          <v-btn
+            color="primary"
+            flat
+            width="180px"
+            @click="goPath('/devices/new')"
+          >
+            + ເພີ່ມອຸປະກອນ</v-btn
+          >
+        </div>
       </v-col>
 
       <v-col cols="12">
@@ -27,7 +40,14 @@
           :loading="loading"
           :itemsPerPage="request.limit"
         >
-          <template v-slot:body="{ items }">
+          <template v-slot:item.index="{ index }">
+            {{ index + (request.page - 1) * request.limit + 1 }}
+          </template>
+
+          <template v-slot:item.created_at="{ item }">
+            {{ FormatDatetime(item.created_at) }}
+          </template>
+          <!-- <template v-slot:body="{ items }">
             <tr v-for="(item, index) in items" :key="item.id">
               <td>{{ index + 1 }}</td>
               <td>{{ item.pos_no }}</td>
@@ -64,6 +84,34 @@
                 />
               </td>
             </tr>
+          </template> -->
+
+          <template v-slot:item.status="{ item }">
+            <GlobalDefaultStatusChip :status="item.status" />
+          </template>
+
+          <template v-slot:item.actions="{ item }">
+            <v-btn
+              icon="mdi-eye"
+              variant="text"
+              color="primary"
+              size="small"
+              @click="goPath(`/devices/detail?id=${item.id}`)"
+            />
+            <v-btn
+              icon="mdi-pencil"
+              size="small"
+              variant="text"
+              color="primary"
+              @click="goPath(`/devices/edit?id=${item.id}`)"
+            />
+            <v-btn
+              icon="mdi-delete-outline"
+              size="small"
+              variant="text"
+              color="error"
+              @click="deleteData(item.id)"
+            />
           </template>
 
           <template v-slot:bottom>
@@ -90,12 +138,13 @@ const title = ref("ໜ້າສະແດງຂໍ້ມູນອຸປະກອ�
 const loading = ref(false);
 
 const headers = [
-  { title: "ລ/ດ", Value: "index" },
-  { title: "POS No.", Value: "pos_no" },
-  { title: "IMEI", Value: "imei" },
-  { title: "ວັນທີສ້າງ", Value: "created_at" },
-  { title: "ສະຖານະ", Value: "status" },
-  { title: "ການຈັດການ", Value: "actions" },
+  { title: "ລ/ດ", value: "index" },
+  { title: "POS No.", value: "pos_no" },
+  { title: "IMEI", value: "imei" },
+  { title: "ວັນທີສ້າງ", value: "created_at" },
+  { title: "ເຈົ້າຂອງຫຼ້າສຸດ", value: "lastest_user.nick_name" },
+  { title: "ສະຖານະ", value: "status" },
+  { title: "ການຈັດການ", value: "actions" },
 ];
 
 const request = ref({
@@ -114,11 +163,16 @@ const onPageChange = async (value: number) => {
   await getdata();
 };
 
+async function onInputChange(input: string | null) {
+  request.value.q = input;
+  await getdata();
+}
+
 const getdata = async () => {
   try {
     loading.value = true;
     const respons = await axios.get<DeviceDetailModel.DeviceDetailResponse>(
-      "/api/v1/devices/get-data?limit=20&page=1",
+      "/api/v1/devices/get-data",
       {
         params: {
           ...request.value,

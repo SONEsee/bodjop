@@ -34,9 +34,12 @@ const debounceGetDevice = useDebounceFn((value: string | null) => {
   deviceStore.GetDeviceSelections(1, value);
 }, 800);
 
+const debounceOfAgencies = useDebounceFn((value: string | null) => {
+  agencyStore.GetAgencySelections(value);
+}, 800);
 onMounted(() => {
-  agencyStore.GetAgencySelections();
-  deviceStore.GetDeviceSelections(1, null);
+  // agencyStore.GetAgencySelections(null);
+  // deviceStore.GetDeviceSelections(1, null);
 });
 </script>
 
@@ -56,16 +59,18 @@ onMounted(() => {
         </v-col>
         <v-col cols="3">
           <label>ເລືອກຕົວແທນ / Agency</label>
-          <v-select
+          <v-autocomplete
             :items="agencies"
             variant="outlined"
             hide-details
             item-title="fullname"
             return-object
+            no-filter
             density="comfortable"
             clearable
+            @update:search="debounceOfAgencies"
             v-model="request.agency_id"
-          ></v-select>
+          ></v-autocomplete>
         </v-col>
 
         <v-col cols="3">

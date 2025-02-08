@@ -7,6 +7,7 @@ const props = defineProps({
   image_url: {
     // required: false,
     default: "N/A",
+    type: [String, File],
   },
 });
 
