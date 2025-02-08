@@ -119,3 +119,42 @@ export interface GetAgencySelectionResponse {
   status: number;
   timestamp: string;
 }
+
+export interface GetAgencyDeviceResponse {
+  error: null;
+  items: GetAgencyDeviceResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetAgencyDeviceResponseItem {
+  list_data: ListDatum[];
+  pagination: Pagination;
+}
+
+export interface ListDatum {
+  id: string;
+  device_id: string;
+  agency_id: string;
+  status: number;
+  created_at: Date;
+  updated_at: Date;
+  device: Device;
+}
+
+export interface Device {
+  id: string;
+  pos_no: string;
+  imei: string;
+  status: number;
+  device_status: number;
+  device_id: string;
+  latest_agency_id: string;
+}
+
+export interface Pagination {
+  current_page: number;
+  limit: number;
+  total_count: number;
+  total_page: number;
+}

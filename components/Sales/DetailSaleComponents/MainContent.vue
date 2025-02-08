@@ -13,6 +13,7 @@ const headers = ref([
   { title: "4 ໂຕ", value: "four_digits" },
   { title: "5 ໂຕ", value: "five_digits" },
   { title: "6 ໂຕ", value: "six_digits" },
+  { title: "ຕົວແທນ", value: "agency.agent_code" },
   { title: "ຍອດລວມ", value: "amount" },
 ]);
 

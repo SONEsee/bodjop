@@ -41,17 +41,16 @@
 
       <v-col cols="12">
         <v-row>
-          <v-col cols="12" md="6">
-            <h3>ຕຳແໜ່ງຫຼ້າສຸດ / Lastest location</h3>
-            <v-divider></v-divider>
-            <div class="mt-4">
-              <v-img
-                src="../../public/image/map.png"
-                style="width: 90%"
-              ></v-img>
-            </div>
+          <v-col cols="12">
+            <h3 class="py-2">ຕຳແໜ່ງຫຼ້າສຸດ</h3>
+            <GlobalMapBoxImage
+              v-if="item.device_locations.length > 0"
+              :longitude="item.device_locations[0].longitude"
+              :latitude="item.device_locations[0].latitude"
+            />
           </v-col>
-          <v-col cols="12" md="6">
+
+          <!-- <v-col cols="12" md="6">
             <h3>ປະຫວັດການກະຈາຍອຸປະກອນ / History of device managements</h3>
             <v-divider></v-divider>
 
@@ -72,7 +71,7 @@
                 </tr>
               </template>
             </v-data-table>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-col>
     </v-row>

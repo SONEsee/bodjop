@@ -11,6 +11,11 @@ const response_data = computed(() => {
       <v-col cols="12">
         <GlobalTextTitleLine :title="'ລາຍລະອຽດການກະຈາຍ'" />
       </v-col>
+      <v-col cols="12" class="d-flex flex-wrap justify-end">
+        <div>
+          <GlobalDefaultStatusChip :status="response_data?.status ?? 1" />
+        </div>
+      </v-col>
 
       <v-col cols="12">
         <v-row>

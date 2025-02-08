@@ -24,6 +24,11 @@ export const goPath = (path: string | null) => {
     window.location.href = path;
   }
 };
+export const openPath = (path: string | null) => {
+  if (path !== null) {
+    window.open(path, "_blank");
+  }
+};
 
 export const DefaultSwalError = (err: any) => {
   if (err instanceof AxiosError) {
@@ -63,6 +68,7 @@ export const FormatDate = (date: any) => {
 export const onLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
+  localStorage.removeItem("refresh_token");
 
   setTimeout(() => {
     goPath("/login");
@@ -265,6 +271,17 @@ export const delayGoPath = (path: string) => {
   return setTimeout(() => {
     window.location.href = path;
   }, 1200);
+};
+
+export const pushPath = (path: string) => {
+  const router = useRouter();
+  if (!path) {
+    return;
+  }
+
+  return router.push({
+    path: path,
+  });
 };
 
 export const ReturnDate = function (date: number | Date) {

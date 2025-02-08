@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const title = ref("ລາຍລະອຽດຕົວແທນ / Detail of Agency");
+// const title = ref("ລາຍລະອຽດຕົວແທນ / Detail of Agency");
 const agencyStore = UseAgencyStore();
 
 const response_data = computed(() => {
@@ -8,26 +8,37 @@ const response_data = computed(() => {
 </script>
 
 <template>
-  <v-section v-if="response_data !== null">
+  <section v-if="response_data !== null">
     <v-row>
-      <v-col cols="12">
+      <!-- <v-col cols="12">
         <GlobalTextTitleLine :title="title" />
-      </v-col>
+      </v-col> -->
 
       <v-col cols="12">
         <v-row>
           <v-col cols="12" class="d-flex flex-wrap justify-end align-center">
-            ສະຖານະ:
-            <span class="pl-4">
-              <GlobalDefaultStatusChip :status="response_data?.status" />
-            </span>
+            <div class="mr-2">
+              <v-btn
+                color="primary"
+                icon="mdi-pencil"
+                variant="text"
+                size="small"
+                @click="goPath(`/agency/edit?id=${response_data.id}`)"
+              ></v-btn>
+            </div>
+            <div class="d-flex">
+              ສະຖານະ:
+              <span class="pl-4">
+                <GlobalDefaultStatusChip :status="response_data?.status" />
+              </span>
+            </div>
           </v-col>
 
           <v-col md="4" class="d-flex align-center justify-center">
             <div>
               <!-- :image_url="response_data?.image_profile ?? 'N/A'" -->
               <GlobalAvatarProfileImage
-                :image_url="response_data?.image_profile"
+                :image_url="response_data?.image_profile ?? ''"
               />
             </div>
           </v-col>
@@ -98,6 +109,13 @@ const response_data = computed(() => {
                   :text="response_data?.username ?? 'N/A'"
                 />
               </v-col>
+
+              <v-col cols="4">
+                <GlobalCardTitle
+                  :title="'ຄ້າງໜີ້ / Debt'"
+                  :text="formatnumber(response_data?.money_outstanding)"
+                />
+              </v-col>
             </v-row>
           </v-col>
         </v-row>
@@ -126,5 +144,5 @@ const response_data = computed(() => {
         </v-row>
       </v-col>
     </v-row>
-  </v-section>
+  </section>
 </template>

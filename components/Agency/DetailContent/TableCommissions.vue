@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { COMMISSIONS } from "@/enum/commissions";
+import { UserCommissionModels } from "@/models/";
 const agencyStore = UseAgencyStore();
 
 const response_data = computed(() => {
@@ -12,6 +13,14 @@ const headers = ref([
   { title: "ເປີເຊັນ", key: "percentage" },
   { title: "Actions", key: "actions" },
 ]);
+
+const dialog = ref(false);
+const commission = ref(null as UserCommissionModels.UserCommission | null);
+
+const onDetailDialog = (item: UserCommissionModels.UserCommission) => {
+  commission.value = item;
+  dialog.value = true;
+};
 </script>
 <template>
   <section class="pt-4">
@@ -38,6 +47,7 @@ const headers = ref([
           icon="mdi-eye"
           size="small"
           variant="text"
+          @click="onDetailDialog(item)"
           v-if="
             item.type === COMMISSIONS.GOAL_DEVICE_COMMISSION ||
             item.type === COMMISSIONS.GOAL_AVERAGE_COMMISSION
@@ -45,5 +55,11 @@ const headers = ref([
         ></v-btn>
       </template>
     </v-data-table>
+
+    <AgencyDetailContentDialogDetailCommission
+      :dialog="dialog"
+      :commission="commission"
+      @onCloseDialog="dialog = $event"
+    />
   </section>
 </template>

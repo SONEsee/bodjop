@@ -179,6 +179,7 @@ const onCreateInvoice = async () => {
                 width="160px"
                 flat
                 :loading="loading"
+                :disabled="invoice_for_create === null"
                 @click="onCreateInvoice()"
                 >ບັນທຶກ</v-btn
               >
