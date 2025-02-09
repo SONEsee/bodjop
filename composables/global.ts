@@ -2,7 +2,8 @@ import numeral from "numeral";
 import swal from "sweetalert2";
 import { AxiosError } from "axios";
 import type { SweetAlertOptions } from "sweetalert2";
-import { DefaultResponseModel } from "@/models/";
+import { DefaultResponseModel, InvoiceModels } from "@/models/";
+import { COMMISSIONS } from "@/enum/commissions";
 
 export const UseGetFormatDatePicker = (date: any) => {
   if (date) {
@@ -25,14 +26,21 @@ export const goPath = (path: string | null) => {
 };
 
 export const DefaultSwalError = (err: any) => {
-  const errors = err as AxiosError;
-  const response_data = errors?.response
-    ?.data as DefaultResponseModel.DefaultErrorResponse;
-  return swal.fire({
-    icon: "error",
-    title: "ຜິດພາດ",
-    text: response_data?.error ?? "",
-  });
+  if (err instanceof AxiosError) {
+    const response_data = err?.response
+      ?.data as DefaultResponseModel.DefaultErrorResponse;
+    return swal.fire({
+      icon: "error",
+      title: "ຜິດພາດ",
+      text: response_data?.error ?? "",
+    });
+  } else {
+    return swal.fire({
+      icon: "error",
+      title: "ຜິດພາດ",
+      text: err?.message ?? "",
+    });
+  }
 };
 
 export const FormatDatetime = (date: any) => {
@@ -44,8 +52,18 @@ export const FormatDatetime = (date: any) => {
   return date;
 };
 
+export const FormatDate = (date: any) => {
+  const dayjs = useDayjs();
+  if (date) {
+    return dayjs(new Date(date)).format("DD-MM-YYYY");
+  }
+  return date;
+};
+
 export const onLogout = () => {
-  localStorage.clear();
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+
   setTimeout(() => {
     goPath("/login");
   }, 1200);
@@ -125,6 +143,32 @@ export const GetIdentitiesList = () => {
     },
   ];
 };
+
+export const GetCommissionList = () => {
+  return [
+    {
+      title: "ເປີເຊັນພຶ້ນຖານ",
+      value: COMMISSIONS.STANDARD_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນຖອກຕົງ",
+      value: COMMISSIONS.STRAIGHT_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+      value: COMMISSIONS.GOAL_AVERAGE_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+      value: COMMISSIONS.GOAL_DEVICE_COMMISSION,
+    },
+    {
+      title: "ເປີເຊັນບິນລາງວັນ",
+      value: COMMISSIONS.WINNER_SALE_COMMISSION,
+    },
+  ];
+};
+
 export const GetIdentitiesLabel = (type: number): string => {
   const list_indetities_label = {
     1: "ບັດປະຈຳຕົວ",
@@ -134,11 +178,33 @@ export const GetIdentitiesLabel = (type: number): string => {
   return list_indetities_label?.[type] ?? "N/A";
 };
 
+export const GetCommissionLabel = (type: string): string => {
+  const list_commission_label = {
+    STANDARD: "ເປີເຊັນພຶ້ນຖານ",
+    STRAIGHT: "ເປີເຊັນຖອກຕົງ",
+    GOAL_AVERAGE: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+    GOAL_DEVICE: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+  } as { [key: string]: string };
+  return list_commission_label?.[type] ?? "N/A";
+};
+
 export const formatnumber = (value: number | string) => {
   if (value) {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
-    return 0;
+    return "0";
+  }
+};
+
+export const formatnumberV2 = (value: number | string) => {
+  if (value) {
+    const [integerPart, decimalPart] = value.toString().split("."); // Split into integer and decimal parts
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ","); // Add commas
+    return decimalPart
+      ? `${formattedInteger}.${decimalPart}`
+      : formattedInteger;
+  } else {
+    return "0";
   }
 };
 
@@ -176,6 +242,18 @@ export const GetItemPerPageOptions = () => {
       title: "200",
       value: 200,
     },
+    {
+      title: "300",
+      value: 300,
+    },
+    {
+      title: "500",
+      value: 500,
+    },
+    {
+      title: "1000",
+      value: 1000,
+    },
   ];
 };
 
@@ -187,4 +265,77 @@ export const delayGoPath = (path: string) => {
   return setTimeout(() => {
     window.location.href = path;
   }, 1200);
+};
+
+export const ReturnDate = function (date: number | Date) {
+  if (typeof date === "number") {
+    var utc_days = Math.floor(date - 25569);
+    var utc_value = utc_days * 86400;
+    var date_info = new Date(utc_value * 1000);
+    var fractional_day = date - Math.floor(date) + 0.0000001;
+    var total_seconds = Math.floor(86400 * fractional_day);
+    var seconds = total_seconds % 60;
+    total_seconds -= seconds;
+    var hours = Math.floor(total_seconds / (60 * 60));
+    var minutes = Math.floor(total_seconds / 60) % 60;
+
+    return new Date(
+      date_info.getFullYear(),
+      date_info.getMonth(),
+      date_info.getDate(),
+      hours,
+      minutes,
+      seconds
+    );
+  } else if (typeof date === "string") {
+    const dayjs = useDayjs();
+    return dayjs(date, "DD-MM-YYYY HH:mm:ss").toDate();
+  } else {
+    return new Date(date);
+  }
+};
+
+export const GetCommissionOrExpenseTypeLabel = (label: string) => {
+  let listOfLabel = {
+    STANDARD: "ເປີເຊັນພຶ້ນຖານ",
+    STRAIGHT: "ເປີເຊັນຖອກຕົງ",
+    GOAL_AVERAGE: "ເປີເຊັນເປົ້າ ແບບຄ່າສະເລ່ຍ",
+    GOAL_DEVICE: "ເປີເຊັນເປົ້າ ແບບຕ່ໍເຄື່ອງ",
+    GOAL_COMMISSION: "ເປີເຊັນເປົ້າ",
+    WINNER_SALE_COMMISSION: "ເປີເຊັນບິນລາງວັນ",
+    WINNER_EXPENSE_SALE: "ບິນລາງວັນ",
+    BORROW_EXPENSE_SALE: "ຕົວແທນຢືມ",
+    COMMITTEE_EXPENSE_SALE: "ຄ່າກຳມະການ",
+    VAT_EXPENSE_SALE: "ອາກອນ",
+    OTHER_EXPENSE_SALE: "ອື່ນໆ",
+  } as { [key: string]: string };
+
+  return listOfLabel[label] ?? "N/A";
+};
+
+export const FilterAmountOfEachTypeInvoice = (
+  sales: InvoiceModels.Sale[],
+  label: string | null
+): string => {
+  try {
+    if (sales.length < 1) {
+      return "";
+    }
+
+    if (label == null) {
+      return "";
+    }
+
+    const filterSale = sales.filter(
+      (d: InvoiceModels.Sale) => d.type === label
+    );
+
+    if (filterSale.length < 1) {
+      return "";
+    }
+    return filterSale[0]["amount"]?.toString() ?? "-";
+  } catch (error) {
+    console.error(error);
+    return "-";
+  }
 };

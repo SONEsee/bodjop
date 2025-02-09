@@ -38,6 +38,16 @@
             ></v-text-field>
           </v-col>
 
+          <v-col cols="12" class="py-0 my-0">
+            <v-checkbox
+              label=" ຈື່ຜູ້ໃຊ້ງານ"
+              hide-details
+              density="compact"
+              color="primary"
+              v-model="isRemember"
+            ></v-checkbox>
+          </v-col>
+
           <v-col cols="12">
             <v-btn
               color="primary"
@@ -62,11 +72,28 @@ import axios from "@/helpers/axios";
 import { UserModel } from "@/models/";
 import { ref } from "vue";
 
-const username = ref(null);
+const username = ref(null as string | null);
 const password = ref(null);
 const visible = ref(false);
 const loading = ref(false);
+const isRemember = ref(false);
 const form = ref();
+
+const onLoginRefetch = async () => {
+  try {
+    const getUsernamme = localStorage.getItem("saveusername");
+    if (
+      getUsernamme !== null ||
+      getUsernamme === "" ||
+      getUsernamme == "null"
+    ) {
+      username.value = getUsernamme;
+      isRemember.value = true;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const handleLogin = async () => {
   try {
@@ -84,6 +111,11 @@ const handleLogin = async () => {
       if (res.status === 200) {
         localStorage.setItem("token", res.data.items.token);
         localStorage.setItem("user", JSON.stringify(res.data.items.user));
+        if (isRemember.value === true) {
+          localStorage.setItem("saveusername", username?.value ?? "");
+        } else {
+          localStorage.removeItem("saveusername");
+        }
 
         setTimeout(() => {
           goPath("/");
@@ -97,4 +129,8 @@ const handleLogin = async () => {
     loading.value = false;
   }
 };
+
+onMounted(() => {
+  onLoginRefetch();
+});
 </script>

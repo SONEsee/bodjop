@@ -2,7 +2,6 @@
 import axios from "@/helpers/axios";
 import notfounfimages from "@/assets/img/404.png";
 const notfoundref = ref(notfounfimages);
-import { AgencyModel } from "@/models/";
 
 const agencyStore = UseAgencyStore();
 const globalStore = UseGlobalStore();
@@ -74,16 +73,22 @@ const submitForm = async () => {
           if (Array.isArray(value)) {
             for (let i = 0; i < value.length; i++) {
               const identity = value[i];
+              //@ts-ignore
               if (identity.file !== null) {
+                //@ts-ignore
                 console.log(`iden`, identity.file.type);
                 formData.append(
                   "identities_files",
+                  //@ts-ignore
                   identity.file,
+                  //@ts-ignore
                   `${i}.${identity.file.type.split("/")[1]}`
                 );
               }
             }
           }
+        } else if (key === "commissions") {
+          formData.append(key, JSON.stringify(value));
         } else {
           formData.append(key, value?.toString() ?? "");
         }
@@ -114,6 +119,7 @@ const submitForm = async () => {
     }
   } catch (error) {
     console.error(error);
+    return DefaultSwalError(error);
   } finally {
     loading.value = false;
   }
@@ -337,7 +343,34 @@ const submitForm = async () => {
 
         <v-col cols="12">
           <v-row>
-            <v-col cols="6"></v-col>
+            <v-col cols="6">
+              <v-row>
+                <v-col cols="12">
+                  <div class="d-flex flex-wrap justify-space-between">
+                    <div class="d-flex flex-wrap align-center">
+                      <h4>ການໃຫ້ສ່ວນແບ່ງ / Commissions</h4>
+                    </div>
+
+                    <div>
+                      <v-btn
+                        variant="text"
+                        icon="mdi-ticket-percent"
+                        size="medium"
+                        @click="agencyStore.commission_request.dialog = true"
+                      ></v-btn>
+                    </div>
+                  </div>
+
+                  <v-col cols="12" class="pa-0 ma-0">
+                    <v-divider color="black" :thickness="2"></v-divider>
+                  </v-col>
+                </v-col>
+                <v-col cols="12">
+                  <AgencyCreateAgencyComponentsCommissionTable />
+                </v-col>
+              </v-row>
+            </v-col>
+
             <v-col cols="6">
               <v-row>
                 <v-col cols="12">

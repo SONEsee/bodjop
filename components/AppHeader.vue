@@ -75,7 +75,6 @@
 </template>
 
 <script lang="ts" setup>
-
 const user = ref({
   fullName: "bih",
   initials: "n",
@@ -90,11 +89,17 @@ const items = ref([
   {
     title: "ຈັດການຂໍ້ມູນ",
     menu: [
+      { text: "ຈັດການຂໍ້ມູນການຂາຍ", icon: "mdi-sale", to: "/sales" },
       { text: "ຈັດການຕົວແທນ", icon: "mdi-account-group", to: "/agency" },
       {
         text: "ຈັດການປະເພດລາຍຈ່າຍ",
         icon: "mdi-cash-edit",
         to: "/expense_type_managements",
+      },
+      {
+        text: "ເພີ່ມຂໍ້ມູນລາຍຈ່າຍ",
+        icon: "mdi-cash-sync",
+        to: "/sale_expense_transactions",
       },
       {
         text: "ຈັດການຂໍ້ມູນອຸປະກອນ",

@@ -30,5 +30,8 @@ const datepicker = computed({
     v-model="datepicker"
     :format="UseGetFormatDatePicker"
     :required="props.required"
+    :teleport="true"
+    :teleport-center="false"
+    @date-update="$emit('onSetDate', $event)"
   ></VueDatePicker>
 </template>

@@ -16,4 +16,7 @@ export interface User {
   status: number;
   profile_image: string;
   role: string;
+  fullname: string;
+  nick_name: string;
+  agent_code: string;
 }

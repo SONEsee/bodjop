@@ -1,9 +1,26 @@
 import type { GetIdentitiesResponse } from "./identities";
+import type { User } from "./users";
+import type { UserCommission } from "./user_commissions";
 
 export interface IdentitiesAgency {
   type: string;
   identity_no: string;
   file: File;
+}
+
+export interface CommissionAgency {
+  percentage: number;
+  id: string | null;
+  active_percentage: number;
+  type: string;
+  special_commissions: CommissionSpecialAgency[];
+}
+
+export interface CommissionSpecialAgency {
+  minimum_amount: number;
+  maximum_amount: number;
+  percentage: number;
+  id: string | null;
 }
 
 export interface GetAgencyResponse {
@@ -64,6 +81,7 @@ export interface GetDetailAgencyResponse {
   username: string;
   village: Village;
   user_identities: GetIdentitiesResponse[];
+  user_commissions: UserCommission[];
 }
 
 export interface Pagination {
@@ -93,4 +111,11 @@ export interface Province {
   id: number;
   pr_name: string;
   pr_name_en: string;
+}
+
+export interface GetAgencySelectionResponse {
+  error: null;
+  items: User[];
+  status: number;
+  timestamp: string;
 }

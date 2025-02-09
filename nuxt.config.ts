@@ -1,5 +1,4 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
-import { resolve } from "path";
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: false,
@@ -40,6 +39,26 @@ export default defineNuxtConfig({
       path: "@/components/DeviceManagement/",
       pathPrefix: true,
       prefix: "Devices",
+    },
+    {
+      path: "@/components/Sales/",
+      pathPrefix: true,
+      prefix: "Sales",
+    },
+    {
+      path: "@/components/Prints/",
+      pathPrefix: true,
+      prefix: "Prints",
+    },
+    {
+      path: "@/components/Invoices/",
+      pathPrefix: true,
+      prefix: "Invoices",
+    },
+    {
+      path: "@/components/DeviceMovements/",
+      pathPrefix: true,
+      prefix: "DeviceMovements",
     },
   ],
 

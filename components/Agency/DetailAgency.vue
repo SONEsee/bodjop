@@ -16,23 +16,18 @@ const response_data = computed(() => {
 
       <v-col cols="12">
         <v-row>
-          <v-col cols="12" class="d-flex flex-wrap justify-end">
-            <div class="d-flex flex-wrap align-center">
-              ສະຖານະ:
-              <span class="mx-4">
-                <GlobalDefaultStatusChip :status="response_data?.status" />
-              </span>
-            </div>
+          <v-col cols="12" class="d-flex flex-wrap justify-end align-center">
+            ສະຖານະ:
+            <span class="pl-4">
+              <GlobalDefaultStatusChip :status="response_data?.status" />
+            </span>
           </v-col>
 
           <v-col md="4" class="d-flex align-center justify-center">
             <div>
-               <!-- :image_url="response_data?.image_profile ?? 'N/A'" -->
+              <!-- :image_url="response_data?.image_profile ?? 'N/A'" -->
               <GlobalAvatarProfileImage
-
-              :image_url="typeof response_data?.image_profile === 'string' 
-      ? response_data.image_profile 
-      : 'N/A'"
+                :image_url="response_data?.image_profile"
               />
             </div>
           </v-col>
@@ -112,6 +107,10 @@ const response_data = computed(() => {
         <v-row>
           <v-col cols="6">
             <h4>ການໃຫ້ເປີເຊັນ / Commissions</h4>
+
+            <div>
+              <AgencyDetailContentTableCommissions />
+            </div>
           </v-col>
 
           <v-col cols="6">
@@ -120,9 +119,9 @@ const response_data = computed(() => {
                 formatnumber(response_data?.user_identities.length ?? 0)
               }})
             </h4>
-            <section class="mt-4">
+            <div>
               <AgencyDetailContentTableIdentities />
-            </section>
+            </div>
           </v-col>
         </v-row>
       </v-col>
