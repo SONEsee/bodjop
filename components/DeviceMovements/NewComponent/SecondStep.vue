@@ -40,11 +40,11 @@ const onSubmit = async () => {
           title: "ສຳເລັດ",
           text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
         });
-        // if (successNotification.isConfirmed) {
-        //   delayGoPath("/devices-movements");
-        // } else {
-        //   delayGoPath("/devices-movements");
-        // }
+        if (successNotification.isConfirmed) {
+          delayGoPath("/devices-movements");
+        } else {
+          delayGoPath("/devices-movements");
+        }
       }
     }
   } catch (error) {

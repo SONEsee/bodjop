@@ -8,6 +8,7 @@ export interface UserLoginResponse {
 export interface Items {
   user: User;
   token: string;
+  refresh_token: string;
 }
 
 export interface User {

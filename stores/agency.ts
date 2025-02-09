@@ -49,6 +49,13 @@ export const UseAgencyStore = defineStore("agency", {
       response_detail_query_data:
         null as AgencyModel.GetDetailAgencyResponse | null,
       agency_selections: [] as UserModel.User[],
+      agency_device_request: {
+        page: 1,
+        limit: 20,
+        q: null as string | null,
+      },
+      agency_devices_response:
+        null as AgencyModel.GetAgencyDeviceResponseItem | null,
     };
   },
 
@@ -187,13 +194,40 @@ export const UseAgencyStore = defineStore("agency", {
       }
     },
 
-    async GetAgencySelections() {
+    async GetAgencySelections(q: string | null) {
       try {
         const res = await axios.get<AgencyModel.GetAgencySelectionResponse>(
-          "/api/v1/agency/get-selection-data"
+          "/api/v1/agency/get-selection-data",
+          {
+            params: {
+              q: q ?? null,
+            },
+          }
         );
         if (res.status === 200) {
           this.agency_selections = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async GetAgenciesDeviceResponse(id: string | null) {
+      try {
+        if (id === null) {
+          return;
+        }
+
+        const res = await axios.get<AgencyModel.GetAgencyDeviceResponse>(
+          `/api/v1/agency/get-devices/${id}`,
+          {
+            params: {
+              ...this.agency_device_request,
+            },
+          }
+        );
+        if (res.status === 200) {
+          this.agency_devices_response = res.data.items;
         }
       } catch (error) {
         console.error(error);

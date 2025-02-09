@@ -11,6 +11,17 @@ export const UseInvoiceStore = defineStore("invoices", {
 
       response_get_for_create:
         null as InvoiceModels.GetInvoiceForCreateResponseItems | null,
+
+      request_get_data: {
+        limit: 20,
+        page: 1,
+        loading: false,
+      },
+
+      response_get_data:
+        null as InvoiceModels.GetInvoiceDataResponseItem | null,
+      repsonse_get_detail_invoice_data:
+        null as InvoiceModels.GetInvoiceDetailResponseItem | null,
     };
   },
 
@@ -39,6 +50,48 @@ export const UseInvoiceStore = defineStore("invoices", {
         console.error(error);
       } finally {
         this.request_create_invoice_agency.loading = false;
+      }
+    },
+
+    async GetInvoiceData() {
+      try {
+        this.request_get_data.loading = true;
+        const res = await axios.get<InvoiceModels.GetInvoiceDataResponse>(
+          "/api/v1/invoices/get-data",
+          {
+            params: {
+              ...this.request_get_data,
+            },
+          }
+        );
+
+        if (res.status === 200) {
+          this.response_get_data = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_get_data.loading = false;
+      }
+    },
+
+    async GetInvoiceDetailData(id: string | null) {
+      const globalStore = UseGlobalStore();
+      try {
+        globalStore.loading_overlay = true;
+        if (id === null) {
+          return;
+        }
+        const res = await axios.get<InvoiceModels.GetInvoiceDetailResponse>(
+          `/api/v1/invoices/get-detail/${id}`
+        );
+        if (res.status === 200) {
+          this.repsonse_get_detail_invoice_data = res.data.items ?? null;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        globalStore.loading_overlay = false;
       }
     },
   },

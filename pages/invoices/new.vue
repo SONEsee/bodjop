@@ -4,7 +4,7 @@ const agencyStore = UseAgencyStore();
 
 onMounted(() => {
   saleStore.GetSalePeriodListData();
-  agencyStore.GetAgencySelections();
+  agencyStore.GetAgencySelections(null);
 });
 </script>
 

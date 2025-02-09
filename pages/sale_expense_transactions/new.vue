@@ -53,7 +53,7 @@ const onSubmitForm = async () => {
 };
 
 onMounted(() => {
-  agencyStore.GetAgencySelections();
+  agencyStore.GetAgencySelections(null);
   saleStore.GetSalePeriodListData();
   expenseTypeStore.GetExpenseTypeSelectionData();
 });
