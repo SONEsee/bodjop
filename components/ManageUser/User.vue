@@ -1,172 +1,104 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import axios from "@/helpers/axios";
-
 const title = "ຈັດການຜູ້ໃຊ້ງານ";
-interface User {
-  id: string;
-  username: string;
-  fullname: string;
-  phone_number: string;
-  role: string;
-  status: number;
+const userStore = UseUserStore();
+onMounted(async () => {
+  try {
+    await userStore.GetData();
+  } catch (error) {
+    console.error("Failed to load users:", error);
+  }
+});
+const response_data = computed(() => {
+  return userStore.respons_query_data;
+});
+const request = userStore.request_query_data;
+async function onSelectionChange(limit: number) {
+  request.limit = limit;
+  await userStore.GetData();
 }
-
+async function onPageChange(page: number) {
+  request.page = page;
+  await userStore.GetData();
+}
 const headers = [
   { title: "ຊື່ຜູ້ໃຊ້", key: "username" },
   { title: "ຊື່ ແລະ ນາມສະກຸນ", key: "fullname" },
   { title: "ເບີໂທ", key: "phone_number" },
   { title: "ສິດການເຂົ້າໃຊ້", key: "role" },
   { title: "ສະຖານະ", key: "status" },
+  { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
-const data = [
-  {
-    id: "1",
-    username: "admin",
-    fullname: "Admin",
-    phone_number: "020 12345678",
-    role: "Admin",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-  {
-    id: "2",
-    username: "user",
-    fullname: "User",
-    phone_number: "020 87654321",
-    role: "User",
-    status: 1,
-  },
-];
-
-const items = ref<User[]>([]);
-const loading = ref(true);
-const totalItems = ref(0);
-const itemsPerPage = ref(10);
-
-const loadItems = async (options: any) => {
-  try {
-    loading.value = true;
-    const { page, itemsPerPage, sortBy } = options;
-
-    const response = await axios.get("/api/v1/users", {
-      params: {
-        page,
-        per_page: itemsPerPage,
-        sort_by: sortBy[0]?.key,
-        sort_order: sortBy[0]?.order,
-      },
-    });
-
-    items.value = response.data.items;
-    totalItems.value = response.data.total;
-  } catch (error) {
-    console.error("Failed to load users:", error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-const editItem = (item: User) => {};
 </script>
 <template>
-  <v-col cols="12">
+  
+  <div>
+   
+    <v-col cols="12">
     <GlobalTextTitleLine :title="title" />
   </v-col>
   <div class="d-flex justify-end align-end mr-3">
-    <v-btn color="primary" :to="{path:'/user/create'}"
-    prepend-icon="mdi-plus" 
+    <v-btn
+      color="primary"
+      :to="{ path: '/user/create' }"
+      prepend-icon="mdi-plus"
       >ເພີ່ມຂໍ້ມູນຜູ້ໃຊ້ງານ</v-btn
     >
   </div>
-
-  <v-col cols="12">
-    <v-data-table-server
-      v-model:items-per-page="itemsPerPage"
-      :headers="headers"
-      :items="data"
-      :items-length="totalItems"
-      :loading="loading"
-      item-value="id"
-      @update:options="loadItems"
+    <v-data-table 
+    :headers="headers"
+    :items="userStore.respons_query_data?.items.list_data " 
+    
     >
-      <template v-slot:item.status="{ item }">
-        <v-chip :color="item.status === 1 ? 'success' : 'error'">
-          {{ item.status === 1 ? "Active" : "Inactive" }}
-        </v-chip>
-      </template>
-      <template v-slot:item.actions="{ item }">
-        <!-- <v-btn icon small @click="editItem(item)">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn> -->
-        <v-btn
-          icon="mdi-eye"
-          variant="text"
-          size="small"
-          color="primary"
-        ></v-btn>
-        <v-btn
-          icon="mdi-pencil"
-          variant="text"
-          size="small"
-          color="info"
-        ></v-btn>
-        <v-btn
-          icon="mdi-delete"
-          variant="text"
-          size="small"
-          color="error"
-        ></v-btn>
-      </template> </v-data-table-server
-  ></v-col>
-</template>
+    <template v-slot:item.no="{ item, index }">
+              {{ index + 1 }}
+            </template>
+            <template v-slot:item.image="{ item }">
+              <div class="pa-2">
+                <GlobalMenuSpanImage :image="item.image_profile" />
+              </div>
+            </template>
+            <template v-slot:item.villages="{ item }">
+              {{ item?.created_at ?? "" }},
+             
+            </template>
+            <template v-slot:item.status="{ item }">
+              <GlobalDefaultStatusChip :status="item.status" />
+            </template>
+            <template v-slot:item.actions="{ item }">
+              <v-btn
+                color="primary"
+                icon="mdi-pencil"
+                variant="text"
+                @click="goPath(`/agency/edit?id=${item.id}`)"
+                size="small"
+              ></v-btn>
 
+              <v-btn
+                color="primary"
+                icon="mdi-eye"
+                variant="text"
+                @click="goPath(`/agency/detail?id=${item.id}`)"
+                size="small"
+              ></v-btn>
+
+              <v-btn
+                color="error"
+                icon="mdi-delete"
+                variant="text"
+                size="small"
+                
+              ></v-btn>
+            </template>
+            <template v-slot:bottom>
+    <GlobalTablePaginations
+                :page="request.page"
+                :limit="request.limit"
+                :totalpage="userStore.respons_query_data?.items.pagination.total_page ?? 1"
+                @onSelectionChange="onSelectionChange"
+                @onPagechange="onPageChange"
+              /></template>
+      </v-data-table>
+  </div>
+</template>
 

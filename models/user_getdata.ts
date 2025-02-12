@@ -1,35 +1,9 @@
-export interface UserLoginResponse {
-  error: null;
-  items: Items;
-  status: number;
-  timestamp: string;
-}
-
-export interface Items {
-  user: User;
-  token: string;
-  refresh_token: string;
-}
-
-export interface User {
-  id: string;
-  username: string;
-  status: number;
-  profile_image: string;
-  role: string;
-  fullname: string;
-  nick_name: string;
-  agent_code: string;
-}
-
-
-
-
 export interface UserRespons {
     error:     null;
     items:     Items;
     status:    number;
     timestamp: string;
+   
 }
 
 export interface Items {
@@ -57,27 +31,4 @@ export interface Pagination {
     limit:        number;
     total_count:  number;
     total_page:   number;
-}
-
-
-export interface Items {
-  list_data:  ListDatum[];
-  pagination: Pagination;
-}
-
-
-export enum ImageProfile {
-  NA = "N/A",
-}
-
-export enum Role {
-  Admin = "ADMIN",
-  Amin = "AMIN",
-}
-
-export interface Pagination {
-  current_page: number;
-  limit:        number;
-  total_count:  number;
-  total_page:   number;
 }
