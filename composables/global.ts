@@ -2,7 +2,7 @@ import numeral from "numeral";
 import swal from "sweetalert2";
 import { AxiosError } from "axios";
 import type { SweetAlertOptions } from "sweetalert2";
-import { DefaultResponseModel, InvoiceModels } from "@/models/";
+import { DefaultResponseModel, InvoiceModels, PrintsModels } from "@/models/";
 import { COMMISSIONS } from "@/enum/commissions";
 
 export const UseGetFormatDatePicker = (date: any) => {
@@ -325,6 +325,7 @@ export const GetCommissionOrExpenseTypeLabel = (label: string) => {
     COMMITTEE_EXPENSE_SALE: "ຄ່າກຳມະການ",
     VAT_EXPENSE_SALE: "ອາກອນ",
     OTHER_EXPENSE_SALE: "ອື່ນໆ",
+    TOPUP_CARD: "ບັດເຕີມ",
   } as { [key: string]: string };
 
   return listOfLabel[label] ?? "N/A";
@@ -345,6 +346,33 @@ export const FilterAmountOfEachTypeInvoice = (
 
     const filterSale = sales.filter(
       (d: InvoiceModels.Sale) => d.type === label
+    );
+
+    if (filterSale.length < 1) {
+      return "";
+    }
+    return filterSale[0]["amount"]?.toString() ?? "-";
+  } catch (error) {
+    console.error(error);
+    return "-";
+  }
+};
+
+export const FilterAmountOfEachTypeInvoiceV2 = (
+  sales: PrintsModels.InvoiceCalculation[],
+  label: string | null
+): string => {
+  try {
+    if (sales.length < 1) {
+      return "";
+    }
+
+    if (label == null) {
+      return "";
+    }
+
+    const filterSale = sales.filter(
+      (d: PrintsModels.InvoiceCalculation) => d.commissions_type === label
     );
 
     if (filterSale.length < 1) {

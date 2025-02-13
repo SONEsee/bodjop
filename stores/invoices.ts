@@ -22,6 +22,8 @@ export const UseInvoiceStore = defineStore("invoices", {
         null as InvoiceModels.GetInvoiceDataResponseItem | null,
       repsonse_get_detail_invoice_data:
         null as InvoiceModels.GetInvoiceDetailResponseItem | null,
+      response_invoice_debts:
+        [] as InvoiceModels.GetListInvoiceDebtResponseItem[],
     };
   },
 
@@ -92,6 +94,23 @@ export const UseInvoiceStore = defineStore("invoices", {
         console.error(error);
       } finally {
         globalStore.loading_overlay = false;
+      }
+    },
+
+    async GetInvoiceDebtData(id: string | null) {
+      try {
+        if (id === null) {
+          return;
+        }
+
+        const res = await axios.get<InvoiceModels.GetListInvoiceDebtResponse>(
+          `/api/v1/agency/get-debts/${id}`
+        );
+        if (res.status === 200) {
+          this.response_invoice_debts = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
       }
     },
   },
