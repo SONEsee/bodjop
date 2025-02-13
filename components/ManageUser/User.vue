@@ -70,7 +70,7 @@ const headers = [
                 color="primary"
                 icon="mdi-pencil"
                 variant="text"
-                @click="goPath(`/agency/edit?id=${item.id}`)"
+                @click="goPath(`/user/edit?id=${item.id}`)"
                 size="small"
               ></v-btn>
 

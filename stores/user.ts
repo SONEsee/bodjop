@@ -46,40 +46,58 @@ export const UseUserStore = defineStore("user", {
       );
       if(res.status === 200){
         this.respons_query_data = res.data;
-        console.log('Response data:', res.data);
+        
       }
       } catch (error) {
         
       }
-    }
-  }
-//   actions: {
-//     async GetLisData() {
-//       try {
-//         this.request_query_data.loading = true;
-//         this.error = null; 
-
+    },
+    async GetDetailData(id: string | null){
+      try {
+        if(id === null || id == ""){
+          return;
+        }
+        const res = await axios.get<UsermeModel.UserMeResponse>(`/api/v1/users/get-detail/${id}`);
        
-//         console.log('API URL:', axios.defaults.baseURL);
+        if(res.status === 200){
+          this.response_detail_query_data = res.data.items;
+          console.log('Response data:', res.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async onGetAndEditUser(id: string | null){
+      const globalStore = UseGlobalStore();
+      try {
         
-//         const res = await axios.get<UserGetdataModel.UserRespons>("/api/v1/users/get-data", {
-//           params: {
-//             ...this.request_query_data,
-//           }
-//         });
+        globalStore.loading_overlay = true
+        await this.GetDetailData(id);
+        let item =  this.response_detail_query_data;
+        if(item != null){
+          const globalStore = UseGlobalStore();
+          const ProvinceID = item?.village?.district?.province_id ?? null;
+          const districtId = item.village.district_id ?? null;
+          await globalStore.GetVillagesData(districtId?.toString() ?? null,
+           null
+          );
+          await globalStore.GetDistrictData(ProvinceID, null  );
+          if (
+            item.image_profile !== null &&
+            item.image_profile != "" &&
+            item.image_profile != "N/A"
+          ) {
+            item.image_profile = await globalStore.GetFileData(
+              item.image_profile
+            );
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }finally {
+        globalStore.loading_overlay = false;
+      }
+  },
 
-//         if (res.status === 200) {
-//           this.respons_query_data = res.data;
-//           console.log('Response data:', res.data);
-//         }
-//       } catch (error: any) {
-//         console.error('API Error:', error);
-        
-//         this.error = error.response?.data?.message || error.message || 'Failed to load data';
-//         throw error; 
-//       } finally {
-//         this.request_query_data.loading = false;
-//       }
-//     }
-//   }
+  }
 });
