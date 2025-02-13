@@ -100,3 +100,18 @@ export interface InvoiceCalculation {
   updated_at: Date;
   is_commission: boolean;
 }
+
+export interface GetListInvoiceDebtResponse {
+  error: null;
+  items: GetListInvoiceDebtResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetListInvoiceDebtResponseItem {
+  invoice_detail_id: string;
+  invoice_id: string;
+  sale_date: Date;
+  innitial_amount: number;
+  debt_amount: number;
+}

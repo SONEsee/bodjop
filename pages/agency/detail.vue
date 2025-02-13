@@ -13,6 +13,13 @@ const windowItems = ref([
     value: 1,
     component: shallowRef(resolveComponent("AgencyDetailContentAgencyDevices")),
   },
+  {
+    title: "ການຕັດໜີ້",
+    value: 2,
+    component: shallowRef(
+      resolveComponent("AgencyDetailContentAgencyInvoiceDebts")
+    ),
+  },
   // {
   //   title: "ລູກທີມ",
   //   value: 2,
@@ -25,6 +32,7 @@ const id =
     ? null
     : route.query.id?.toString() ?? null;
 const agencyStore = UseAgencyStore();
+const invoiceStore = UseInvoiceStore();
 
 const onLoadingData = async () => {
   try {
@@ -40,6 +48,7 @@ const onLoadingData = async () => {
 
 onMounted(() => {
   onLoadingData();
+  invoiceStore.GetInvoiceDebtData(id);
 });
 </script>
 

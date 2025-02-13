@@ -325,6 +325,7 @@ export const GetCommissionOrExpenseTypeLabel = (label: string) => {
     COMMITTEE_EXPENSE_SALE: "ຄ່າກຳມະການ",
     VAT_EXPENSE_SALE: "ອາກອນ",
     OTHER_EXPENSE_SALE: "ອື່ນໆ",
+    TOPUP_CARD: "ບັດເຕີມ",
   } as { [key: string]: string };
 
   return listOfLabel[label] ?? "N/A";
