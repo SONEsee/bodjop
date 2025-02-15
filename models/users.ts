@@ -44,6 +44,7 @@ export interface ListDatum {
     nick_name:          string;
     phone_number:       string;
     username:           string;
+    password:           string;
     created_at:         Date;
     created_by_user_id: string;
     role:               string;

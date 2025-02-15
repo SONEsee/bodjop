@@ -14,7 +14,7 @@ export const UseUserStore = defineStore("user", {
         profile_image: null as File | null,
         village_id: null,
         district_id: null,
-        province_id: null
+        province_id: null,
       },
       reques: {
         error: null,
@@ -29,59 +29,60 @@ export const UseUserStore = defineStore("user", {
         loading: false,
       },
       respons_query_data: null as UserGetdataModel.UserRespons | null,
-      response_detail_query_data: null as UsermeModel.UserMeResponseItems | null,
-      error: null as string | null, 
+      response_detail_query_data:
+        null as UsermeModel.UserMeResponseItems | null,
+      error: null as string | null,
     };
   },
-  actions:{
-    async GetData(){
+  actions: {
+    async GetData() {
       try {
         this.request_query_data.loading = true;
-        const res =await axios.get<UsermeModel.UserMeResponse>(`/api/v1/users/get-data`,{
-          params:{
-            ...this.request_query_data,
-          
+        const res = await axios.get<UsermeModel.UserMeResponse>(
+          `/api/v1/users/get-data`,
+          {
+            params: {
+              ...this.request_query_data,
+            },
           }
+        );
+        if (res.status === 200) {
+          this.respons_query_data = res.data;
         }
-      );
-      if(res.status === 200){
-        this.respons_query_data = res.data;
-        
-      }
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     },
-    async GetDetailData(id: string | null){
+    async GetDetailData(id: string | null) {
       try {
-        if(id === null || id == ""){
+        if (id === null || id == "") {
           return;
         }
-        const res = await axios.get<UsermeModel.UserMeResponse>(`/api/v1/users/get-detail/${id}`);
-       
-        if(res.status === 200){
+        const res = await axios.get<UsermeModel.UserMeResponse>(
+          `/api/v1/users/get-detail/${id}`
+        );
+
+        if (res.status === 200) {
           this.response_detail_query_data = res.data.items;
-          console.log('Response data:', res.data);
         }
       } catch (error) {
         console.error(error);
       }
     },
-    async onGetAndEditUser(id: string | null){
+    async onGetAndEditUser(id: string | null) {
       const globalStore = UseGlobalStore();
       try {
-        
-        globalStore.loading_overlay = true
+        globalStore.loading_overlay = true;
         await this.GetDetailData(id);
-        let item =  this.response_detail_query_data;
-        if(item != null){
+
+        let item = this.response_detail_query_data;
+        if (item != null) {
           const globalStore = UseGlobalStore();
           const ProvinceID = item?.village?.district?.province_id ?? null;
           const districtId = item.village.district_id ?? null;
-          await globalStore.GetVillagesData(districtId?.toString() ?? null,
-           null
+          await globalStore.GetVillagesData(
+            districtId?.toString() ?? null,
+            null
           );
-          await globalStore.GetDistrictData(ProvinceID, null  );
+          await globalStore?.GetDistrictData(ProvinceID, null);
           if (
             item.image_profile !== null &&
             item.image_profile != "" &&
@@ -94,10 +95,9 @@ export const UseUserStore = defineStore("user", {
         }
       } catch (error) {
         console.log(error);
-      }finally {
+      } finally {
         globalStore.loading_overlay = false;
       }
+    },
   },
-
-  }
 });
