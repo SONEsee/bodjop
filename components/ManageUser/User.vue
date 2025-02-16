@@ -29,6 +29,28 @@ const headers = [
   { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
+const onDeleteUser = async (id: string) => {
+  const res = await userStore.OndeleteUser(id);
+  if (res instanceof Error) {
+    return DefaultSwalError(res.message);
+  }
+  const notification = await CallSwal({
+    icon: "success",
+    title: "ສຳເລັດ",
+    text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
+  });
+  if (notification.isConfirmed) {
+    await userStore.GetData();
+  } else {
+    await userStore.GetData();
+  }
+};
+const onsetinput = async (input: string | null) => {
+  if (request !== null) {
+    request.q = input ?? null;
+    await userStore.GetData();
+  }
+};
 </script>
 <template>
   
@@ -78,7 +100,7 @@ const headers = [
                 color="primary"
                 icon="mdi-eye"
                 variant="text"
-                @click="goPath(`/agency/detail?id=${item.id}`)"
+                @click="goPath(`/user/detail?id=${item.id}`)"
                 size="small"
               ></v-btn>
 
@@ -87,6 +109,7 @@ const headers = [
                 icon="mdi-delete"
                 variant="text"
                 size="small"
+                @click="onDeleteUser(item.id)"
                 
               ></v-btn>
             </template>

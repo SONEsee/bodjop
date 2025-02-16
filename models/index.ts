@@ -17,6 +17,7 @@ import * as InvoiceModels from "./invoices";
 import * as DeviceModels from "./devices";
 import * as DeviceMovementModels from "./device_movements";
 import* as UserGetdataModel from "./user_getdata";
+import *as DetailUserModel from "./detailuser";
 export {
   UserModel,
   UsermeModel,
@@ -37,4 +38,4 @@ export {
   DeviceModels,
   DeviceMovementModels,
   UserGetdataModel,
-};
+  DetailUserModel,
