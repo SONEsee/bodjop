@@ -43,13 +43,6 @@ export interface ListDatum {
   user: User;
 }
 
-export interface Pagination {
-  current_page: number;
-  limit: number;
-  total_count: number;
-  total_page: number;
-}
-
 export interface GetInvoiceDetailResponse {
   error: null;
   items: GetInvoiceDetailResponseItem;
@@ -108,10 +101,55 @@ export interface GetListInvoiceDebtResponse {
   timestamp: string;
 }
 
+export interface NewGetListInvoiceDebtResponse {
+  error: null;
+  items: NewGetListInvoiceDebtResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface NewGetListInvoiceDebtResponseItem {
+  invoice_detail_id: string;
+  invoice_id: string;
+  sale_date: Date;
+  innitial_amount: number;
+  debt_amount: number;
+  amount: number;
+}
+
 export interface GetListInvoiceDebtResponseItem {
   invoice_detail_id: string;
   invoice_id: string;
   sale_date: Date;
   innitial_amount: number;
   debt_amount: number;
+}
+
+export interface GetInvoicePaymentTransactionResponse {
+  error: null;
+  items: GetInvoicePaymentTransactionResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetInvoicePaymentTransactionResponseItem {
+  list_data: GetInvoicePaymentTransactionResponseItemListdata[];
+  pagination: Pagination;
+}
+
+export interface GetInvoicePaymentTransactionResponseItemListdata {
+  id: string;
+  invoice_detail_id: string;
+  sale_date: Date;
+  payment_amount: number;
+  username: string;
+  fullname: string;
+  created_at: Date;
+}
+
+export interface Pagination {
+  current_page: number;
+  limit: number;
+  total_count: number;
+  total_page: number;
 }

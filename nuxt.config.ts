@@ -60,6 +60,11 @@ export default defineNuxtConfig({
       pathPrefix: true,
       prefix: "DeviceMovements",
     },
+    {
+      path: "@/components/Debts/",
+      pathPrefix: true,
+      prefix: "Debts",
+    },
   ],
 
   css: ["~/assets/css/style.scss", "~/assets/css/global.css"],

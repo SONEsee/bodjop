@@ -20,6 +20,13 @@ const windowItems = ref([
       resolveComponent("AgencyDetailContentAgencyInvoiceDebts")
     ),
   },
+  {
+    title: "ປະຫວັດການຕັດຍອດ",
+    value: 3,
+    component: shallowRef(
+      resolveComponent("AgencyDetailContentAgencyInvoicePayments")
+    ),
+  },
   // {
   //   title: "ລູກທີມ",
   //   value: 2,
@@ -38,7 +45,6 @@ const onLoadingData = async () => {
   try {
     loading.value = true;
     await agencyStore.GetDetailAgencyData(id);
-    await agencyStore.GetAgenciesDeviceResponse(id);
   } catch (error) {
     console.error(error);
   } finally {
@@ -49,6 +55,8 @@ const onLoadingData = async () => {
 onMounted(() => {
   onLoadingData();
   invoiceStore.GetInvoiceDebtData(id);
+  agencyStore.GetAgenciesDeviceResponse(id);
+  invoiceStore.GetAgencyInvoicePaymentAmount(id);
 });
 </script>
 
