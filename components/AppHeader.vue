@@ -119,7 +119,7 @@ const items = ref([
       {
         text: "ຈັດການຜູ້ໃຊ້ງານ",
         icon: "mdi-account-cog",
-        to: "/user",
+        to: "/manageuser",
       },
       {
         text: "ສະແກນ Qr Code",

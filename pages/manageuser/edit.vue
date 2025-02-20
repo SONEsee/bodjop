@@ -9,7 +9,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  
-    <Edit/>
+    <EditManage/>
     <GlobalOverlayLoading :loading="globalStore.loading_overlay" />
 </template>

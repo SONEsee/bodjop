@@ -1,10 +1,9 @@
-import { UsermeModel, UserGetdataModel,DetailUserModel } from "~/models";
+import { UsermeModel, UserGetdataModel, DetailUserModel } from "~/models";
 import axios from "~/helpers/axios";
 
 export const UseUserStore = defineStore("user", {
   state() {
     return {
-      
       form_create_data: {
         fullname: null as string | null,
         phone_number: null as string | null,
@@ -48,7 +47,7 @@ export const UseUserStore = defineStore("user", {
           }
         );
         if (res.status === 200) {
-          this.respons_query_data = res.data;
+          this.respons_query_data = res.data
         }
       } catch (error) {}
     },
@@ -101,30 +100,29 @@ export const UseUserStore = defineStore("user", {
         globalStore.loading_overlay = false;
       }
     },
-    async OndeleteUser( id: string): Promise<string | Error>{
-const globalStore = UseGlobalStore();
-try {
-  
-  const notification = await CallSwal({
-    icon: "warning",
-    title: "ຄຳເຕືອນ",
-    text: `ທ່ານກຳລັງລົບຂໍ້ມູນທ່ານແນ່ໃຈແລ້ວບໍ່?`,
-    showCancelButton: true,
-    confirmButtonText: "ຕົກລົງ",
-    cancelButtonText: "ຍົກເລີກ",
-  });
-  if (notification.isConfirmed) {
-    globalStore.loading_overlay = true;
-    const res = await axios.delete(`/api/v1/users/delete/${id}`);
-    if (res.status === 200) {
-      return id;
-    }
-  }
+    async OndeleteUser(id: string): Promise<string | Error> {
+      const globalStore = UseGlobalStore();
+      try {
+        const notification = await CallSwal({
+          icon: "warning",
+          title: "ຄຳເຕືອນ",
+          text: `ທ່ານກຳລັງລົບຂໍ້ມູນທ່ານແນ່ໃຈແລ້ວບໍ່?`,
+          showCancelButton: true,
+          confirmButtonText: "ຕົກລົງ",
+          cancelButtonText: "ຍົກເລີກ",
+        });
+        if (notification.isConfirmed) {
+          globalStore.loading_overlay = true;
+          const res = await axios.delete(`/api/v1/users/delete/${id}`);
+          if (res.status === 200) {
+            return id;
+          }
+        }
 
-  return "";
-} catch (error) {
-  
-}
-    }
+        return "";
+      } catch (error) {
+        throw error;
+      }
+    },
   },
 });

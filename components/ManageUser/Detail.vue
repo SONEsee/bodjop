@@ -80,7 +80,7 @@ const respons = computed({
                 />
               </v-col>
 
-              <v-col cols="4">
+              <v-col cols="4" >
                 <GlobalCardTitle
                   :title="'ແຂວງ / Provinces'"
                   :text="

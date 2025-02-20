@@ -39,3 +39,4 @@ export {
   DeviceMovementModels,
   UserGetdataModel,
   DetailUserModel,
+}
