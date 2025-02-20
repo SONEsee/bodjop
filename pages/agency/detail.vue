@@ -27,6 +27,11 @@ const windowItems = ref([
       resolveComponent("AgencyDetailContentAgencyInvoicePayments")
     ),
   },
+  {
+    title: "ລູກທີມ",
+    value: 4,
+    component: shallowRef(resolveComponent("AgencyDetailContentAgencyMembers")),
+  },
   // {
   //   title: "ລູກທີມ",
   //   value: 2,
@@ -57,6 +62,7 @@ onMounted(() => {
   invoiceStore.GetInvoiceDebtData(id);
   agencyStore.GetAgenciesDeviceResponse(id);
   invoiceStore.GetAgencyInvoicePaymentAmount(id);
+  agencyStore.GetAgencyMemberList(id);
 });
 </script>
 

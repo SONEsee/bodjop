@@ -45,6 +45,13 @@ export const UseAgencyStore = defineStore("agency", {
         loading: false,
       },
 
+      request_query_agency_members_data: {
+        q: null as string | null,
+        limit: 20,
+        page: 1,
+        loading: false,
+      },
+
       response_query_data: null as AgencyModel.GetAgencyResponseItems | null,
       response_detail_query_data:
         null as AgencyModel.GetDetailAgencyResponse | null,
@@ -56,6 +63,8 @@ export const UseAgencyStore = defineStore("agency", {
       },
       agency_devices_response:
         null as AgencyModel.GetAgencyDeviceResponseItem | null,
+      response_query_agency_members_data:
+        null as AgencyModel.GetAgencyMemberResponseItem | null,
     };
   },
 
@@ -231,6 +240,31 @@ export const UseAgencyStore = defineStore("agency", {
         }
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    async GetAgencyMemberList(id: string | null) {
+      try {
+        if (id === null) {
+          return;
+        }
+
+        this.request_query_agency_members_data.loading = true;
+        const res = await axios.get<AgencyModel.GetAgencyMemberResponse>(
+          `/api/v1/agency/members/get-data/${id}`,
+          {
+            params: {
+              ...this.request_query_agency_members_data,
+            },
+          }
+        );
+        if (res.status === 200) {
+          this.response_query_agency_members_data = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_query_agency_members_data.loading = false;
       }
     },
   },

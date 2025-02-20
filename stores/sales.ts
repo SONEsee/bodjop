@@ -14,6 +14,7 @@ export const UseSaleStore = defineStore("sales", {
         limit: 20,
         q: null,
         loading: false,
+        sale_date: null as Date | null,
       },
       response_sale_get_data:
         null as SaleModels.GetSaleListDataResponseItems | null,
@@ -25,11 +26,18 @@ export const UseSaleStore = defineStore("sales", {
     async GetSaleListData() {
       try {
         this.request_sale_get_data.loading = true;
+        const dayjs = useDayjs();
         const res = await axios.get<SaleModels.GetSaleListDataResponse>(
           "/api/v1/sales/get-data",
           {
             params: {
               ...this.request_sale_get_data,
+              sale_date:
+                this.request_sale_get_data.sale_date !== null
+                  ? dayjs(this.request_sale_get_data.sale_date).format(
+                      "YYYY-MM-DD"
+                    )
+                  : "",
             },
           }
         );

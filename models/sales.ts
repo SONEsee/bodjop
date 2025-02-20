@@ -59,6 +59,7 @@ export interface GetSaleListDataResponseItemsListData {
   total_devices: number;
   created_at: Date;
   updated_at: Date;
+  sale_date: Date;
   created_by_user_id: string;
   status: number;
   user: User;
