@@ -129,6 +129,13 @@ export interface GetSalePeriodResponse {
   timestamp: string;
 }
 
+export interface GetSalePeriodCheckResponse {
+  error: null;
+  items: GetSalePeriodResponseItem;
+  status: number;
+  timestamp: string;
+}
+
 export interface GetSalePeriodResponseItem {
   sale_date: Date;
   id: string;
