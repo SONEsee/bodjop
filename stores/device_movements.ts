@@ -1,5 +1,5 @@
 import axios from "@/helpers/axios";
-import { DeviceMovementModels } from "@/models";
+import { DeviceMovementModels, DeviceModels } from "@/models";
 export const UseDeviceMovementStore = defineStore("device_movements", {
   state() {
     return {
@@ -12,6 +12,11 @@ export const UseDeviceMovementStore = defineStore("device_movements", {
         null as DeviceMovementModels.GetDeviceMovementResponseItem | null,
       response_detail_data:
         null as DeviceMovementModels.GetDeviceMovementDetailResponseItem | null,
+      request_return_device: {
+        devices: [] as DeviceModels.DeviceSelectionResponseItem[],
+        movement_date: null,
+        device_id: null as DeviceModels.DeviceSelectionResponseItem | null,
+      },
     };
   },
 

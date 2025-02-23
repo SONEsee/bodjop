@@ -16,6 +16,8 @@ export const UseInvoiceStore = defineStore("invoices", {
         limit: 20,
         page: 1,
         loading: false,
+        sale_date: null as Date | null,
+        q: null as string | null,
       },
 
       response_get_data:
@@ -67,11 +69,19 @@ export const UseInvoiceStore = defineStore("invoices", {
     async GetInvoiceData() {
       try {
         this.request_get_data.loading = true;
+        const saledateRequest = this.request_get_data.sale_date;
+        const dayjs = useDayjs();
+        let saleDate =
+          saledateRequest === null
+            ? null
+            : dayjs(saledateRequest).format("YYYY-MM-DD");
+
         const res = await axios.get<InvoiceModels.GetInvoiceDataResponse>(
           "/api/v1/invoices/get-data",
           {
             params: {
               ...this.request_get_data,
+              sale_date: saleDate,
             },
           }
         );

@@ -213,7 +213,7 @@ const deleteData = async (id: string) => {
     }
   } catch (error) {
     console.error(error);
-    Swal.fire("ຜິດພາດ!", "ບໍ່ສາມາດລົບຂໍ້ມູນໄດ້.", "error");
+    DefaultSwalError(error);
   }
 };
 onMounted(() => {

@@ -41,6 +41,8 @@ export interface ListDatum {
   updated_at: Date;
   status: number;
   user: User;
+  sale_date: Date;
+  main_invoice_code: string;
 }
 
 export interface GetInvoiceDetailResponse {
