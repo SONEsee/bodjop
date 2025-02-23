@@ -37,6 +37,10 @@ export interface GetAgencyDetailResponse {
   timestamp: string;
 }
 
+
+
+
+
 export interface GetAgencyResponseItems {
   list_data: GetAgencyResponseItemsListData[];
   pagination: Pagination;

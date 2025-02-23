@@ -5,7 +5,8 @@ const notfoundref = ref(notfoundImage);
 import axios from "@/helpers/axios";
 import { UsermeModel } from "@/models/";
 import { useRouter } from "vue-router";
-const userStore = UseUserStore();
+
+const userStore = UserManageStore();
 const globalStore = UseGlobalStore();
 const title = ref("ສ້າງຂໍ້ມູນຜູ້ໃຊ້ງານ");
 const tour = ref("ຂໍ້ມູນທົວໄປ")
@@ -71,7 +72,7 @@ const handleSubmit = async () => {
       });
 
       if (successNotification.isConfirmed) {
-        delayGoPath("/user");
+        delayGoPath("/manageuser");
       } else {
         delayGoPath("users");
       }
