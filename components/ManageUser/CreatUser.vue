@@ -8,6 +8,8 @@ import { useRouter } from "vue-router";
 const userStore = UseUserStore();
 const globalStore = UseGlobalStore();
 const title = ref("ສ້າງຂໍ້ມູນຜູ້ໃຊ້ງານ");
+const tour = ref("ຂໍ້ມູນທົວໄປ")
+const location = ref("ຂໍ້ມູນທີ່ຢູ່")
 interface UserRequest {
   fullname: string;
   phone_number: string;
@@ -69,7 +71,7 @@ const handleSubmit = async () => {
       });
 
       if (successNotification.isConfirmed) {
-        delayGoPath("/users");
+        delayGoPath("/user");
       } else {
         delayGoPath("users");
       }
@@ -96,20 +98,30 @@ const onFileChange = (event: Event) => {
 </script>
 
 <template>
-  
-  <v-card border flat><v-col cols="12">
-    <GlobalTextTitleLine :title="title" />
-  </v-col>
-  <v-form ref="form" @submit.prevent="handleSubmit">
-    <div class="d-flex justify-end align-end mr-3">
-      <v-btn color="primary" type="submit" class="mt-2">ບັນທຶກ</v-btn>
-    </div>
-
+  <v-card class="pa-4" min-height="95vh"   flat >
     <v-col cols="12">
+      <GlobalTextTitleLine :title="title" />
+    </v-col>
+
+    <v-form ref="form" @submit.prevent="handleSubmit">
+      <div class="d-flex justify-end align-end mb-4">
+        <v-btn
+          color="primary"
+          type="submit"
+          :loading="loading"
+          prepend-icon="mdi-content-save"
+        >
+          ບັນທຶກ
+        </v-btn>
+      </div>
+
       <v-row>
-        <v-col cols="4">
-          <v-row>
-           
+        <v-col cols="12" md="4">
+          <div class="text-center mb-4">
+          <h3>ຮູບໂປຣໄຟລ໌</h3></div>
+
+          <v-col cols="12" class="d-flex justify-center">
+            <v-row>
               <v-col
                 cols="12"
                 class="d-flex flex-wrap justify-center mt-2 ml-2 mr-2 mb-2"
@@ -145,129 +157,158 @@ const onFileChange = (event: Event) => {
                   style="display: none"
                   accept="image/jpg,image/png,image/jpeg"
                   @change="onFileChange"
-                /> </v-col
-            >
-          </v-row>
-        </v-col>
-        <v-col cols="8">
-          
-            <v-row class="ml-2 mr-2">
-              <v-col cols="12" md="6">
-                <label>ຊື່ ແລະ ນາມສະກຸນ / Fullname</label>
-                <v-text-field
-                  @click:append-inner="visible = !visible"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນຊື່ ແລະ ນາມສະກຸນ']"
-                  v-model="request.fullname"
-                  placeholder="ກະລຸນາປ້ອນຊື່ ແລະ ນາມສະກຸນ"
-                  density="compact"
-                  variant="outlined"
-                  hide-details="auto"
-                  class="pb-6"
-                ></v-text-field>
-
-                <label>ເບີໂທລະສັບ</label>
-                <v-text-field
-                  v-model="request.phone_number"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນເບີ້ໂທລະສັບ']"
-                  placeholder="ກະລຸນາປ້ອນເບີ້ໂທລະສັບ"
-                  density="compact"
-                  hide-details="auto"
-                  variant="outlined"
-                  class="pb-6"
-                ></v-text-field>
-
-                <label>ສິດການເຂົ້າໃຊ້ງານ</label>
-                <v-text-field
-                  v-model="request.role"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປອ້ນສິດການເຂົ້າໃຊ້ງານ']"
-                  placeholder="ກະລຸນາປອ້ນສິດການເຂົ້າໃຊ້ງານ"
-                  density="compact"
-                  variant="outlined"
-                  hide-details="auto"
-                  class="pb-6"
-                ></v-text-field>
-
-                <label>ລະຫັດຜ່ານ / Password</label>
-                <v-text-field
-                  v-model="request.password"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນລະຫັດຜ່ານ']"
-                  placeholder="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
-                  density="compact"
-                  variant="outlined"
-                  hide-details="auto"
-                  class="pb-6"
-                ></v-text-field>
-                <label>Villages</label>
-                <v-select
-                  v-model="request.village_id"
-                  :items="globalStore.villages"
-                  variant="outlined"
-                  hide-details="auto"
-                  density="compact"
-                  item-title="vill_name"
-                  :rules="[(v: string) => !!v || 'Villages is required']"
-                  item-value="id"
-                ></v-select>
-              </v-col>
-
-              <v-col cols="6">
-                <label>ເພດ</label>
-                <v-text-field
-                  v-model="request.gender"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນເພດ']"
-                  placeholder="ກະລຸນາປ້ອນເພດ"
-                  density="compact"
-                  variant="outlined"
-                  hide-details="auto"
-                  class="pb-6"
-                ></v-text-field>
-
-                <label>ຊື່ຜູ້ໃຊ້ງານ</label>
-                <v-text-field
-                  v-model="request.username"
-                  :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້ງານ']"
-                  placeholder="ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້ງານ"
-                  density="compact"
-                  variant="outlined"
-                  hide-details="auto"
-                  class="pb-6"
-                ></v-text-field>
-
-                <label>Province</label>
-                <v-select
-                  v-model="request.province_id"
-                  :items="globalStore.provinces"
-                  variant="outlined"
-                  hide-details="auto"
-                  :rules="[(v: string) => !!v || 'Province is required']"
-                  density="compact"
-                  item-title="pr_name"
-                  item-value="id"
-                  @update:model-value="
-                    globalStore.GetDistrictData($event, null)
-                  "
-                ></v-select>
-                <label>Districts</label>
-                <v-select
-                  v-model="request.district_id"
-                  :items="globalStore.districts"
-                  variant="outlined"
-                  hide-details="auto"
-                  density="compact"
-                  item-title="dr_name"
-                  item-value="id"
-                  :rules="[(v: string) => !!v || 'Districts is required']"
-                  @update:model-value="
-                    globalStore.GetVillagesData($event, null)
-                  "
-                ></v-select>
-                
+                />
               </v-col>
             </v-row>
-          
-        </v-col>
-      </v-row> </v-col
-  >
-</v-form></v-card>
+          </v-col>
 
+          <input
+            type="file"
+            ref="file"
+            style="display: none"
+            accept="image/jpg,image/png,image/jpeg"
+            @change="onFileChange"
+          />
+        </v-col>
+
+        <v-col cols="12" md="8">
+          <v-row>
+            <v-col cols="12">
+              <GlobalTextTitleLine :title="tour" />
+              <v-divider class="mb-4"></v-divider>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="request.fullname"
+                density="comfortable"
+                variant="outlined"
+                label="ຊື່ ແລະ ນາມສະກຸນ"
+                placeholder="ກະລຸນາປ້ອນຊື່ ແລະ ນາມສະກຸນ"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-account"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="request.phone_number"
+                density="comfortable"
+                variant="outlined"
+                label="ເບີໂທລະສັບ"
+                placeholder="ກະລຸນາປ້ອນເບີໂທລະສັບ"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-phone"
+              ></v-text-field>
+              <v-text-field
+                v-model="request.role"
+                density="comfortable"
+                variant="outlined"
+                label="ສິດການເຂົ້ານຳໃຊ້"
+                placeholder="ກະລຸນາປ້ອນສິດການເຂົ້ານຳໃຊ້"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-account-star-outline"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <v-select
+                v-model="request.gender"
+                density="comfortable"
+                variant="outlined"
+                label="ເພດ"
+                :rules="[(v) => !!v || 'ກະລຸນາເລືອກເພດ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-gender-male-female"
+              ></v-select>
+
+              <v-text-field
+                v-model="request.username"
+                density="comfortable"
+                variant="outlined"
+                label="ຊື່ຜູ້ໃຊ້"
+                placeholder="ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-account-key"
+              ></v-text-field>
+
+              <v-text-field
+                v-model="request.password"
+                density="comfortable"
+                variant="outlined"
+                type="password"
+                placeholder="ກະລຸນາປ້ອນລະຫັດ"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-key-outline"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="12">
+              <div class="mb-4"><GlobalTextTitleLine :title="location" /></div>
+              
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="request.province_id"
+                :items="globalStore.provinces"
+                item-title="pr_name"
+                item-value="id"
+                density="comfortable"
+                variant="outlined"
+                label="ແຂວງ"
+                :rules="[(v) => !!v || 'ກະລຸນາເລືອກແຂວງ']"
+                hide-details="auto"
+                class="mb-4"
+                @update:model-value="globalStore.GetDistrictData($event, null)"
+                prepend-inner-icon="mdi-map-marker"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="request.district_id"
+                :items="globalStore.districts"
+                item-title="dr_name"
+                item-value="id"
+                density="comfortable"
+                variant="outlined"
+                label="ເມືອງ"
+                :rules="[(v) => !!v || 'ກະລຸນາເລືອກເມືອງ']"
+                hide-details="auto"
+                class="mb-4"
+                @update:model-value="globalStore.GetVillagesData($event, null)"
+                prepend-inner-icon="mdi-map-marker-outline"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="12" md="4">
+              <v-select
+                v-model="request.village_id"
+                :items="globalStore.villages"
+                item-title="vill_name"
+                item-value="id"
+                density="comfortable"
+                variant="outlined"
+                label="ບ້ານ"
+                :rules="[(v) => !!v || 'ກະລຸນາເລືອກບ້ານ']"
+                hide-details="auto"
+                class="mb-4"
+                prepend-inner-icon="mdi-home-variant"
+              ></v-select>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-form>
+  </v-card>
 </template>

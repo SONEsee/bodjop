@@ -6,7 +6,7 @@ export interface UserMeResponse {
 export interface UserMeResponseItems {
   id: string;
   agent_code: string;
-  village_id: number;
+  village_id: number || null;
   fullname: string;
   nick_name: string;
   phone_number: string;
@@ -27,7 +27,7 @@ export interface Village {
   id: number;
   vill_name: string;
   vill_name_en: string;
-  district_id: number;
+  district_id: number | null;
   district: District;
 }
 

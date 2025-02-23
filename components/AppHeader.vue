@@ -90,6 +90,12 @@ const items = ref([
     title: "ຈັດການຂໍ້ມູນ",
     menu: [
       { text: "ຈັດການຕົວແທນ", icon: "mdi-account-group", to: "/agency" },
+      { text: "ຈັດການຂໍ້ມູນການຂາຍ", icon: "mdi-sale", to: "/sales" },
+      {
+        text: "ຈັດການຂໍ້ມູນໃບຮຽກເກັບເງິນ",
+        icon: "mdi-invoice",
+        to: "/invoices",
+      },
       {
         text: "ຈັດການປະເພດລາຍຈ່າຍ",
         icon: "mdi-cash-edit",
@@ -101,6 +107,11 @@ const items = ref([
         to: "/sale_expense_transactions",
       },
       {
+        text: "ເພີ່ມຂໍ້ມູນການຕັດໜີ້",
+        icon: "mdi-cash-100",
+        to: "/debts/new",
+      },
+      {
         text: "ຈັດການຂໍ້ມູນອຸປະກອນ",
         icon: "mdi-devices",
         to: "/devices",
@@ -110,16 +121,15 @@ const items = ref([
         icon: "mdi-transfer",
         to: "/devices-movements",
       },
-      { text: "ຈັດການຂໍ້ມູນການຂາຍ", icon: "mdi-sale", to: "/sales" },
-      {
-        text: "ຈັດການຂໍ້ມູນໃບຮຽກເກັບເງິນ",
-        icon: "mdi-invoice",
-        to: "/invoices",
-      },
       {
         text: "ຈັດການຜູ້ໃຊ້ງານ",
         icon: "mdi-account-cog",
-        to: "/user",
+        to: "/manageuser",
+      },
+      {
+        text: "ສະແກນ Qr Code",
+        icon: "mdi-qrcode",
+        to: "/qr",
       },
     ],
   },

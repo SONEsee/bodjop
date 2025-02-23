@@ -6,6 +6,7 @@ const emits = defineEmits(["onSetDate"]);
 const props = defineProps({
   date: {
     default: new Date(),
+    type: [Date, null],
   },
   required: {
     type: Boolean,

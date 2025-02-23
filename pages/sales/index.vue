@@ -4,6 +4,7 @@ const title = ref("ຂໍ້ມູນການຂາຍ");
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
   { title: "ສ້າງວັນທີ", value: "created_at" },
+  { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ຈຳນວນງວດທັງໝົດ", value: "total_devices" },
   { title: "ຍອດລວມ", value: "total_amount" },
   { title: "ຄົນສ້າງ", value: "username" },
@@ -27,6 +28,11 @@ async function onPageChange(page: number) {
   await saleStore.GetSaleListData();
 }
 
+async function onDateSelect(date: Date | null) {
+  request.sale_date = date;
+  await saleStore.GetSaleListData();
+}
+
 onMounted(() => {
   saleStore.GetSaleListData();
 });
@@ -44,7 +50,14 @@ onMounted(() => {
           />
         </v-col>
 
-        <v-col cols="12" class="d-flex flex-wrap justify-end">
+        <v-col cols="12" class="d-flex flex-wrap justify-space-between">
+          <div>
+            <label>ງວດວັນທີ</label>
+            <DatePicker
+              :date="request.sale_date"
+              @on-set-date="onDateSelect($event)"
+            />
+          </div>
           <div>
             <v-btn
               color="primary"
@@ -72,6 +85,10 @@ onMounted(() => {
 
             <template v-slot:item.created_at="{ item }">
               {{ FormatDatetime(item.created_at) }}
+            </template>
+
+            <template v-slot:item.sale_date="{ item }">
+              {{ FormatDate(item.sale_date) }}
             </template>
 
             <template v-slot:item.total_amount="{ item }">

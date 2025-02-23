@@ -92,6 +92,19 @@ export const GetAgencyType = () => {
   ];
 };
 
+export const GetDefaultGenders = () => {
+  return [
+    {
+      title: "ຜູ້ຍິງ / Female",
+      value: 1,
+    },
+    {
+      title: "ຜູ້ຊາຍ / Male",
+      value: 2,
+    },
+  ];
+};
+
 export const GetAgencyTypeLabel = (type: string): string => {
   const list_of_agency_label = {
     PROVINCE: "ຕົວແທນແບບແຂວງ (Province Agency)",
