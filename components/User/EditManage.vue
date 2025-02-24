@@ -344,7 +344,7 @@ const GetImageUrl = (image: string | File) => {
                 :loading="loading"
                 class="px-6 elevation-1"
               >
-              <v-icon icon="mdi-home"></v-icon>
+              <v-icon icon="mdi-content-save-edit"></v-icon>
                 ບັນທຶກ
               </v-btn>
             </div>
