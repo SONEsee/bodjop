@@ -25,22 +25,22 @@ const headers = [
   { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
-const OndeleteUser = async(id: string)=>{
-    const res = await UserManage.OndeleteUser(id);
-    if(res instanceof Error){
-        return DefaultSwalError(res.message);
-    }
-    const notification = await CallSwal({
-        icon: "success",
-        title: "ສຳເລັດ",
-        text: "ລົບຂໍ້ມູນສຳເລັດ",
-    });
-    if(notification.isConfirmed){
-        await UserManage.GetData();
-    }else{
-        await UserManage.GetData();
-    }
-}
+const OndeleteUser = async (id: string) => {
+  const res = await UserManage.OndeleteUser(id);
+  if (res instanceof Error) {
+    return DefaultSwalError(res.message);
+  }
+  const notification = await CallSwal({
+    icon: "success",
+    title: "ສຳເລັດ",
+    text: "ລົບຂໍ້ມູນສຳເລັດ",
+  });
+  if (notification.isConfirmed) {
+    await UserManage.GetData();
+  } else {
+    await UserManage.GetData();
+  }
+};
 </script>
 <template>
   <div>
@@ -50,15 +50,23 @@ const OndeleteUser = async(id: string)=>{
     <div class="d-flex justify-end align-end mr-3">
       <v-btn
         color="primary"
-        :to="{ path: '/manageuser/create' }"
+        @click="goPath('/manageuser/create')"
         prepend-icon="mdi-plus"
+        flat
         >ເພີ່ມຂໍ້ມູນຜູ້ໃຊ້ງານ</v-btn
       >
     </div>
-    <v-data-table :headers="headers" :items="response?.list_data">
+    <v-data-table
+      :headers="headers"
+      :items="response?.list_data"
+      :items-per-page="request.limit"
+      :loading="request.loading"
+      hide-default-footer
+    >
       <template v-slot:item.no="{ item, index }">
         {{ index + 1 }}
       </template>
+
       <template v-slot:item.image="{ item }">
         <div class="pa-2">
           <GlobalMenuSpanImage :image="item.image_profile" />
@@ -95,6 +103,7 @@ const OndeleteUser = async(id: string)=>{
           @click="OndeleteUser(item.id)"
         ></v-btn>
       </template>
+
       <template v-slot:bottom>
         <GlobalTablePaginations
           :page="request.page"

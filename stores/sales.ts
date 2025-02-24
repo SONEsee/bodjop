@@ -5,15 +5,17 @@ export const UseSaleStore = defineStore("sales", {
   state() {
     return {
       sale_request_create: {
-        sale_date: new Date(),
+        sale_date: null,
         items: [] as SaleModels.OnSaleCreateModelAndWinnerSale[],
       },
       sale_periods: [] as SaleModels.GetSalePeriodResponseItem[],
+      sale_period_check: null as SaleModels.GetSalePeriodResponseItem | null,
       request_sale_get_data: {
         page: 1,
         limit: 20,
         q: null,
         loading: false,
+        sale_date: null as Date | null,
       },
       response_sale_get_data:
         null as SaleModels.GetSaleListDataResponseItems | null,
@@ -25,11 +27,18 @@ export const UseSaleStore = defineStore("sales", {
     async GetSaleListData() {
       try {
         this.request_sale_get_data.loading = true;
+        const dayjs = useDayjs();
         const res = await axios.get<SaleModels.GetSaleListDataResponse>(
           "/api/v1/sales/get-data",
           {
             params: {
               ...this.request_sale_get_data,
+              sale_date:
+                this.request_sale_get_data.sale_date !== null
+                  ? dayjs(this.request_sale_get_data.sale_date).format(
+                      "YYYY-MM-DD"
+                    )
+                  : "",
             },
           }
         );
@@ -110,6 +119,33 @@ export const UseSaleStore = defineStore("sales", {
         );
         if (res.status === 200) {
           this.sale_periods = res.data?.items ?? [];
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async GetSalePeriodCheck(sale_date: Date | null) {
+      try {
+        if (sale_date === null) {
+          return;
+        }
+        const dayjs = useDayjs();
+        const saleDate = dayjs(sale_date).format("YYYY-MM-DD");
+        const res = await axios.get<SaleModels.GetSalePeriodCheckResponse>(
+          "/api/v1/sales/get-period-check",
+          {
+            params: {
+              sale_date: saleDate,
+            },
+          }
+        );
+
+        if (res.status === 200) {
+          const item = res.data.items;
+          if (item.id != "") {
+            this.sale_period_check = item;
+          }
         }
       } catch (error) {
         console.error(error);

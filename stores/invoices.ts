@@ -16,12 +16,25 @@ export const UseInvoiceStore = defineStore("invoices", {
         limit: 20,
         page: 1,
         loading: false,
+        sale_date: null as Date | null,
+        q: null as string | null,
       },
 
       response_get_data:
         null as InvoiceModels.GetInvoiceDataResponseItem | null,
       repsonse_get_detail_invoice_data:
         null as InvoiceModels.GetInvoiceDetailResponseItem | null,
+      response_invoice_debts:
+        [] as InvoiceModels.GetListInvoiceDebtResponseItem[],
+
+      request_invoice_payment_transactions: {
+        page: 1,
+        limit: 20,
+        q: null as string | null,
+        loading: false,
+      },
+      response_invoice_payment_transactions:
+        null as InvoiceModels.GetInvoicePaymentTransactionResponseItem | null,
     };
   },
 
@@ -56,11 +69,19 @@ export const UseInvoiceStore = defineStore("invoices", {
     async GetInvoiceData() {
       try {
         this.request_get_data.loading = true;
+        const saledateRequest = this.request_get_data.sale_date;
+        const dayjs = useDayjs();
+        let saleDate =
+          saledateRequest === null
+            ? null
+            : dayjs(saledateRequest).format("YYYY-MM-DD");
+
         const res = await axios.get<InvoiceModels.GetInvoiceDataResponse>(
           "/api/v1/invoices/get-data",
           {
             params: {
               ...this.request_get_data,
+              sale_date: saleDate,
             },
           }
         );
@@ -92,6 +113,48 @@ export const UseInvoiceStore = defineStore("invoices", {
         console.error(error);
       } finally {
         globalStore.loading_overlay = false;
+      }
+    },
+
+    async GetInvoiceDebtData(id: string | null) {
+      try {
+        if (id === null) {
+          return;
+        }
+
+        const res = await axios.get<InvoiceModels.GetListInvoiceDebtResponse>(
+          `/api/v1/agency/get-debts/${id}`
+        );
+        if (res.status === 200) {
+          this.response_invoice_debts = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async GetAgencyInvoicePaymentAmount(id: string | null) {
+      try {
+        if (!id) {
+          return;
+        }
+        this.request_invoice_payment_transactions.loading = true;
+        const res =
+          await axios.get<InvoiceModels.GetInvoicePaymentTransactionResponse>(
+            `/api/v1/agency/get-invoice-payment/${id}`,
+            {
+              params: {
+                ...this.request_invoice_payment_transactions,
+              },
+            }
+          );
+        if (res.status === 200) {
+          this.response_invoice_payment_transactions = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_invoice_payment_transactions.loading = false;
       }
     },
   },

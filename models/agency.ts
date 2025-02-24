@@ -156,9 +156,20 @@ export interface Device {
   latest_agency_id: string;
 }
 
-export interface Pagination {
-  current_page: number;
-  limit: number;
-  total_count: number;
-  total_page: number;
+export interface GetAgencyMemberResponse {
+  error: null;
+  items: GetAgencyMemberResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetAgencyMemberResponseItem {
+  list_data: GetAgencyMemberResponseItemListData[];
+  pagination: Pagination;
+}
+
+export interface GetAgencyMemberResponseItemListData {
+  fullname: string;
+  tel: string;
+  percentage: number;
 }

@@ -375,7 +375,12 @@ const expenseTitle = ref([
             class="ma-0 pa-0 pr-3 mt-1 d-flex align-center justify-end card text"
           >
             {{
-              formatnumberV2(FilterAmountOfEachTypeInvoice(item.sales, null))
+              formatnumberV2(
+                FilterAmountOfEachTypeInvoice(
+                  item.sales,
+                  COMMISSION_OR_EXPENSES.TOPUP_CARD
+                )
+              )
             }}
           </v-card>
 

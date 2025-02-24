@@ -10,4 +10,5 @@ export interface DeviceSelectionResponseItem {
   pos_code: string;
   imei: string;
   status: number;
+  device_status: number;
 }

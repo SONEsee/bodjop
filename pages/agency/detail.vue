@@ -13,6 +13,25 @@ const windowItems = ref([
     value: 1,
     component: shallowRef(resolveComponent("AgencyDetailContentAgencyDevices")),
   },
+  {
+    title: "ການຕັດໜີ້",
+    value: 2,
+    component: shallowRef(
+      resolveComponent("AgencyDetailContentAgencyInvoiceDebts")
+    ),
+  },
+  {
+    title: "ປະຫວັດການຕັດຍອດ",
+    value: 3,
+    component: shallowRef(
+      resolveComponent("AgencyDetailContentAgencyInvoicePayments")
+    ),
+  },
+  {
+    title: "ລູກທີມ",
+    value: 4,
+    component: shallowRef(resolveComponent("AgencyDetailContentAgencyMembers")),
+  },
   // {
   //   title: "ລູກທີມ",
   //   value: 2,
@@ -25,12 +44,12 @@ const id =
     ? null
     : route.query.id?.toString() ?? null;
 const agencyStore = UseAgencyStore();
+const invoiceStore = UseInvoiceStore();
 
 const onLoadingData = async () => {
   try {
     loading.value = true;
     await agencyStore.GetDetailAgencyData(id);
-    await agencyStore.GetAgenciesDeviceResponse(id);
   } catch (error) {
     console.error(error);
   } finally {
@@ -40,6 +59,10 @@ const onLoadingData = async () => {
 
 onMounted(() => {
   onLoadingData();
+  invoiceStore.GetInvoiceDebtData(id);
+  agencyStore.GetAgenciesDeviceResponse(id);
+  invoiceStore.GetAgencyInvoicePaymentAmount(id);
+  agencyStore.GetAgencyMemberList(id);
 });
 </script>
 

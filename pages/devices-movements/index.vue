@@ -81,14 +81,26 @@ onMounted(() => {
         </v-col>
 
         <v-col cols="12" class="d-flex flex-wrap justify-end">
-          <div>
+          <div class="d-flex">
+            <div class="mr-3">
+              <v-btn
+                color="primary"
+                width="165px"
+                flat
+                prepend-icon="mdi-clipboard-arrow-right"
+                @click="goPath('/devices-movements/transports')"
+                >ກະຈາຍອຸປະກອນ</v-btn
+              >
+            </div>
+
             <div>
               <v-btn
                 color="primary"
                 width="165px"
                 flat
-                @click="goPath('/devices-movements/transports')"
-                >ກະຈາຍອຸປະກອນ</v-btn
+                prepend-icon="mdi-clipboard-arrow-left"
+                @click="goPath('/devices-movements/return')"
+                >ອຸປະກອນກັບຫ້ອງການ</v-btn
               >
             </div>
           </div>
@@ -142,7 +154,7 @@ onMounted(() => {
                     icon="mdi-delete"
                     :loading="loading"
                     size="small"
-                    :disabled="item.status === 2"
+                    :disabled="item.status === 2 || item.movement_type === 'IN'"
                     @click="ondeleteMovement(item.id)"
                   ></v-btn>
                 </div>

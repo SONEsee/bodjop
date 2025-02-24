@@ -7,6 +7,11 @@ const file = ref();
 const saleStore = UseSaleStore();
 const loading = ref(false);
 const request = saleStore.sale_request_create;
+const dayjs = useDayjs();
+
+const response_period_check = computed(() => {
+  return saleStore.sale_period_check;
+});
 
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
@@ -61,10 +66,19 @@ async function onCreateSale() {
       return;
     }
 
+    let text: string = "";
+    if (response_period_check.value !== null) {
+      text = `ຍອດຂາຍວັນທີ ${dayjs(response_period_check.value.sale_date).format(
+        "DD-MM-YYYY"
+      )} ໄດ້ມີການເພີ່ມເຂົ້າມາໃນລະບົບແລ້ວ ຂໍ້ມູນອາດຊ້ຳກັນໄດ້ທ່ານແນ່ໃຈແລ້ວບໍ່?`;
+    } else {
+      text = "ທ່ານກຳລັງສ້າງຂໍ້ມູນການຂາຍທ່ານແນ່ໃຈແລ້ວບໍ່";
+    }
+
     const notification = await CallSwal({
       icon: "warning",
       title: "ຄຳເຕືອນ",
-      text: "ທ່ານກຳລັງສ້າງຂໍ້ມູນການຂາຍທ່ານແນ່ໃຈແລ້ວບໍ່?",
+      text: `${text}`,
       showCancelButton: true,
       confirmButtonText: "ຕົກລົງ",
       cancelButtonText: "ຍົກເລີກ",
@@ -98,6 +112,17 @@ async function onCreateSale() {
     loading.value = false;
   }
 }
+
+async function onDateSelect(date: Date | null) {
+  try {
+    saleStore.sale_period_check = null;
+    //@ts-ignore
+    request.sale_date = date;
+    await saleStore.GetSalePeriodCheck(date);
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <template>
@@ -116,7 +141,7 @@ async function onCreateSale() {
             <DatePicker
               :date="request.sale_date"
               :required="true"
-              @on-set-date="request.sale_date = $event"
+              @on-set-date="onDateSelect"
             />
           </div>
         </div>
