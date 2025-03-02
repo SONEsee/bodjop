@@ -118,8 +118,8 @@ const onFileChange = (event: Event) => {
 
       <v-row>
         <v-col cols="12" md="4">
-          <div class="text-center mb-4">
-          <h3>ຮູບໂປຣໄຟລ໌</h3></div>
+          <!-- <div class="text-center mb-4">
+          <h3>ຮູບໂປຣໄຟລ໌</h3></div> -->
 
           <v-col cols="12" class="d-flex justify-center">
             <v-row>
@@ -174,13 +174,15 @@ const onFileChange = (event: Event) => {
 
         <v-col cols="12" md="8">
           <v-row>
-            <v-col cols="12">
+            <!-- <v-col cols="12">
               <GlobalTextTitleLine :title="tour" />
               <v-divider class="mb-4"></v-divider>
-            </v-col>
+            </v-col> -->
 
             <v-col cols="12" md="6">
+              <label for="name"> ຊື່ ແລະ ນາມສະກຸນ / fullname</label>
               <v-text-field
+              id="name"
                 v-model="request.fullname"
                 density="comfortable"
                 variant="outlined"
@@ -192,7 +194,9 @@ const onFileChange = (event: Event) => {
                 prepend-inner-icon="mdi-account"
               ></v-text-field>
 
+<label for="phon"> ເບີໂທລະສັບ / phone number </label>
               <v-text-field
+              id="phon"
                 v-model="request.phone_number"
                 density="comfortable"
                 variant="outlined"
@@ -203,7 +207,9 @@ const onFileChange = (event: Event) => {
                 class="mb-4"
                 prepend-inner-icon="mdi-phone"
               ></v-text-field>
+            <label for="role">ສິດການເຂົ້ານຳໃຊ້ / role</label>
               <v-text-field
+              id="role"
                 v-model="request.role"
                 density="comfortable"
                 variant="outlined"
@@ -217,7 +223,9 @@ const onFileChange = (event: Event) => {
             </v-col>
 
             <v-col cols="12" md="6">
+              <label for="gender" >ເພດ / gender</label>
               <v-select
+              id="gender"
                 v-model="request.gender"
                 density="comfortable"
                 variant="outlined"
@@ -227,6 +235,7 @@ const onFileChange = (event: Event) => {
                 class="mb-4"
                 prepend-inner-icon="mdi-gender-male-female"
               ></v-select>
+              <label for="username">ຊື່ຜູ້ໃຊ້ / username</label>
 
               <v-text-field
                 v-model="request.username"
@@ -239,8 +248,10 @@ const onFileChange = (event: Event) => {
                 class="mb-4"
                 prepend-inner-icon="mdi-account-key"
               ></v-text-field>
+              <label for="password">ລະຫັດຜ່ານ / password</label>
 
               <v-text-field
+              id="password"
                 v-model="request.password"
                 density="comfortable"
                 variant="outlined"
@@ -253,12 +264,13 @@ const onFileChange = (event: Event) => {
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12">
+            <!-- <v-col cols="12">
               <div class="mb-4"><GlobalTextTitleLine :title="location" /></div>
               
-            </v-col>
+            </v-col> -->
 
             <v-col cols="12" md="4">
+              <label for="province"> ແຂວງ / province</label>
               <v-select
                 v-model="request.province_id"
                 :items="globalStore.provinces"
@@ -276,7 +288,9 @@ const onFileChange = (event: Event) => {
             </v-col>
 
             <v-col cols="12" md="4">
+              <label for="district"> ເມືອງ / district</label>
               <v-select
+              id="district"
                 v-model="request.district_id"
                 :items="globalStore.districts"
                 item-title="dr_name"
@@ -293,7 +307,9 @@ const onFileChange = (event: Event) => {
             </v-col>
 
             <v-col cols="12" md="4">
+              <label for="village"> ບ້ານ / village</label>
               <v-select
+              id="village"
                 v-model="request.village_id"
                 :items="globalStore.villages"
                 item-title="vill_name"
@@ -304,6 +320,7 @@ const onFileChange = (event: Event) => {
                 :rules="[(v) => !!v || 'ກະລຸນາເລືອກບ້ານ']"
                 hide-details="auto"
                 class="mb-4"
+               
                 prepend-inner-icon="mdi-home-variant"
               ></v-select>
             </v-col>

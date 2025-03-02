@@ -337,12 +337,14 @@ const GetImageUrl = (image: string | File) => {
             <div class="d-flex justify-space-between align-center mb-4">
               <GlobalTextTitleLine />
               <v-btn
+              
                 color="primary"
                 flat
                 type="submit"
                 :loading="loading"
                 class="px-6 elevation-1"
               >
+              <v-icon icon="mdi-content-save-edit"></v-icon>
                 ບັນທຶກ
               </v-btn>
             </div>
