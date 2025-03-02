@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 const agencyStore = UseAgencyStore();
+const dialog = ref(false);
+const agencyID = ref(null as string | null);
 
 const response_data = computed(() => {
   return agencyStore.response_query_data;
@@ -53,6 +55,16 @@ const onsetinput = async (input: string | null) => {
     await agencyStore.GetListData();
   }
 };
+
+function onEditAgency(id: string) {
+  agencyID.value = id;
+  dialog.value = true;
+}
+
+function onCloseDialog(value: boolean) {
+  dialog.value = value;
+  agencyID.value = null;
+}
 </script>
 <template>
   <div class="pa-6">
@@ -131,6 +143,14 @@ const onsetinput = async (input: string | null) => {
             <template v-slot:item.actions="{ item }">
               <v-btn
                 color="primary"
+                icon="mdi-lock-reset"
+                variant="text"
+                @click="onEditAgency(item.id)"
+                size="small"
+              ></v-btn>
+
+              <v-btn
+                color="primary"
                 icon="mdi-pencil"
                 variant="text"
                 @click="goPath(`/agency/edit?id=${item.id}`)"
@@ -166,6 +186,12 @@ const onsetinput = async (input: string | null) => {
           </v-data-table>
         </v-col>
       </v-row>
+
+      <AgencyResetPassword
+        :dialog="dialog"
+        @close-dialog="onCloseDialog"
+        :user_id="agencyID"
+      />
     </v-card>
   </div>
 </template>
