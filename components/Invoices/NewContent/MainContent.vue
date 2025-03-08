@@ -118,7 +118,7 @@ const onCreateInvoice = async () => {
               clearable
             >
               <template v-slot:selection="{ item }">
-                {{ item.title }}
+                {{ item.title }} - {{ item.raw?.agent_code ?? "N/A" }}
               </template>
             </v-select>
           </v-col>
@@ -161,6 +161,13 @@ const onCreateInvoice = async () => {
             <GlobalCardTitle
               :title="'ຊື່ຫຼິ້ນ'"
               :text="request?.agency_id?.nick_name ?? 'N/A'"
+            />
+          </v-col>
+
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ໜີ້ທີ່ຍັງເຫຼືອ'"
+              :text="formatnumber(request?.agency_id?.money_outstanding ?? 0)"
             />
           </v-col>
         </v-row>
