@@ -65,6 +65,14 @@ export const FormatDate = (date: any) => {
   return date;
 };
 
+export const FormatInvoiceDate = (date: any) => {
+  const dayjs = useDayjs();
+  if (date) {
+    return dayjs(new Date(date)).format("DD/MM/YYYY");
+  }
+  return date;
+};
+
 export const onLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");

@@ -13,6 +13,9 @@ const acencyTitle = ref([
   {
     name: "ຊື່ຕົວແທນ",
   },
+  {
+    name: "ພິມເອກະສານວັນທີ",
+  },
 ]);
 
 const expenseTitle = ref([
@@ -147,7 +150,9 @@ const expenseTitle = ref([
             rounded="0"
             class="ma-0 pa-0 pr-3 d-flex align-center justify-end card-header"
           >
-            <div class="header">12/06/2024</div>
+            <div class="header">
+              {{ FormatInvoiceDate(invoice_detail?.sale_date) }}
+            </div>
           </v-card>
 
           <!-- agency code -->
@@ -170,6 +175,16 @@ const expenseTitle = ref([
             class="ma-0 pa-0 pr-3 mt-1 d-flex align-center justify-end card text"
           >
             {{ invoice_detail?.agency?.fullname ?? "N/A" }}
+          </v-card>
+
+          <v-card
+            width="99%"
+            height="30"
+            flat
+            rounded="0"
+            class="ma-0 pa-0 pr-3 mt-1 d-flex align-center justify-end card text"
+          >
+            {{ FormatDatetime(new Date()) }}
           </v-card>
 
           <!-- sale total -->
@@ -442,7 +457,7 @@ const expenseTitle = ref([
             <div class="header">
               {{
                 formatnumber(
-                  invoice_detail?.total_amount - invoice_detail?.total_debt
+                  invoice_detail?.total_amount + invoice_detail?.total_debt
                 )
               }}
             </div>

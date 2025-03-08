@@ -5,21 +5,22 @@
         <GlobalTextTitleLine :title="'ລາຍລະອຽດຂໍ້ມູນຜູ້ໃຊ້ງານ'" />
       </v-col>
 
+      <v-col cols="12" class="d-flex flex-wrap justify-end py-0">
+        <div>
+          <v-btn color="primary" flat @click="goPath(`/profile/reset-password`)"
+            >ແກ້ໄຂລະຫັດຜ່ານ</v-btn
+          >
+        </div>
+      </v-col>
+
       <v-col cols="12" v-if="datarespons !== null">
         <v-row>
           <v-col cols="12" md="4" class="d-flex align-center justify-center">
             <div class="d-flex text-center align-center">
               <v-col cols="12" class="d-flex justify-center align-center">
-                <v-avatar
-                  size="220"
-                  class="mx-auto d-flex align-center"
-                  color="grey lighten-2"
-                >
-                  <img
-                    :src="`https://32lottery-api.phouservice.com/${datarespons.image_profile}`"
-                    alt="Profile Picture"
-                  />
-                </v-avatar>
+                <GlobalAvatarProfileImage
+                  :image_url="datarespons?.image_profile ?? ''"
+                />
               </v-col>
             </div>
           </v-col>

@@ -19,6 +19,7 @@ export interface GetInvoicePrintResponseItem {
   total_sale_amount: number;
   agency: Agency;
   invoice_calculations: InvoiceCalculation[];
+  sale_date: Date;
 }
 
 export interface Agency {

@@ -28,7 +28,7 @@ export const UseUserStore = defineStore("user", {
         page: 1,
         loading: false,
       },
-      respons_query_data: null as UserGetdataModel.UserRespons | null,
+      respons_query_data: null as UsermeModel.UserMeResponseItems | null,
       response_detail_query_data:
         null as UsermeModel.UserMeResponseItems | null,
       error: null as string | null,
@@ -46,8 +46,9 @@ export const UseUserStore = defineStore("user", {
             },
           }
         );
+
         if (res.status === 200) {
-          this.respons_query_data = res.data
+          this.respons_query_data = res.data.items;
         }
       } catch (error) {}
     },
