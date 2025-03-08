@@ -70,7 +70,8 @@ async function onCreateSale() {
     if (response_period_check.value !== null) {
       text = `ຍອດຂາຍວັນທີ ${dayjs(response_period_check.value.sale_date).format(
         "DD-MM-YYYY"
-      )} ໄດ້ມີການເພີ່ມເຂົ້າມາໃນລະບົບແລ້ວ ຂໍ້ມູນອາດຊ້ຳກັນໄດ້ທ່ານແນ່ໃຈແລ້ວບໍ່?`;
+      )} ໄດ້ມີການເພີ່ມເຂົ້າມາໃນລະບົບແລ້ວ`;
+      return DefaultSwalError(new Error(text));
     } else {
       text = "ທ່ານກຳລັງສ້າງຂໍ້ມູນການຂາຍທ່ານແນ່ໃຈແລ້ວບໍ່";
     }
