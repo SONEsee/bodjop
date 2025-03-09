@@ -65,6 +65,11 @@ export default defineNuxtConfig({
       pathPrefix: true,
       prefix: "Debts",
     },
+    {
+      path: "@/components/Profile/",
+      pathPrefix: true,
+      prefix: "Profile",
+    },
   ],
 
   css: ["~/assets/css/style.scss", "~/assets/css/global.css"],

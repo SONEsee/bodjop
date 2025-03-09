@@ -2,7 +2,12 @@ import numeral from "numeral";
 import swal from "sweetalert2";
 import { AxiosError } from "axios";
 import type { SweetAlertOptions } from "sweetalert2";
-import { DefaultResponseModel, InvoiceModels, PrintsModels } from "@/models/";
+import {
+  DefaultResponseModel,
+  InvoiceModels,
+  PrintsModels,
+  UserModel,
+} from "@/models/";
 import { COMMISSIONS } from "@/enum/commissions";
 
 export const UseGetFormatDatePicker = (date: any) => {
@@ -65,10 +70,20 @@ export const FormatDate = (date: any) => {
   return date;
 };
 
+export const FormatInvoiceDate = (date: any) => {
+  const dayjs = useDayjs();
+  if (date) {
+    return dayjs(new Date(date)).format("DD/MM/YYYY");
+  }
+  return date;
+};
+
 export const onLogout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
   localStorage.removeItem("refresh_token");
+  localStorage.removeItem("profile_image_url");
+  localStorage.removeItem("profile_enable");
 
   setTimeout(() => {
     goPath("/login");
@@ -395,5 +410,21 @@ export const FilterAmountOfEachTypeInvoiceV2 = (
   } catch (error) {
     console.error(error);
     return "-";
+  }
+};
+
+export const GetUserLocalStorage = () => {
+  try {
+    const user = localStorage.getItem("user") ?? null;
+    if (user === null) {
+      return null;
+    }
+
+    //parse data
+    const result = JSON.parse(user) as UserModel.User;
+    return result;
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };

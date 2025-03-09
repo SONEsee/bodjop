@@ -147,6 +147,24 @@ async function onDateSelect(date: Date | null) {
           </div>
         </div>
         <div class="mr-3 d-flex flex-wrap">
+          <div class="pt-6 mr-4">
+            <a
+              href="/uploads/UPLOAD-FILE-32LOTTERY.xlsx"
+              download="sale_upload_file.xlsx"
+              target="_blank"
+            >
+              <v-btn
+                color="primary"
+                prepend-icon="mdi-file-excel"
+                flat
+                width="180px"
+                :loading="loading"
+              >
+                ດາວໂຫຼດຟາຍອັບໂຫຼດ</v-btn
+              >
+            </a>
+          </div>
+
           <div class="pt-6 mr-6">
             <v-btn
               color="primary"

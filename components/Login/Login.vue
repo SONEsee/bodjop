@@ -28,7 +28,7 @@
           id="password"
           v-model="password"
           :type="visible ? 'text' : 'password'"
-          :append-inner-icon="visible ?   'mdi-eye':'mdi-eye-off'"
+          :append-inner-icon="visible ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append-inner="toggleVisibility"
           :rules="[(v: string) => !!v || 'Password is required']"
           label="ກະລຸນາປ້ອນລະຫັດຜ່ານ"
@@ -62,7 +62,6 @@ const handleLogin = async () => {
   try {
     const { valid } = await form.value.validate();
     if (valid) {
-      console.log("form password");
       const res = await axios.post<UserModel.UserLoginResponse>(
         "/api/v1/users/login",
         {
