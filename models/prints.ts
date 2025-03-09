@@ -20,6 +20,7 @@ export interface GetInvoicePrintResponseItem {
   agency: Agency;
   invoice_calculations: InvoiceCalculation[];
   sale_date: Date;
+  invoice_debt: InvoiceDebt;
 }
 
 export interface Agency {
@@ -40,4 +41,14 @@ export interface InvoiceCalculation {
   created_at: Date;
   updated_at: Date;
   is_commission: boolean;
+}
+
+export interface InvoiceDebt {
+  id: string;
+  invoice_detail_id: string;
+  innitial_amount: number;
+  debt_amount: number;
+  status: number;
+  created_at: Date;
+  updated_at: Date;
 }

@@ -125,6 +125,7 @@ export interface GetListInvoiceDebtResponseItem {
   sale_date: Date;
   innitial_amount: number;
   debt_amount: number;
+  status: number;
 }
 
 export interface GetInvoicePaymentTransactionResponse {

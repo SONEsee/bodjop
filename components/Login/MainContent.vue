@@ -112,6 +112,8 @@ const handleLogin = async () => {
         localStorage.setItem("token", res.data.items.token);
         localStorage.setItem("refresh_token", res.data.items.refresh_token);
         localStorage.setItem("user", JSON.stringify(res.data.items.user));
+        localStorage.setItem("profile_enable", "0");
+        localStorage.setItem("profile_image_url", "N/A");
         if (isRemember.value === true) {
           localStorage.setItem("saveusername", username?.value ?? "");
         } else {

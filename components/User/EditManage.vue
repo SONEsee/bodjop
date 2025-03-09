@@ -125,7 +125,6 @@ watch(
   { immediate: true }
 );
 
-
 const selectedDistrict = ref<District | null>(null);
 const selectedVillage = ref<Village | null>(null);
 
@@ -152,7 +151,7 @@ const fields: FieldConfig[] = [
     label: "ເພດ",
     model: "gender",
     placeholder: "ກະລຸນາປ້ອນເພດ",
-    icon:"mdi-gender-male-female",
+    icon: "mdi-gender-male-female",
     rules: [(v: number) => v !== null || "ກະລຸนາປ້ອນເພດ"],
   },
   {
@@ -273,7 +272,7 @@ const submitForm = async () => {
         const formData = new FormData();
         for (const [key, value] of Object.entries(req)) {
           if (key === "image_profile" && value instanceof File) {
-            formData.append("profile_image", value, value.name);
+            formData.append("file", value, value.name);
           } else if (value !== null) {
             formData.append(key, value.toString());
           }
@@ -324,8 +323,11 @@ const GetImageUrl = (image: string | File) => {
 </script>
 
 <template>
-  <section v-if="request !== null" class="bg-gray-50 min-h-screen py-6">
-   
+  <section
+    v-if="request !== null"
+    class="bg-gray-50 py-6"
+    style="min-height: 95vh"
+  >
     <div class="max-w-7xl mx-auto px-4">
       <v-form
         ref="form"
@@ -337,14 +339,13 @@ const GetImageUrl = (image: string | File) => {
             <div class="d-flex justify-space-between align-center mb-4">
               <GlobalTextTitleLine />
               <v-btn
-              
                 color="primary"
                 flat
                 type="submit"
                 :loading="loading"
                 class="px-6 elevation-1"
               >
-              <v-icon icon="mdi-content-save-edit"></v-icon>
+                <v-icon icon="mdi-content-save-edit"></v-icon>
                 ບັນທຶກ
               </v-btn>
             </div>
@@ -354,20 +355,10 @@ const GetImageUrl = (image: string | File) => {
             <v-row>
               <v-col cols="12" md="4">
                 <div class="d-flex flex-column align-center">
-                  <v-avatar
-                    v-if="
-                      request.image_profile && request.image_profile !== 'N/A'
-                    "
-                    size="220"
-                    class="elevation-3 mb-4"
-                    :image="GetImageUrl(request.image_profile)"
-                  />
                   <GlobalAvatarProfileImage
-                    v-else
-                    size="220"
-                    class="elevation-3 mb-4"
                     :image_url="request?.image_profile ?? ''"
                   />
+
                   <v-btn
                     width="180"
                     height="40"
@@ -375,7 +366,7 @@ const GetImageUrl = (image: string | File) => {
                     flat
                     prepend-icon="mdi-cloud-upload-outline"
                     @click="openFile"
-                    class="elevation-1"
+                    class="elevation-1 mt-5"
                   >
                     ອັບໂຫຼດຮູບພາບ
                   </v-btn>
@@ -400,7 +391,7 @@ const GetImageUrl = (image: string | File) => {
                         {{ field.label }}
                       </label>
                       <v-text-field
-                      :prepend-inner-icon="field.icon"
+                        :prepend-inner-icon="field.icon"
                         :id="field.id"
                         v-model="request[field.model]"
                         :rules="field.rules"
@@ -419,10 +410,10 @@ const GetImageUrl = (image: string | File) => {
                       for="province"
                       class="font-weight-medium mb-2 d-block"
                     >
-                      ແຂວງ 
+                      ແຂວງ
                     </label>
                     <v-select
-                        prepend-inner-icon="mdi-map-marker-outline"
+                      prepend-inner-icon="mdi-map-marker-outline"
                       v-model="request.village.district.province_id"
                       :rules="[(v: number | null) => v !== null || 'ກະລຸນາເຜືອກແຂວງ']"
                       placeholder="ກະລຸນາເຜືອກແຂວງ"
@@ -442,10 +433,10 @@ const GetImageUrl = (image: string | File) => {
                       for="district"
                       class="font-weight-medium mb-2 d-block"
                     >
-                      ເມືອງ 
+                      ເມືອງ
                     </label>
                     <v-select
-                    prepend-inner-icon="mdi-map-marker"
+                      prepend-inner-icon="mdi-map-marker"
                       v-model="selectedDistrict"
                       :rules="[(v: District | null) => !!v && typeof v.id === 'number' || 'ກະລຸນາເຜືອກເມືອງ']"
                       placeholder="ກະລຸນາເຜືອກເມືອງ"
@@ -468,10 +459,10 @@ const GetImageUrl = (image: string | File) => {
                       for="villages"
                       class="font-weight-medium mb-2 d-block"
                     >
-                      ບ້ານ 
+                      ບ້ານ
                     </label>
                     <v-autocomplete
-                        prepend-inner-icon="mdi-map-marker-radius"
+                      prepend-inner-icon="mdi-map-marker-radius"
                       id="villages"
                       v-model="selectedVillage"
                       :rules="[(v: Village | null) => !!v && typeof v.id === 'number' || 'ກະລຸນາເຜືອກບ້ານ']"

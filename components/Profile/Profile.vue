@@ -104,14 +104,6 @@ const getdata = async () => {
     if (res.status === 200) {
       let item = res.data.items;
       datarespons.value = item;
-      if (item != null) {
-        let imageProfile = item.image_profile;
-        if (imageProfile && imageProfile != "" && imageProfile !== "N/A") {
-          datarespons.value.image_profile = await globalStore.GetFileData(
-            imageProfile
-          );
-        }
-      }
     }
   } catch (error) {
     console.error(error);
