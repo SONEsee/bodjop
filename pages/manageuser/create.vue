@@ -6,5 +6,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <CreateMangeUser/>
+  <section class="pa-4">
+    <CreateMangeUser />
+  </section>
 </template>
