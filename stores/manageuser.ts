@@ -85,18 +85,36 @@ export const UserManageStore = defineStore("usermanage", {
       }
     },
     async Getdetail(id: string | null) {
+      const globalStore = UseGlobalStore();
       try {
         if (id === null || id == "") {
           return;
         }
+        globalStore.loading_overlay = true;
         const res = await axios.get<UserGetdataModel.GetUserDetailResponse>(
           `/api/v1/users/get-detail/${id}`
         );
-        this.response_detail_query_data = res.data.items;
+
+        if (res.status == 200) {
+          const item = res.data.items ?? null;
+          this.response_detail_query_data = item;
+          if (item !== null) {
+            const province_id = item.village?.district?.province_id ?? null;
+            const district_id = item.village?.district_id ?? null;
+            await globalStore.GetDistrictData(province_id, null);
+            await globalStore.GetVillagesData(
+              district_id?.toString() ?? null,
+              null
+            );
+          }
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        globalStore.loading_overlay = false;
       }
     },
+
     async OnGetAndEditUser(id: string) {
       const globalStore = UseGlobalStore();
       try {

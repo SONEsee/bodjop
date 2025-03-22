@@ -1,9 +1,20 @@
 <script setup lang="ts">
 const UserManage = UserManageStore();
-
+const dialog = ref(false);
+const userID = ref(null as string | null);
 const response = computed(() => {
   return UserManage.response_query_data;
 });
+
+const onCloseDialog = (value: boolean) => {
+  dialog.value = value;
+};
+
+function onPasswordEdit(id: string) {
+  userID.value = id;
+  dialog.value = true;
+}
+
 const request = UserManage.request_query_data;
 async function onSelectionChange(limit: number) {
   request.limit = limit;
@@ -103,6 +114,14 @@ onMounted(() => {
         ></v-btn>
 
         <v-btn
+          color="primary"
+          icon="mdi-lock"
+          variant="text"
+          @click="onPasswordEdit(item.id)"
+          size="small"
+        ></v-btn>
+
+        <v-btn
           color="error"
           icon="mdi-delete"
           variant="text"
@@ -120,5 +139,11 @@ onMounted(() => {
           @onPagechange="onPageChange"
       /></template>
     </v-data-table>
+
+    <AgencyResetPassword
+      :dialog="dialog"
+      @close-dialog="onCloseDialog"
+      :user_id="userID"
+    />
   </div>
 </template>

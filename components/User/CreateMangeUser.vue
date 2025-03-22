@@ -22,6 +22,16 @@ const onDistrictChange = async (value: number | null) => {
   request.village_id = null;
 };
 
+// const onDistrictSearch = async (value: string | null) => {};
+
+const onDistrictSearch = useDebounceFn(async (value: string) => {
+  await globalStore.GetDistrictData(request.province_id, value);
+}, 800);
+
+const onVillageSearch = useDebounceFn(async (value: string) => {
+  await globalStore.GetVillagesData(request.district_id, value);
+}, 800);
+
 const handleSubmit = async () => {
   try {
     const { valid } = await form.value.validate();
@@ -220,7 +230,7 @@ const onFileChange = (event: Event) => {
               <label>
                 ເມືອງ / district <span style="color: red"> * </span></label
               >
-              <v-select
+              <v-autocomplete
                 v-model="request.district_id"
                 :items="globalStore.districts"
                 item-title="dr_name"
@@ -231,12 +241,14 @@ const onFileChange = (event: Event) => {
                 hide-details="auto"
                 placeholder="ກະລຸນາເລືອກເມືອງ"
                 @update:model-value="onDistrictChange($event)"
-              ></v-select>
+                @update:search="onDistrictSearch($event)"
+                no-filter
+              ></v-autocomplete>
             </v-col>
 
             <v-col md="4">
               <label> ບ້ານ / village <span style="color: red"> * </span></label>
-              <v-select
+              <v-autocomplete
                 v-model="request.village_id"
                 :items="globalStore.villages"
                 item-title="vill_name"
@@ -245,8 +257,10 @@ const onFileChange = (event: Event) => {
                 variant="outlined"
                 placeholder="ກະລຸນາເລືອກບ້ານ"
                 :rules="[(v) => !!v || 'ກະລຸນາເລືອກບ້ານ']"
+                @update:search="onVillageSearch($event)"
+                no-filter
                 hide-details="auto"
-              ></v-select>
+              ></v-autocomplete>
             </v-col>
 
             <v-col cols="4">
