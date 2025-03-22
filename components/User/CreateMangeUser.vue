@@ -1,52 +1,34 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
 import notfoundImage from "@/assets/img/404.png";
 const notfoundref = ref(notfoundImage);
 import axios from "@/helpers/axios";
-import { UsermeModel } from "@/models/";
-import { useRouter } from "vue-router";
 
 const userStore = UserManageStore();
 const globalStore = UseGlobalStore();
 const title = ref("ສ້າງຂໍ້ມູນຜູ້ໃຊ້ງານ");
-const tour = ref("ຂໍ້ມູນທົວໄປ")
-const location = ref("ຂໍ້ມູນທີ່ຢູ່")
-interface UserRequest {
-  fullname: string;
-  phone_number: string;
-  role: string;
-  password: string;
-  gender: string;
-  username: string;
-  profile_image: File | null;
-}
-
-const router = useRouter();
 const form = ref();
-const isFormValid = ref(false);
 const loading = ref(false);
-const visible = ref(false);
-
 const request = userStore.form_create_data;
+const visiblePassword = ref(false);
 
-// const request = reactive<UserRequest>({
-//   fullname: "",
-//   phone_number: "",
-//   role: "",
-//   password: "",
-//   gender: "",
-//   username: "",
-//   profile_image: null,
-// });
+const onProvinceChange = async (value: number | null) => {
+  await globalStore.GetDistrictData(value, null);
+  request.district_id = null;
+  request.village_id = null;
+};
+
+const onDistrictChange = async (value: number | null) => {
+  await globalStore.GetVillagesData(value?.toString() ?? null, null);
+  request.village_id = null;
+};
 
 const handleSubmit = async () => {
   try {
     const { valid } = await form.value.validate();
     if (!valid) return;
 
-    // loading.value = true;
+    loading.value = true;
     var formData = new FormData();
-
     for (const [key, value] of Object.entries(request)) {
       if (key === "profile_image") {
         if (value !== null) {
@@ -78,8 +60,6 @@ const handleSubmit = async () => {
       }
     }
   } catch (error) {
-    console.error("Registration failed:", error);
-
     DefaultSwalError(error);
   } finally {
     loading.value = false;
@@ -99,7 +79,7 @@ const onFileChange = (event: Event) => {
 </script>
 
 <template>
-  <v-card class="pa-4" min-height="95vh"   flat >
+  <v-card class="pa-4" min-height="95vh" flat>
     <v-col cols="12">
       <GlobalTextTitleLine :title="title" />
     </v-col>
@@ -111,217 +91,238 @@ const onFileChange = (event: Event) => {
           type="submit"
           :loading="loading"
           prepend-icon="mdi-content-save"
+          variant="flat"
         >
           ບັນທຶກ
         </v-btn>
       </div>
 
-      <v-row>
-        <v-col cols="12" md="4">
+      <v-row class="mt-6">
+        <v-col md="4">
           <!-- <div class="text-center mb-4">
           <h3>ຮູບໂປຣໄຟລ໌</h3></div> -->
-
-          <v-col cols="12" class="d-flex justify-center">
-            <v-row>
-              <v-col
-                cols="12"
-                class="d-flex flex-wrap justify-center mt-2 ml-2 mr-2 mb-2"
-              >
-                <v-avatar
-                  size="220"
-                  class="mx-auto"
-                  :image="
-                    request.profile_image === null
-                      ? notfoundref
-                      : GetImageUrl(request.profile_image)
-                  "
+          <v-row>
+            <v-col cols="12" class="d-flex justify-center">
+              <v-row>
+                <v-col
+                  cols="12"
+                  class="d-flex flex-wrap justify-center mt-2 ml-2 mr-2 mb-2"
                 >
-                </v-avatar>
-              </v-col>
+                  <v-avatar
+                    size="220"
+                    class="mx-auto"
+                    :image="
+                      request.profile_image === null
+                        ? notfoundref
+                        : GetImageUrl(request.profile_image)
+                    "
+                  >
+                  </v-avatar>
+                </v-col>
 
-              <v-col cols="12" class="d-flex flex-wrap justify-center">
-                <v-btn
-                  class="mt-4 mb-7"
-                  width="180px"
-                  height="40px"
-                  color="primary"
-                  flat
-                  prepend-icon="mdi-cloud-upload-outline"
-                  text="ອັບໂຫຼດຮູບພາບ"
-                  @click="openFile"
-                >
-                </v-btn>
+                <v-col cols="12" class="d-flex flex-wrap justify-center">
+                  <v-btn
+                    class="mt-4 mb-7"
+                    width="180px"
+                    height="40px"
+                    color="primary"
+                    flat
+                    prepend-icon="mdi-cloud-upload-outline"
+                    text="ອັບໂຫຼດຮູບພາບ"
+                    @click="openFile"
+                  >
+                  </v-btn>
 
-                <input
-                  type="file"
-                  ref="file"
-                  style="display: none"
-                  accept="image/jpg,image/png,image/jpeg"
-                  @change="onFileChange"
-                />
-              </v-col>
-            </v-row>
-          </v-col>
+                  <input
+                    type="file"
+                    ref="file"
+                    style="display: none"
+                    accept="image/jpg,image/png,image/jpeg"
+                    @change="onFileChange"
+                  />
+                </v-col>
+              </v-row>
+            </v-col>
 
-          <input
-            type="file"
-            ref="file"
-            style="display: none"
-            accept="image/jpg,image/png,image/jpeg"
-            @change="onFileChange"
-          />
+            <input
+              type="file"
+              ref="file"
+              style="display: none"
+              accept="image/jpg,image/png,image/jpeg"
+              @change="onFileChange"
+            />
+          </v-row>
         </v-col>
 
         <v-col cols="12" md="8">
           <v-row>
-            <!-- <v-col cols="12">
-              <GlobalTextTitleLine :title="tour" />
-              <v-divider class="mb-4"></v-divider>
-            </v-col> -->
-
-            <v-col cols="12" md="6">
-              <label for="name"> ຊື່ ແລະ ນາມສະກຸນ / fullname</label>
+            <v-col md="4">
+              <label>
+                ຊື່ ແລະ ນາມສະກຸນ / fullname
+                <span style="color: red"> * </span></label
+              >
               <v-text-field
-              id="name"
                 v-model="request.fullname"
-                density="comfortable"
+                density="compact"
                 variant="outlined"
-                label="ຊື່ ແລະ ນາມສະກຸນ"
                 placeholder="ກະລຸນາປ້ອນຊື່ ແລະ ນາມສະກຸນ"
-                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
                 hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-account"
-              ></v-text-field>
-
-<label for="phon"> ເບີໂທລະສັບ / phone number </label>
-              <v-text-field
-              id="phon"
-                v-model="request.phone_number"
-                density="comfortable"
-                variant="outlined"
-                label="ເບີໂທລະສັບ"
-                placeholder="ກະລຸນາປ້ອນເບີໂທລະສັບ"
-                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
-                hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-phone"
-              ></v-text-field>
-            <label for="role">ສິດການເຂົ້ານຳໃຊ້ / role</label>
-              <v-text-field
-              id="role"
-                v-model="request.role"
-                density="comfortable"
-                variant="outlined"
-                label="ສິດການເຂົ້ານຳໃຊ້"
-                placeholder="ກະລຸນາປ້ອນສິດການເຂົ້ານຳໃຊ້"
-                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
-                hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-account-star-outline"
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="6">
-              <label for="gender" >ເພດ / gender</label>
+            <v-col cols="4">
+              <label>
+                ຊື່ຫຼິ້ນ / Nick name <span style="color: red"> * </span></label
+              >
+              <v-text-field
+                v-model="request.nick_name"
+                density="compact"
+                variant="outlined"
+                placeholder="ກະລຸນາປ້ອນຊື້ຫຼິ້ນ"
+                :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="4">
+              <label> ເພດ / Gender <span style="color: red"> * </span></label>
               <v-select
-              id="gender"
                 v-model="request.gender"
-                density="comfortable"
+                placeholder="ກະລຸນາເລືອກເພດ"
+                density="compact"
                 variant="outlined"
-                label="ເພດ"
-                :rules="[(v) => !!v || 'ກະລຸນາເລືອກເພດ']"
+                :rules="[(v: string) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
                 hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-gender-male-female"
+                :items="GetDefaultGenders()"
               ></v-select>
-              <label for="username">ຊື່ຜູ້ໃຊ້ / username</label>
-
-              <v-text-field
-                v-model="request.username"
-                density="comfortable"
-                variant="outlined"
-                label="ຊື່ຜູ້ໃຊ້"
-                placeholder="ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້"
-                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
-                hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-account-key"
-              ></v-text-field>
-              <label for="password">ລະຫັດຜ່ານ / password</label>
-
-              <v-text-field
-              id="password"
-                v-model="request.password"
-                density="comfortable"
-                variant="outlined"
-                type="password"
-                placeholder="ກະລຸນາປ້ອນລະຫັດ"
-                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
-                hide-details="auto"
-                class="mb-4"
-                prepend-inner-icon="mdi-key-outline"
-              ></v-text-field>
             </v-col>
 
-            <!-- <v-col cols="12">
-              <div class="mb-4"><GlobalTextTitleLine :title="location" /></div>
-              
-            </v-col> -->
-
-            <v-col cols="12" md="4">
-              <label for="province"> ແຂວງ / province</label>
+            <v-col md="4">
+              <label>
+                ແຂວງ / province <span style="color: red"> * </span></label
+              >
               <v-select
                 v-model="request.province_id"
                 :items="globalStore.provinces"
                 item-title="pr_name"
                 item-value="id"
-                density="comfortable"
+                density="compact"
                 variant="outlined"
-                label="ແຂວງ"
                 :rules="[(v) => !!v || 'ກະລຸນາເລືອກແຂວງ']"
                 hide-details="auto"
-                class="mb-4"
-                @update:model-value="globalStore.GetDistrictData($event, null)"
-                prepend-inner-icon="mdi-map-marker"
+                placeholder="ກະລຸນາເລືອກແຂວງ"
+                @update:model-value="onProvinceChange($event)"
               ></v-select>
             </v-col>
 
-            <v-col cols="12" md="4">
-              <label for="district"> ເມືອງ / district</label>
+            <v-col md="4">
+              <label>
+                ເມືອງ / district <span style="color: red"> * </span></label
+              >
               <v-select
-              id="district"
                 v-model="request.district_id"
                 :items="globalStore.districts"
                 item-title="dr_name"
                 item-value="id"
-                density="comfortable"
+                density="compact"
                 variant="outlined"
-                label="ເມືອງ"
                 :rules="[(v) => !!v || 'ກະລຸນາເລືອກເມືອງ']"
                 hide-details="auto"
-                class="mb-4"
-                @update:model-value="globalStore.GetVillagesData($event, null)"
-                prepend-inner-icon="mdi-map-marker-outline"
+                placeholder="ກະລຸນາເລືອກເມືອງ"
+                @update:model-value="onDistrictChange($event)"
               ></v-select>
             </v-col>
 
-            <v-col cols="12" md="4">
-              <label for="village"> ບ້ານ / village</label>
+            <v-col md="4">
+              <label> ບ້ານ / village <span style="color: red"> * </span></label>
               <v-select
-              id="village"
                 v-model="request.village_id"
                 :items="globalStore.villages"
                 item-title="vill_name"
                 item-value="id"
-                density="comfortable"
+                density="compact"
                 variant="outlined"
-                label="ບ້ານ"
+                placeholder="ກະລຸນາເລືອກບ້ານ"
                 :rules="[(v) => !!v || 'ກະລຸນາເລືອກບ້ານ']"
                 hide-details="auto"
-                class="mb-4"
-               
-                prepend-inner-icon="mdi-home-variant"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="4">
+              <label>
+                ເບີໂທລະສັບ / phone number
+                <span style="color: red"> * </span></label
+              >
+              <v-text-field
+                v-model="request.phone_number"
+                density="compact"
+                variant="outlined"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                placeholder="ກະລຸນາປ້ອນເບີໂທ"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col md="4">
+              <label
+                >ຊື່ຜູ້ໃຊ້ / username <span style="color: red"> * </span></label
+              >
+              <v-text-field
+                v-model="request.username"
+                density="compact"
+                variant="outlined"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                placeholder="ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້ງານ"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="4">
+              <label
+                >ສິດການເຂົ້ານຳໃຊ້ / role
+                <span style="color: red"> * </span></label
+              >
+              <v-select
+                v-model="request.role"
+                density="compact"
+                variant="outlined"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+                placeholder="ກະລຸນາເລືອກສິດການເຂົ້າໃຊ້ງານ"
+                :items="GetUserRoleList()"
+              ></v-select>
+            </v-col>
+
+            <v-col cols="4">
+              <label
+                >ລະຫັດຜ່ານ / Password <span style="color: red"> * </span>
+              </label>
+              <v-text-field
+                v-model="request.password"
+                density="compact"
+                variant="outlined"
+                :append-inner-icon="visiblePassword ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="visiblePassword = !visiblePassword"
+                :type="visiblePassword ? 'text' : 'password'"
+                placeholder="ກະລຸນາປ້ອນລະຫັດ"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="4">
+              <label
+                >ສະຖານະ / Status <span style="color: red"> * </span>
+              </label>
+              <v-select
+                v-model="request.status"
+                :items="GetDefaultStatus()"
+                density="compact"
+                variant="outlined"
+                placeholder="ກະລຸນາເລືອກສະຖານະ"
+                :rules="[(v) => !!v || 'ກະລຸນາປ້ອນຂໍ້ມູນ']"
+                hide-details="auto"
               ></v-select>
             </v-col>
           </v-row>

@@ -428,3 +428,12 @@ export const GetUserLocalStorage = () => {
     return null;
   }
 };
+
+export const GetUserRoleList = () => {
+  return [
+    {
+      title: "ແອັດມິນ / Admin",
+      value: "ADMIN",
+    },
+  ];
+};

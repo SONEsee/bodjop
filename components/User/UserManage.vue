@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const UserManage = UserManageStore();
-onMounted(async () => {
-  await UserManage.GetData();
-});
+
 const response = computed(() => {
   return UserManage.response_query_data;
 });
@@ -25,6 +23,7 @@ const headers = [
   { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
+
 const OndeleteUser = async (id: string) => {
   const res = await UserManage.OndeleteUser(id);
   if (res instanceof Error) {
@@ -41,7 +40,12 @@ const OndeleteUser = async (id: string) => {
     await UserManage.GetData();
   }
 };
+
+onMounted(() => {
+  UserManage.GetData();
+});
 </script>
+
 <template>
   <div>
     <v-col cols="12">
