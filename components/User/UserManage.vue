@@ -15,12 +15,14 @@ async function onPageChange(page: number) {
 }
 const title = "ຈັດການຜູ້ໃຊ້ງານ";
 const headers = [
+  { title: "ລຳດັບ", key: "no" },
+  { title: "ຮູບ", key: "image_profile" },
   { title: "ຊື່ຜູ້ໃຊ້", key: "username" },
+  { title: "ຊື່ຫຼິ້ນ", key: "nick_name" },
   { title: "ຊື່ ແລະ ນາມສະກຸນ", key: "fullname" },
   { title: "ເບີໂທ", key: "phone_number" },
   { title: "ສິດການເຂົ້າໃຊ້", key: "role" },
   { title: "ສະຖານະ", key: "status" },
-  { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
 
@@ -71,11 +73,12 @@ onMounted(() => {
         {{ index + 1 }}
       </template>
 
-      <template v-slot:item.image="{ item }">
+      <template v-slot:item.image_profile="{ item }">
         <div class="pa-2">
           <GlobalMenuSpanImage :image="item.image_profile" />
         </div>
       </template>
+
       <template v-slot:item.villages="{ item }">
         {{ item?.created_at ?? "" }},
       </template>
@@ -112,7 +115,7 @@ onMounted(() => {
         <GlobalTablePaginations
           :page="request.page"
           :limit="request.limit"
-          :totalpage="response?.pagination.total_count ?? 1"
+          :totalpage="response?.pagination.total_page ?? 1"
           @onSelectionChange="onSelectionChange"
           @onPagechange="onPageChange"
       /></template>
