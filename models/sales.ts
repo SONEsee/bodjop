@@ -140,3 +140,15 @@ export interface GetSalePeriodResponseItem {
   sale_date: Date;
   id: string;
 }
+
+export interface UploadSaleItemBody {
+  sale_date: string | number;
+  pos_code: string;
+  sale_amount: number;
+  agency_code: string;
+}
+
+export interface UploadSaleBody {
+  sale_date: string;
+  items: UploadSaleItemBody[];
+}

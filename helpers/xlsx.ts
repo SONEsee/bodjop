@@ -67,6 +67,92 @@ export const onSaleUploadFile = async (
   }
 };
 
+export const onSaleUploadFileRecover = async (
+  file: ArrayBuffer | undefined
+): Promise<SaleModels.UploadSaleBody[] | Error> => {
+  try {
+    if (!file) {
+      return [];
+    }
+
+    const dayjs = useDayjs();
+    const result: SaleModels.UploadSaleItemBody[] = [];
+    const res: SaleModels.UploadSaleBody[] = [];
+
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: SaleModels.UploadSaleItemBody[] = XLSX.utils.sheet_to_json(
+      worksheet,
+      { raw: true }
+    );
+    if (tables.length < 1) {
+      return [];
+    }
+
+    const saleDates = [
+      ...new Set(
+        tables.map((d) => {
+          //@ts-ignore
+          return dayjs(ReturnDate(d.sale_date)).format("YYYY-MM-DD");
+        })
+      ),
+    ];
+
+    console.log(`sale_date`, saleDates);
+    if (saleDates.length === 0) {
+      return res;
+    }
+
+    for (let i = 0; i < saleDates.length; i++) {
+      let item: SaleModels.UploadSaleBody = {
+        sale_date: saleDates[i],
+        items: [],
+      };
+
+      const saleTime = new Date(saleDates[i]).getTime();
+      const saleData = tables.filter((d) => {
+        const saleFileTime = new Date(
+          //@ts-ignore
+          dayjs(ReturnDate(d.sale_date)).format("YYYY-MM-DD")
+        ).getTime();
+
+        return saleTime === saleFileTime;
+      });
+
+      item.items = saleData.map((d) => {
+        return {
+          ...d,
+          pos_code: d.pos_code?.toString() ?? "N/A",
+          //@ts-ignore
+          sale_date: dayjs(ReturnDate(d.sale_date)).format("YYYY-MM-DD"),
+        };
+      });
+      res.push(item);
+    }
+
+    console.log(`res`, res);
+
+    // for (let i = 0; i < tables.length; i++) {
+    //   let item = tables[i];
+    //   //@ts-ignore
+    //   result.push({
+    //     pos_code: item.pos_code?.toString() ?? "N/A",
+    //     sale_amount: item.sale_amount ?? 0,
+    //     agency_code: item.agency_code,
+    //     sale_date: dayjs(ReturnDate(Number(item.sale_date))).format(
+    //       "YYYY-MM-DD"
+    //     ),
+    //   });
+    // }
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const GetFilterWinnerSale = async (
   pos_code_main: string,
   sale_date: string,

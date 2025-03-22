@@ -119,6 +119,7 @@ function onCloseDialog(value: boolean) {
             :headers="headers"
             :items="response_data?.list_data ?? []"
             :loading="request.loading"
+            :items-per-page="request.limit"
           >
             <template v-slot:item.no="{ item, index }">
               {{ index + 1 }}
