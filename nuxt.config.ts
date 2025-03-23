@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "Nuxt3-Starter-Template",
+      title: "32Lottery-Backoffice",
     },
   },
 
