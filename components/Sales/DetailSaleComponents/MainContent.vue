@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { onSaleExportExcel } from "@/helpers/xlsx";
 const title = ref("ລາຍລະອຽດການຂາຍ");
 const saleStore = UseSaleStore();
 
@@ -20,6 +21,21 @@ const headers = ref([
 const response_data = computed(() => {
   return saleStore.response_sale_detail;
 });
+
+const onExportExcel = async () => {
+  try {
+    const res = await onSaleExportExcel(
+      response_data.value?.sale_details ?? []
+    );
+
+    if (res instanceof Error) {
+      return DefaultSwalError(res);
+    }
+  } catch (error) {
+    console.error(error);
+    DefaultSwalError(error);
+  }
+};
 </script>
 
 <template>
@@ -64,8 +80,24 @@ const response_data = computed(() => {
       </v-col>
 
       <v-col cols="12" class="pt-6">
-        <div>
-          <h4>ລາຍການທັງໝົດ ({{ response_data?.sale_details.length }})</h4>
+        <div class="d-flex flex-wrap justify-space-between">
+          <div>
+            <h4>
+              ລາຍການທັງໝົດ ({{
+                formatnumber(response_data?.sale_details.length)
+              }})
+            </h4>
+          </div>
+
+          <div>
+            <v-btn
+              color="primary"
+              variant="flat"
+              prepend-icon="mdi-export"
+              @click="onExportExcel"
+              >Export excel</v-btn
+            >
+          </div>
         </div>
 
         <v-data-table

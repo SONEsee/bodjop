@@ -50,13 +50,28 @@ onMounted(() => {
           />
         </v-col>
 
-        <v-col cols="12" class="d-flex flex-wrap justify-space-between">
-          <div>
-            <label>ງວດວັນທີ</label>
-            <DatePicker
-              :date="request.sale_date"
-              @on-set-date="onDateSelect($event)"
-            />
+        <v-col
+          cols="12"
+          class="d-flex flex-wrap justify-space-between align-center"
+        >
+          <div class="d-flex flex-wrap align-center">
+            <div>
+              <label>ງວດວັນທີ</label>
+              <DatePicker
+                :date="request.sale_date"
+                @on-set-date="onDateSelect($event)"
+              />
+            </div>
+
+            <div class="pt-5 ml-5">
+              <v-btn
+                color="primary"
+                variant="flat"
+                @click="saleStore.GetSaleListData()"
+                :loading="request.loading"
+                >ຄົ້ນຫາ</v-btn
+              >
+            </div>
           </div>
           <div>
             <v-btn

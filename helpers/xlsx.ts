@@ -197,3 +197,40 @@ export const GetFilterWinnerSale = async (
     throw error;
   }
 };
+
+export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
+  try {
+    if (items.length < 1) {
+      return [];
+    }
+
+    const dayjs = useDayjs();
+    const headers = [
+      "No",
+      "Sale Date",
+      "Pos Code",
+      "Sale Amount",
+      "Agency Code",
+    ];
+    const ws_data: any[] = [];
+    ws_data.push(headers);
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      ws_data.push([
+        i + 1,
+        dayjs(item.sale_date).format("DD-MM-YYYY"),
+        item.pos_code ?? "-",
+        item.amount ?? 0,
+        item.agency?.agent_code ?? "N/A",
+      ]);
+    }
+    const sale_date = dayjs(items[0].sale_date).format("DD_MM_YYYY");
+    const workBooks = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
+    XLSX.writeFile(workBooks, `${sale_date}_REPORT_SALES.xlsx`);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
