@@ -10,6 +10,8 @@ const visible = ref(false);
 const loading = ref(false);
 const form = ref();
 const file = ref();
+const isPasswordVisible = ref(false);
+const isConfirmPasswordVisible = ref(false);
 
 const request = agencyStore.form_create_data;
 
@@ -231,6 +233,11 @@ const submitForm = async () => {
                     variant="outlined"
                     hide-details="auto"
                     class="pb-6"
+                    :type="isPasswordVisible ? 'text' : 'password'"
+                    :append-inner-icon="
+                      isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'
+                    "
+                    @click:append-inner="isPasswordVisible = !isPasswordVisible"
                   ></v-text-field>
                 </v-col>
 
@@ -283,6 +290,13 @@ const submitForm = async () => {
                     density="compact"
                     variant="outlined"
                     class="pb-6"
+                    :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                    :append-inner-icon="
+                      isConfirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'
+                    "
+                    @click:append-inner="
+                      isConfirmPasswordVisible = !isConfirmPasswordVisible
+                    "
                   ></v-text-field>
                 </v-col>
 
@@ -327,7 +341,6 @@ const submitForm = async () => {
                   <label>ສະຖານະ / Status</label>
                   <v-select
                     v-model="request.status"
-                    :rules="[(v: string) => !!v || 'ກະລຸນາເລືອກສິດເຂົ້ານຳໃຊ້']"
                     placeholder="ກາລຸນາເລືອກສິດເຂົ້ານຳໃຊ້"
                     density="compact"
                     :items="GetDefaultStatus()"

@@ -14,4 +14,5 @@ export interface SpecialCommission {
   minimum_amount: number;
   maximum_amount: number;
   percentage: number;
+  active_percentage: number;
 }

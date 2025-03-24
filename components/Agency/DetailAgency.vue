@@ -18,13 +18,27 @@ const response_data = computed(() => {
         <v-row>
           <v-col cols="12" class="d-flex flex-wrap justify-end align-center">
             <div class="mr-2">
-              <v-btn
+              <v-tooltip text="ແກ້ໄຂຂໍ້ມູນຕົວແທນ" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="primary"
+                    icon="mdi-pencil"
+                    variant="text"
+                    @click="goPath(`/agency/edit?id=${response_data.id}`)"
+                    size="medium"
+                    class="mr-3"
+                    v-bind="props"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
+
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-pencil"
                 variant="text"
                 size="small"
                 @click="goPath(`/agency/edit?id=${response_data.id}`)"
-              ></v-btn>
+              ></v-btn> -->
             </div>
             <div class="d-flex">
               ສະຖານະ:
