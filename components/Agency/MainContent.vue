@@ -35,18 +35,6 @@ const onDeleteUser = async (id: string) => {
   if (res instanceof Error) {
     return DefaultSwalError(res.message);
   }
-
-  const notification = await CallSwal({
-    icon: "success",
-    title: "ສຳເລັດ",
-    text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
-  });
-
-  if (notification.isConfirmed) {
-    await agencyStore.GetListData();
-  } else {
-    await agencyStore.GetListData();
-  }
 };
 
 const onsetinput = async (input: string | null) => {
@@ -142,29 +130,55 @@ function onCloseDialog(value: boolean) {
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-btn
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-lock-reset"
                 variant="text"
                 @click="onEditAgency(item.id)"
                 size="small"
-              ></v-btn>
+              ></v-btn> -->
 
-              <v-btn
+              <v-tooltip text="ແກ້ໄຂລະຫັດຜ່ານຕົວແທນ" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="primary"
+                    icon="mdi-lock-reset"
+                    variant="text"
+                    @click="onEditAgency(item.id)"
+                    size="small"
+                    v-bind="props"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
+
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-pencil"
                 variant="text"
                 @click="goPath(`/agency/edit?id=${item.id}`)"
                 size="small"
-              ></v-btn>
+              ></v-btn> -->
 
-              <v-btn
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-eye"
                 variant="text"
                 @click="goPath(`/agency/detail?id=${item.id}`)"
                 size="small"
-              ></v-btn>
+              ></v-btn> -->
+
+              <v-tooltip text="ເບິ່ງຂໍ້ມູນຕົວແທນ" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="primary"
+                    icon="mdi-eye"
+                    variant="text"
+                    v-bind="props"
+                    @click="goPath(`/agency/detail?id=${item.id}`)"
+                    size="small"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
 
               <v-btn
                 color="error"

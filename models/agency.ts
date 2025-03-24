@@ -21,6 +21,7 @@ export interface CommissionSpecialAgency {
   maximum_amount: number;
   percentage: number;
   id: string | null;
+  active_percentage: number;
 }
 
 export interface GetAgencyResponse {
@@ -36,10 +37,6 @@ export interface GetAgencyDetailResponse {
   status: number;
   timestamp: string;
 }
-
-
-
-
 
 export interface GetAgencyResponseItems {
   list_data: GetAgencyResponseItemsListData[];

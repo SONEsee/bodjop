@@ -12,3 +12,8 @@ export interface DeviceSelectionResponseItem {
   status: number;
   device_status: number;
 }
+
+export interface DeviceUploadFileRequest {
+  pos_code: string;
+  imei: string;
+}

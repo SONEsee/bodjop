@@ -62,7 +62,7 @@ const submitForm = async () => {
                   ></v-select>
                 </v-col>
 
-                <v-col
+                <!-- <v-col
                   cols="5"
                   v-if="
                     form_request.type !== '' &&
@@ -76,7 +76,7 @@ const submitForm = async () => {
                     density="comfortable"
                     v-model.number="form_request.active_percentage"
                   ></v-text-field>
-                </v-col>
+                </v-col> -->
 
                 <v-col
                   cols="5"
@@ -133,11 +133,17 @@ const submitForm = async () => {
                   class="py-0 my-0"
                 >
                   <v-row>
-                    <v-col cols="4">
-                      <label>ເລີ່ມຕົ້ນ</label>
+                    <v-col
+                      cols="4"
+                      v-if="
+                        form_request.type ===
+                        COMMISSIONS.GOAL_AVERAGE_COMMISSION
+                      "
+                    >
+                      <label>ເປີເຊັນ Active (%) </label>
                       <GlobalTextFieldNumber
-                        :number="special.minimum_amount"
-                        @input_number="special.minimum_amount = $event"
+                        :number="special.active_percentage"
+                        @input_number="special.active_percentage = $event"
                         :rules="[]"
                         :density="'compact'"
                         :hide="'auto'"
@@ -145,7 +151,7 @@ const submitForm = async () => {
                     </v-col>
 
                     <v-col cols="4">
-                      <label>ຫາ</label>
+                      <label>ກຳນົດຈຳນວນເງິນ</label>
                       <GlobalTextFieldNumber
                         :number="special.maximum_amount"
                         @input_number="special.maximum_amount = $event"
@@ -156,7 +162,7 @@ const submitForm = async () => {
                     </v-col>
 
                     <v-col cols="3">
-                      <label>ເປີເຊັນທີ່ຈະໄດ້</label>
+                      <label>ເປີເຊັນທີ່ຈະໄດ້ (%)</label>
                       <v-text-field
                         variant="outlined"
                         hide-details="auto"

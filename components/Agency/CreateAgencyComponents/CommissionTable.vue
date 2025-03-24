@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { AgencyModel } from "@/models/";
-import { COMMISSIONS } from "@/enum/commissions";
 const agencyStore = UseAgencyStore();
 
 const request = agencyStore.form_create_data;
@@ -12,13 +11,32 @@ const headers = ref([
 ]);
 
 function onSetCommissionForm(item: AgencyModel.CommissionAgency) {
-  request.commissions.push({
-    percentage: item.percentage,
-    active_percentage: item.active_percentage,
-    special_commissions: item.special_commissions,
-    type: item.type,
-    id: null,
-  });
+  let indexNumber = localStorage.getItem("index_number");
+  if (indexNumber === null) {
+    request.commissions.push({
+      percentage: item.percentage,
+      active_percentage: item.active_percentage,
+      special_commissions: item.special_commissions,
+      type: item.type,
+      id: null,
+    });
+  } else {
+    const rangeNumber = Number(indexNumber);
+    if (rangeNumber != -1) {
+      request.commissions[rangeNumber] = item;
+    }
+  }
+}
+
+function OnEditCommission(item: AgencyModel.CommissionAgency, index: number) {
+  agencyStore.commission_request = {
+    ...item,
+    dialog: false,
+  };
+
+  agencyStore.commission_request.dialog = true;
+
+  localStorage.setItem("index_number", index.toString() ?? "N/A");
 }
 </script>
 <template>
@@ -46,11 +64,9 @@ function onSetCommissionForm(item: AgencyModel.CommissionAgency) {
           variant="text"
           icon="mdi-pencil"
           size="small"
-          v-if="
-            item.type === COMMISSIONS.GOAL_AVERAGE_COMMISSION ||
-            item.type === COMMISSIONS.GOAL_DEVICE_COMMISSION
-          "
+          @click="OnEditCommission(item, index)"
         ></v-btn>
+
         <v-btn
           color="error"
           icon="mdi-delete"

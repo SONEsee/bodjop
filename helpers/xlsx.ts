@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { SaleModels } from "@/models/";
+import { SaleModels, DeviceModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
 
 export const onSaleUploadFile = async (
@@ -57,6 +57,31 @@ export const onSaleUploadFile = async (
         province_name: item.province_name ?? "N/A",
         unit: item.unit ?? "N/A",
         winner_sales: winnerSales,
+      });
+    }
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const onDeviceUploadFile = async (
+  file: ArrayBuffer | undefined
+): Promise<DeviceModels.DeviceUploadFileRequest[] | Error> => {
+  try {
+    const result: DeviceModels.DeviceUploadFileRequest[] = [];
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: DeviceModels.DeviceUploadFileRequest[] =
+      XLSX.utils.sheet_to_json(worksheet, { raw: true });
+    for (let i = 0; i < tables.length; i++) {
+      let item = tables[i];
+      result.push({
+        pos_code: item.pos_code?.toString() ?? "N/A",
+        imei: item.imei?.toString() ?? "N/A",
       });
     }
 

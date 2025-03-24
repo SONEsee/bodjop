@@ -47,6 +47,12 @@
           <template v-slot:item.created_at="{ item }">
             {{ FormatDatetime(item.created_at) }}
           </template>
+
+          <template v-slot:item.lastest_user="{ item }">
+            {{ item.lastest_user?.nick_name ?? "N/A" }}-{{
+              item.lastest_user?.agent_code ?? "N/A"
+            }}
+          </template>
           <!-- <template v-slot:body="{ items }">
             <tr v-for="(item, index) in items" :key="item.id">
               <td>{{ index + 1 }}</td>
@@ -142,7 +148,7 @@ const headers = [
   { title: "POS No.", value: "pos_no" },
   { title: "IMEI", value: "imei" },
   { title: "ວັນທີສ້າງ", value: "created_at" },
-  { title: "ເຈົ້າຂອງຫຼ້າສຸດ", value: "lastest_user.nick_name" },
+  { title: "ເຈົ້າຂອງຫຼ້າສຸດ", value: "lastest_user" },
   { title: "ສະຖານະ", value: "status" },
   { title: "ການຈັດການ", value: "actions" },
 ];
