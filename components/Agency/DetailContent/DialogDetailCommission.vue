@@ -19,7 +19,7 @@ defineProps<{
             :text="GetCommissionLabel(commission.type)"
           />
         </v-col>
-        <v-col
+        <!-- <v-col
           cols="6"
           v-if="commission.type === COMMISSIONS.GOAL_AVERAGE_COMMISSION"
         >
@@ -27,7 +27,7 @@ defineProps<{
             :title="'ເປີເຊັນ Actives'"
             :text="formatnumber(commission.active_percentage)"
           />
-        </v-col>
+        </v-col> -->
 
         <v-col cols="12">
           <v-row>
@@ -44,16 +44,19 @@ defineProps<{
                 v-for="(special, index) in commission.special_commissions"
                 :key="`special-${index}`"
               >
-                <v-col cols="4">
+                <v-col
+                  cols="4"
+                  v-if="commission.type === COMMISSIONS.GOAL_AVERAGE_COMMISSION"
+                >
                   <GlobalCardTitle
-                    :title="'ເລີ່ມ'"
-                    :text="formatnumber(special.minimum_amount)"
+                    :title="'ເປີເຊັນ Active (%)'"
+                    :text="formatnumber(special.active_percentage)"
                   />
                 </v-col>
 
                 <v-col cols="4">
                   <GlobalCardTitle
-                    :title="'ຫາ'"
+                    :title="'ກຳນົດຈຳນວນເງິນ'"
                     :text="formatnumber(special.maximum_amount)"
                   />
                 </v-col>

@@ -16,6 +16,10 @@ const invoice_for_create = computed(() => {
   return invoiceStore.response_get_for_create;
 });
 
+const onDebounceAgencySearch = useDebounceFn(async (value: string) => {
+  await agencyStore.GetAgencySelections(value);
+}, 800);
+
 const onRequestForCreate = async () => {
   try {
     if (request.agency_id === null || request.sale_date === null) {
@@ -106,7 +110,7 @@ const onCreateInvoice = async () => {
 
           <v-col cols="3">
             <label>ເລືອກຕົວແທນ</label>
-            <v-select
+            <v-autocomplete
               :items="agencyStore.agency_selections"
               variant="outlined"
               hide-details
@@ -116,11 +120,21 @@ const onCreateInvoice = async () => {
               return-object
               v-model="request.agency_id"
               clearable
+              no-filter
+              @update:search="onDebounceAgencySearch"
             >
               <template v-slot:selection="{ item }">
                 {{ item.title }} - {{ item.raw?.agent_code ?? "N/A" }}
               </template>
-            </v-select>
+
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                  v-bind="props"
+                  :subtitle="item.raw.agent_code"
+                  :title="item.raw.fullname"
+                ></v-list-item>
+              </template>
+            </v-autocomplete>
           </v-col>
 
           <v-col cols="2">

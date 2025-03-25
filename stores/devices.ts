@@ -12,6 +12,9 @@ export const UseDeviceStore = defineStore("devices", {
         agency_id: null as UserModel.User | null,
         list_device_id: [] as DeviceModels.DeviceSelectionResponseItem[],
       },
+
+      request_device_option: null,
+      request_device_uploads: [] as DeviceModels.DeviceUploadFileRequest[],
     };
   },
 

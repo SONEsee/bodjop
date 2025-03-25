@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onSaleUploadFile } from "@/helpers/xlsx";
 import axios from "@/helpers/axios";
+import _ from "lodash";
 
 const title = ref("ເພີ່ມຂໍ້ມູນການຂາຍ");
 const file = ref();
@@ -32,6 +33,10 @@ const headers = ref([
 function onOpenfile() {
   file.value.click();
 }
+
+const total_sale_amount = computed(() => {
+  return _.sum(request.items.map((d) => d.sale_amount ?? 0));
+});
 
 async function onFileUpload(event: Event) {
   try {
@@ -135,7 +140,10 @@ async function onDateSelect(date: Date | null) {
         />
       </v-col>
 
-      <v-col cols="12" class="d-flex flex-wrap justify-space-between">
+      <v-col
+        cols="12"
+        class="d-flex flex-wrap justify-space-between alig-center"
+      >
         <div>
           <div>
             <label>ຍອດຂາຍວັນທີ</label>
@@ -146,7 +154,21 @@ async function onDateSelect(date: Date | null) {
             />
           </div>
         </div>
-        <div class="mr-3 d-flex flex-wrap">
+
+        <div class="mr-3 d-flex flex-wrap align-center">
+          <div class="pt-6 mr-6">
+            <v-btn
+              color="info"
+              prepend-icon="mdi-cloud-upload"
+              flat
+              width="180px"
+              @click="onOpenfile"
+              :loading="loading"
+            >
+              ອັບໂຫຼດຂໍ້ມູນການຂາຍ</v-btn
+            >
+          </div>
+
           <div class="pt-6 mr-4">
             <a
               href="/uploads/UPLOAD-FILE-32LOTTERY.xlsx"
@@ -163,19 +185,6 @@ async function onDateSelect(date: Date | null) {
                 ດາວໂຫຼດຟາຍອັບໂຫຼດ</v-btn
               >
             </a>
-          </div>
-
-          <div class="pt-6 mr-6">
-            <v-btn
-              color="primary"
-              prepend-icon="mdi-plus"
-              flat
-              width="180px"
-              @click="onOpenfile"
-              :loading="loading"
-            >
-              ອັບໂຫຼດຂໍ້ມູນການຂາຍ</v-btn
-            >
           </div>
 
           <div
@@ -200,6 +209,24 @@ async function onDateSelect(date: Date | null) {
           style="display: none"
           @change="onFileUpload"
         />
+      </v-col>
+
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ຂໍ້ມູນການຂາຍທັງໝົດ'"
+              :text="`${formatnumber(request.items.length)} ລາຍການ`"
+            />
+          </v-col>
+
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ລວມການຂາຍທັງໝົດ'"
+              :text="`${formatnumberV2(total_sale_amount)} ກີບ`"
+            />
+          </v-col>
+        </v-row>
       </v-col>
 
       <v-col cols="12" v-show="saleStore.sale_request_create.items.length > 0">

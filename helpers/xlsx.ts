@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx";
-import { SaleModels } from "@/models/";
+import { SaleModels, DeviceModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
 
 export const onSaleUploadFile = async (
@@ -57,6 +57,31 @@ export const onSaleUploadFile = async (
         province_name: item.province_name ?? "N/A",
         unit: item.unit ?? "N/A",
         winner_sales: winnerSales,
+      });
+    }
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const onDeviceUploadFile = async (
+  file: ArrayBuffer | undefined
+): Promise<DeviceModels.DeviceUploadFileRequest[] | Error> => {
+  try {
+    const result: DeviceModels.DeviceUploadFileRequest[] = [];
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: DeviceModels.DeviceUploadFileRequest[] =
+      XLSX.utils.sheet_to_json(worksheet, { raw: true });
+    for (let i = 0; i < tables.length; i++) {
+      let item = tables[i];
+      result.push({
+        pos_code: item.pos_code?.toString() ?? "N/A",
+        imei: item.imei?.toString() ?? "N/A",
       });
     }
 
@@ -195,5 +220,42 @@ export const GetFilterWinnerSale = async (
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
+  try {
+    if (items.length < 1) {
+      return [];
+    }
+
+    const dayjs = useDayjs();
+    const headers = [
+      "No",
+      "Sale Date",
+      "Pos Code",
+      "Sale Amount",
+      "Agency Code",
+    ];
+    const ws_data: any[] = [];
+    ws_data.push(headers);
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      ws_data.push([
+        i + 1,
+        dayjs(item.sale_date).format("DD-MM-YYYY"),
+        item.pos_code ?? "-",
+        item.amount ?? 0,
+        item.agency?.agent_code ?? "N/A",
+      ]);
+    }
+    const sale_date = dayjs(items[0].sale_date).format("DD_MM_YYYY");
+    const workBooks = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
+    XLSX.writeFile(workBooks, `${sale_date}_REPORT_SALES.xlsx`);
+  } catch (error) {
+    console.error(error);
+    return error;
   }
 };
