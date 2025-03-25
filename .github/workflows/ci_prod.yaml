@@ -46,7 +46,7 @@ jobs:
           username: ${{ secrets.SSH_PROD_USERNAME }}
           password: ${{ secrets.SSH_PROD_PASSWORD }}
           script: |
-            cd /root/services/32lottery
+            cd /root/services
             docker compose pull backoffice
             docker compose up backoffice -d
             docker image prune -f
