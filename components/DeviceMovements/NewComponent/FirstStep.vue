@@ -70,7 +70,18 @@ onMounted(() => {
             clearable
             @update:search="debounceOfAgencies"
             v-model="request.agency_id"
-          ></v-autocomplete>
+          >
+            <template v-slot:selection="{ item }">
+              {{ item.title }} - {{ item.raw?.agent_code ?? "N/A" }}
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item
+                v-bind="props"
+                :subtitle="item.raw.agent_code"
+                :title="item.raw.fullname"
+              ></v-list-item>
+            </template>
+          </v-autocomplete>
         </v-col>
 
         <v-col cols="3">
