@@ -15,6 +15,7 @@ export interface DeviceDetailidResponseItems {
   create_username: string;
   create_fullname: string;
   create_nickname: string;
+  agency_code: string;
   status: number;
   device_locations: DeviceLocation[];
   device_transactions: any[];
