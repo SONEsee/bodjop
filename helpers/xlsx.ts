@@ -259,3 +259,23 @@ export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
     return error;
   }
 };
+
+export const ExportErrorSale = async (items: any[]) => {
+  try {
+    const ws_data: any[] = [];
+    const headers = ["ລະຫັດເຄື່ອງຂາຍ"];
+    ws_data.push(headers);
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      ws_data.push([item]);
+    }
+
+    const workBooks = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນເຄື່ອງຂາຍ");
+    XLSX.writeFile(workBooks, `ERROR_SALE_DEVICE_UPLOAD.xlsx`);
+  } catch (error) {
+    console.error(error);
+  }
+};

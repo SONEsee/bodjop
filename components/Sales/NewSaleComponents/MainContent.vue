@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { onSaleUploadFile } from "@/helpers/xlsx";
+import { AxiosError } from "axios";
+import { ExportErrorSale } from "@/helpers/xlsx";
 import axios from "@/helpers/axios";
 import _ from "lodash";
 
@@ -45,6 +47,7 @@ async function onFileUpload(event: Event) {
     if (file) {
       const reader = new FileReader();
       reader.onload = async (e) => {
+        saleStore.sale_request_create.items = [];
         const data = e.target?.result as ArrayBuffer;
         const result = await onSaleUploadFile(data, request.sale_date);
         if (result instanceof Error) {
@@ -113,7 +116,29 @@ async function onCreateSale() {
     }
   } catch (error) {
     console.error(error);
-    DefaultSwalError(error);
+    const err = error as AxiosError;
+    //@ts-ignore
+    const response_message_data: string = err?.response?.data?.error ?? "N/A";
+    if (response_message_data.includes("ERROR_DEVICE_NOT_FOUND:")) {
+      const notification = await CallSwal({
+        icon: "error",
+        title: "ຜິດພາດ",
+        text: "ຂໍ້ມູນອຸປະກອນບໍ່ມີໃນລະບົບ",
+        confirmButtonText: "ດາວໂຫຼດຟາຍ Excel",
+      });
+
+      if (notification.isConfirmed) {
+        //prepate download excel
+        const [_, data] = response_message_data.split(":");
+        const response_data = data.replace(/,\s*$/, "");
+        const result: any[] = JSON.parse(`[${response_data}]`);
+        if (result.length > 0) {
+          await ExportErrorSale(result);
+        }
+      }
+    } else {
+      DefaultSwalError(error);
+    }
   } finally {
     loading.value = false;
   }
@@ -294,5 +319,7 @@ async function onDateSelect(date: Date | null) {
         </v-data-table>
       </v-col>
     </v-row>
+
+    <!-- <GlobalOverlayLoading :loading="loading" /> -->
   </section>
 </template>
