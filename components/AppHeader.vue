@@ -46,11 +46,20 @@ const items = ref([
         icon: "mdi-account-cog",
         to: "/manageuser",
       },
-      // {
-      //   text: "ສະແກນ Qr Code",
-      //   icon: "mdi-qrcode",
-      //   to: "/qr",
-      // },
+    ],
+  },
+  {
+    title: "ລາຍງານ",
+    icon: "mdi-file-document",
+    menu: [
+      { text: "ລາຍງານຂໍ້ມູນ",
+       icon: "mdi-file-document", 
+       to: "/reports" },
+      {
+        text: "ລາຍງານສະເໜີ",
+        icon: "mdi-file-document-edit",
+        to: "../reports/reports_agency",
+      },
     ],
   },
 ]);

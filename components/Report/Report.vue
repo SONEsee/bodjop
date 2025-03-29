@@ -158,12 +158,12 @@ const uniqueDates = computed(() => {
 
 const refresh = ref(false);
 const refreshData = () => {
-    refresh.value = !refresh.value;
-    selectedDate.value = "";
-    console.log("refresh");
-    console.log(refresh.value);
-    console.log(selectedDate.value);
-};  
+  refresh.value = !refresh.value;
+  selectedDate.value = "";
+  console.log("refresh");
+  console.log(refresh.value);
+  console.log(selectedDate.value);
+};
 
 const filteredItems = computed(() => {
   if (!selectedDate.value) {
@@ -172,52 +172,48 @@ const filteredItems = computed(() => {
   return item.filter((i) => i.Date === selectedDate.value);
 });
 
-
 const exportToExcel = () => {
   loading.value = true;
   try {
-    
     let csvContent = "";
-    
-    
-    const headerRow = headers.map(header => `"${header.title}"`).join(",");
+
+    const headerRow = headers.map((header) => `"${header.title}"`).join(",");
     csvContent += headerRow + "\n";
-    
-   
-    filteredItems.value.forEach(row => {
-      const dataRow = headers.map(header => {
-        const value = row[header.value as keyof Item];
-        
-        return typeof value === 'string' && value.includes(',') 
-          ? `"${value}"` 
-          : `"${value}"`;
-      }).join(",");
+
+    filteredItems.value.forEach((row) => {
+      const dataRow = headers
+        .map((header) => {
+          const value = row[header.value as keyof Item];
+
+          return typeof value === "string" && value.includes(",")
+            ? `"${value}"`
+            : `"${value}"`;
+        })
+        .join(",");
       csvContent += dataRow + "\n";
     });
-    
-   
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    
 
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    
-  
+
     const date = new Date();
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const filename = selectedDate.value 
-      ? `report_${selectedDate.value}.xlsx` 
+    const formattedDate = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const filename = selectedDate.value
+      ? `report_${selectedDate.value}.xlsx`
       : `report_all_data_${formattedDate}.xlsx`;
-    
+
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
-    
 
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     console.log("Excel file exported successfully");
   } catch (error) {
     console.error("Error exporting to Excel:", error);
@@ -228,6 +224,8 @@ const exportToExcel = () => {
 </script>
 
 <template>
+    <v-card>
+        <div class="pa-4">
   <div>
     <v-col cols="12">
       <GlobalTextTitleLine :title="title" />
@@ -247,41 +245,43 @@ const exportToExcel = () => {
           :loading="loading"
         ></v-autocomplete>
       </v-col>
-      <v-col cols="auto">
-        <v-btn 
-          color="primary" 
-          flat 
-          prepend-icon="mdi-magnify" 
+      <v-col cols="4">
+        <v-btn
+          color="primary"
+          flat
+          prepend-icon="mdi-magnify"
           @click="refreshData"
           :loading="loading"
         >
           <p>ຄົ້ນຫາ</p>
         </v-btn>
       </v-col>
-      <v-col cols="auto">
-        <v-btn 
-          color="success" 
-          flat 
-          prepend-icon="mdi-file-excel" 
+      <v-col cols="5">
+        <div class="d-flex justify-end"> 
+        <v-btn
+        
+          color="success"
+          flat
+          prepend-icon="mdi-file-excel"
           @click="exportToExcel"
           :loading="loading"
         >
-          <p>ສ້າງ Excel</p>
-        </v-btn>
+          <p style="color: white;">ສ້າງ Excel</p>
+        </v-btn></div>
       </v-col>
     </v-row>
   </div>
   <div style="height: 100vh">
     <div class="d-flex justify-center">
-      <v-data-table 
-        :items="filteredItems" 
-        :headers="headers" 
-        density="compact" 
-        class="text-caption text-no-wrap" 
+      <v-data-table
+        :items="filteredItems"
+        :headers="headers"
+        density="compact"
+        class="text-caption text-no-wrap"
         hide-default-footer
         hover
         :loading="loading"
       ></v-data-table>
-    </div>
-  </div>
+    </div></div> 
+  </div></v-card>
 </template>
