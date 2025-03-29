@@ -1,4 +1,6 @@
 import * as XLSX from "xlsx";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 import { SaleModels, DeviceModels, ExpenseTypeModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
 
@@ -258,6 +260,68 @@ export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
     const ws = XLSX.utils.aoa_to_sheet(ws_data);
     XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
     XLSX.writeFile(workBooks, `${sale_date}_REPORT_SALES.xlsx`);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
+  try {
+    if (items.length < 1) {
+      return [];
+    }
+
+    const dayjs = useDayjs();
+    const agencyCode = items.map(
+      (d: SaleModels.SaleDetail) => d.agency?.agent_code
+    );
+
+    const uniqueAgencyCode = [...new Set(agencyCode)];
+    if (uniqueAgencyCode.length < 1) {
+      return [];
+    }
+
+    const zip = new JSZip();
+    let headers = ["No", "Sale Date", "Pos Code", "Sale Amount", "Agency Code"];
+    for (let i = 0; i < uniqueAgencyCode.length; i++) {
+      let code = uniqueAgencyCode[i];
+      let ws_data: any[] = [headers];
+      const salesFilterByAgencyCode = items.filter(
+        (d: SaleModels.SaleDetail) => d.agency?.agent_code === code
+      );
+
+      for (let j = 0; j < salesFilterByAgencyCode.length; j++) {
+        let item = salesFilterByAgencyCode[j];
+        ws_data.push([
+          i + 1,
+          dayjs(item.sale_date).format("DD-MM-YYYY"),
+          item.pos_code ?? "-",
+          item.amount ?? 0,
+          item.agency?.agent_code ?? "N/A",
+        ]);
+      }
+
+      const sale_date = dayjs(salesFilterByAgencyCode[0].sale_date).format(
+        "DD-MM-YYYY"
+      );
+      const workBooks = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
+      const excelBuffer = XLSX.write(workBooks, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      zip.file(
+        `Daily Sale Report ${code} ${sale_date}.xlsx`,
+        new Blob([excelBuffer])
+      );
+    }
+
+    const sale_date = dayjs(items[0].sale_date).format("DD-MM-YYYY");
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, `Daily Sale Reports ${sale_date} .zip`);
   } catch (error) {
     console.error(error);
     return error;
