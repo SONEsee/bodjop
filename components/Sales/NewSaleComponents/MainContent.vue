@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { onSaleUploadFile } from "@/helpers/xlsx";
+import { AxiosError } from "axios";
+import { ExportErrorSale } from "@/helpers/xlsx";
 import axios from "@/helpers/axios";
+import _ from "lodash";
 
 const title = ref("ເພີ່ມຂໍ້ມູນການຂາຍ");
 const file = ref();
@@ -33,6 +36,10 @@ function onOpenfile() {
   file.value.click();
 }
 
+const total_sale_amount = computed(() => {
+  return _.sum(request.items.map((d) => d.sale_amount ?? 0));
+});
+
 async function onFileUpload(event: Event) {
   try {
     const input = event.target as HTMLInputElement;
@@ -40,6 +47,7 @@ async function onFileUpload(event: Event) {
     if (file) {
       const reader = new FileReader();
       reader.onload = async (e) => {
+        saleStore.sale_request_create.items = [];
         const data = e.target?.result as ArrayBuffer;
         const result = await onSaleUploadFile(data, request.sale_date);
         if (result instanceof Error) {
@@ -70,7 +78,8 @@ async function onCreateSale() {
     if (response_period_check.value !== null) {
       text = `ຍອດຂາຍວັນທີ ${dayjs(response_period_check.value.sale_date).format(
         "DD-MM-YYYY"
-      )} ໄດ້ມີການເພີ່ມເຂົ້າມາໃນລະບົບແລ້ວ ຂໍ້ມູນອາດຊ້ຳກັນໄດ້ທ່ານແນ່ໃຈແລ້ວບໍ່?`;
+      )} ໄດ້ມີການເພີ່ມເຂົ້າມາໃນລະບົບແລ້ວ`;
+      return DefaultSwalError(new Error(text));
     } else {
       text = "ທ່ານກຳລັງສ້າງຂໍ້ມູນການຂາຍທ່ານແນ່ໃຈແລ້ວບໍ່";
     }
@@ -107,7 +116,29 @@ async function onCreateSale() {
     }
   } catch (error) {
     console.error(error);
-    DefaultSwalError(error);
+    const err = error as AxiosError;
+    //@ts-ignore
+    const response_message_data: string = err?.response?.data?.error ?? "N/A";
+    if (response_message_data.includes("ERROR_DEVICE_NOT_FOUND:")) {
+      const notification = await CallSwal({
+        icon: "error",
+        title: "ຜິດພາດ",
+        text: "ຂໍ້ມູນອຸປະກອນບໍ່ມີໃນລະບົບ",
+        confirmButtonText: "ດາວໂຫຼດຟາຍ Excel",
+      });
+
+      if (notification.isConfirmed) {
+        //prepate download excel
+        const [_, data] = response_message_data.split(":");
+        const response_data = data.replace(/,\s*$/, "");
+        const result: any[] = JSON.parse(`[${response_data}]`);
+        if (result.length > 0) {
+          await ExportErrorSale(result);
+        }
+      }
+    } else {
+      DefaultSwalError(error);
+    }
   } finally {
     loading.value = false;
   }
@@ -134,7 +165,10 @@ async function onDateSelect(date: Date | null) {
         />
       </v-col>
 
-      <v-col cols="12" class="d-flex flex-wrap justify-space-between">
+      <v-col
+        cols="12"
+        class="d-flex flex-wrap justify-space-between alig-center"
+      >
         <div>
           <div>
             <label>ຍອດຂາຍວັນທີ</label>
@@ -145,11 +179,12 @@ async function onDateSelect(date: Date | null) {
             />
           </div>
         </div>
-        <div class="mr-3 d-flex flex-wrap">
+
+        <div class="mr-3 d-flex flex-wrap align-center">
           <div class="pt-6 mr-6">
             <v-btn
-              color="primary"
-              prepend-icon="mdi-plus"
+              color="info"
+              prepend-icon="mdi-cloud-upload"
               flat
               width="180px"
               @click="onOpenfile"
@@ -157,6 +192,24 @@ async function onDateSelect(date: Date | null) {
             >
               ອັບໂຫຼດຂໍ້ມູນການຂາຍ</v-btn
             >
+          </div>
+
+          <div class="pt-6 mr-4">
+            <a
+              href="/uploads/UPLOAD-FILE-32LOTTERY.xlsx"
+              download="sale_upload_file.xlsx"
+              target="_blank"
+            >
+              <v-btn
+                color="primary"
+                prepend-icon="mdi-file-excel"
+                flat
+                width="180px"
+                :loading="loading"
+              >
+                ດາວໂຫຼດຟາຍອັບໂຫຼດ</v-btn
+              >
+            </a>
           </div>
 
           <div
@@ -181,6 +234,24 @@ async function onDateSelect(date: Date | null) {
           style="display: none"
           @change="onFileUpload"
         />
+      </v-col>
+
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ຂໍ້ມູນການຂາຍທັງໝົດ'"
+              :text="`${formatnumber(request.items.length)} ລາຍການ`"
+            />
+          </v-col>
+
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ລວມການຂາຍທັງໝົດ'"
+              :text="`${formatnumberV2(total_sale_amount)} ກີບ`"
+            />
+          </v-col>
+        </v-row>
       </v-col>
 
       <v-col cols="12" v-show="saleStore.sale_request_create.items.length > 0">
@@ -248,5 +319,7 @@ async function onDateSelect(date: Date | null) {
         </v-data-table>
       </v-col>
     </v-row>
+
+    <!-- <GlobalOverlayLoading :loading="loading" /> -->
   </section>
 </template>

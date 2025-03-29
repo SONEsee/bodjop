@@ -9,13 +9,16 @@ export const UserManageStore = defineStore("usermanage", {
         phone_number: null as string | null,
         role: null as string | null,
         password: null as string | null,
-        gender: 1,
+        nick_name: null as string | null,
         username: null as string | null,
         profile_image: null as File | null,
         village_id: null,
         district_id: null,
         province_id: null,
+        gender: null as number | null,
+        status: null as number | null,
       },
+
       reques: {
         error: null,
         items: null as UsermeModel.UserMeResponseItems | null,
@@ -82,24 +85,42 @@ export const UserManageStore = defineStore("usermanage", {
       }
     },
     async Getdetail(id: string | null) {
+      const globalStore = UseGlobalStore();
       try {
         if (id === null || id == "") {
           return;
         }
+        globalStore.loading_overlay = true;
         const res = await axios.get<UserGetdataModel.GetUserDetailResponse>(
           `/api/v1/users/get-detail/${id}`
         );
-        this.response_detail_query_data = res.data.items
+
+        if (res.status == 200) {
+          const item = res.data.items ?? null;
+          this.response_detail_query_data = item;
+          if (item !== null) {
+            const province_id = item.village?.district?.province_id ?? null;
+            const district_id = item.village?.district_id ?? null;
+            await globalStore.GetDistrictData(province_id, null);
+            await globalStore.GetVillagesData(
+              district_id?.toString() ?? null,
+              null
+            );
+          }
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        globalStore.loading_overlay = false;
       }
     },
-    async OnGetAndEditUser(id: string ) {
-        const globalStore = UseGlobalStore();
-        try {
-            globalStore.loading_overlay = true;
-            await this.Getdetail(id);
-            let item = this.response_detail_query_data;
+
+    async OnGetAndEditUser(id: string) {
+      const globalStore = UseGlobalStore();
+      try {
+        globalStore.loading_overlay = true;
+        await this.Getdetail(id);
+        let item = this.response_detail_query_data;
         if (item != null) {
           const globalStore = UseGlobalStore();
           const provinceID = item?.village?.district?.province_id ?? null;
@@ -109,23 +130,21 @@ export const UserManageStore = defineStore("usermanage", {
             null
           );
           await globalStore?.GetDistrictData(provinceID, null);
-                if(
-                    item.image_profile !== null &&
-                    item.image_profile != "" &&
-                    item.image_profile != "N/A"
-                ){
-                    item.image_profile = await globalStore.GetFileData(
-                      item.image_profile
-                    );
-                  }
-            }
-
-        } catch (error) {
-            console.error(error);
-        }finally {
-            globalStore.loading_overlay = false;
+          if (
+            item.image_profile !== null &&
+            item.image_profile != "" &&
+            item.image_profile != "N/A"
+          ) {
+            item.image_profile = await globalStore.GetFileData(
+              item.image_profile
+            );
           }
-
-    }
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        globalStore.loading_overlay = false;
+      }
+    },
   },
 });

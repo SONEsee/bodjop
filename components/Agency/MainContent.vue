@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 const agencyStore = UseAgencyStore();
+const dialog = ref(false);
+const agencyID = ref(null as string | null);
 
 const response_data = computed(() => {
   return agencyStore.response_query_data;
@@ -33,18 +35,6 @@ const onDeleteUser = async (id: string) => {
   if (res instanceof Error) {
     return DefaultSwalError(res.message);
   }
-
-  const notification = await CallSwal({
-    icon: "success",
-    title: "ສຳເລັດ",
-    text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
-  });
-
-  if (notification.isConfirmed) {
-    await agencyStore.GetListData();
-  } else {
-    await agencyStore.GetListData();
-  }
 };
 
 const onsetinput = async (input: string | null) => {
@@ -53,6 +43,16 @@ const onsetinput = async (input: string | null) => {
     await agencyStore.GetListData();
   }
 };
+
+function onEditAgency(id: string) {
+  agencyID.value = id;
+  dialog.value = true;
+}
+
+function onCloseDialog(value: boolean) {
+  dialog.value = value;
+  agencyID.value = null;
+}
 </script>
 <template>
   <div class="pa-6">
@@ -107,6 +107,7 @@ const onsetinput = async (input: string | null) => {
             :headers="headers"
             :items="response_data?.list_data ?? []"
             :loading="request.loading"
+            :items-per-page="request.limit"
           >
             <template v-slot:item.no="{ item, index }">
               {{ index + 1 }}
@@ -129,21 +130,55 @@ const onsetinput = async (input: string | null) => {
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-btn
+              <!-- <v-btn
+                color="primary"
+                icon="mdi-lock-reset"
+                variant="text"
+                @click="onEditAgency(item.id)"
+                size="small"
+              ></v-btn> -->
+
+              <v-tooltip text="ແກ້ໄຂລະຫັດຜ່ານຕົວແທນ" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="primary"
+                    icon="mdi-lock-reset"
+                    variant="text"
+                    @click="onEditAgency(item.id)"
+                    size="small"
+                    v-bind="props"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
+
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-pencil"
                 variant="text"
                 @click="goPath(`/agency/edit?id=${item.id}`)"
                 size="small"
-              ></v-btn>
+              ></v-btn> -->
 
-              <v-btn
+              <!-- <v-btn
                 color="primary"
                 icon="mdi-eye"
                 variant="text"
                 @click="goPath(`/agency/detail?id=${item.id}`)"
                 size="small"
-              ></v-btn>
+              ></v-btn> -->
+
+              <v-tooltip text="ເບິ່ງຂໍ້ມູນຕົວແທນ" location="top">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    color="primary"
+                    icon="mdi-eye"
+                    variant="text"
+                    v-bind="props"
+                    @click="goPath(`/agency/detail?id=${item.id}`)"
+                    size="small"
+                  ></v-btn>
+                </template>
+              </v-tooltip>
 
               <v-btn
                 color="error"
@@ -166,6 +201,12 @@ const onsetinput = async (input: string | null) => {
           </v-data-table>
         </v-col>
       </v-row>
+
+      <AgencyResetPassword
+        :dialog="dialog"
+        @close-dialog="onCloseDialog"
+        :user_id="agencyID"
+      />
     </v-card>
   </div>
 </template>

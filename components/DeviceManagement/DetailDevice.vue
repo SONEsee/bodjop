@@ -25,7 +25,7 @@
 
           <v-col cols="3">
             <GlobalCardTitle
-              :text="item?.create_fullname ?? 'N/A'"
+              :text="`${item?.agency_code ?? 'N/A'}`"
               :title="'ຫຼ້າສຸດຢູ່ກັບໃຜ / Lastest owner'"
             />
           </v-col>

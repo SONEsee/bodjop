@@ -1,11 +1,20 @@
 <script setup lang="ts">
 const UserManage = UserManageStore();
-onMounted(async () => {
-  await UserManage.GetData();
-});
+const dialog = ref(false);
+const userID = ref(null as string | null);
 const response = computed(() => {
   return UserManage.response_query_data;
 });
+
+const onCloseDialog = (value: boolean) => {
+  dialog.value = value;
+};
+
+function onPasswordEdit(id: string) {
+  userID.value = id;
+  dialog.value = true;
+}
+
 const request = UserManage.request_query_data;
 async function onSelectionChange(limit: number) {
   request.limit = limit;
@@ -17,14 +26,17 @@ async function onPageChange(page: number) {
 }
 const title = "ຈັດການຜູ້ໃຊ້ງານ";
 const headers = [
+  { title: "ລຳດັບ", key: "no" },
+  { title: "ຮູບ", key: "image_profile" },
   { title: "ຊື່ຜູ້ໃຊ້", key: "username" },
+  { title: "ຊື່ຫຼິ້ນ", key: "nick_name" },
   { title: "ຊື່ ແລະ ນາມສະກຸນ", key: "fullname" },
   { title: "ເບີໂທ", key: "phone_number" },
   { title: "ສິດການເຂົ້າໃຊ້", key: "role" },
   { title: "ສະຖານະ", key: "status" },
-  { title: "ຮູບ", key: "image_profile" },
   { title: "ຈັດການ", key: "actions", sortable: false },
 ];
+
 const OndeleteUser = async (id: string) => {
   const res = await UserManage.OndeleteUser(id);
   if (res instanceof Error) {
@@ -41,7 +53,12 @@ const OndeleteUser = async (id: string) => {
     await UserManage.GetData();
   }
 };
+
+onMounted(() => {
+  UserManage.GetData();
+});
 </script>
+
 <template>
   <div>
     <v-col cols="12">
@@ -67,11 +84,12 @@ const OndeleteUser = async (id: string) => {
         {{ index + 1 }}
       </template>
 
-      <template v-slot:item.image="{ item }">
+      <template v-slot:item.image_profile="{ item }">
         <div class="pa-2">
           <GlobalMenuSpanImage :image="item.image_profile" />
         </div>
       </template>
+
       <template v-slot:item.villages="{ item }">
         {{ item?.created_at ?? "" }},
       </template>
@@ -96,6 +114,14 @@ const OndeleteUser = async (id: string) => {
         ></v-btn>
 
         <v-btn
+          color="primary"
+          icon="mdi-lock"
+          variant="text"
+          @click="onPasswordEdit(item.id)"
+          size="small"
+        ></v-btn>
+
+        <v-btn
           color="error"
           icon="mdi-delete"
           variant="text"
@@ -108,10 +134,16 @@ const OndeleteUser = async (id: string) => {
         <GlobalTablePaginations
           :page="request.page"
           :limit="request.limit"
-          :totalpage="response?.pagination.total_count ?? 1"
+          :totalpage="response?.pagination.total_page ?? 1"
           @onSelectionChange="onSelectionChange"
           @onPagechange="onPageChange"
       /></template>
     </v-data-table>
+
+    <AgencyResetPassword
+      :dialog="dialog"
+      @close-dialog="onCloseDialog"
+      :user_id="userID"
+    />
   </div>
 </template>

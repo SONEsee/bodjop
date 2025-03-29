@@ -77,4 +77,5 @@ export interface DeviceMovementDetail {
   pos_no: string;
   imei: string;
   agency_id: string;
+  agency: Agency;
 }

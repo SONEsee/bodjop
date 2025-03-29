@@ -64,6 +64,10 @@ async function onSubmitForm() {
     loading.value = false;
   }
 }
+
+const debounceSearchDevice = useDebounceFn(async (value: string) => {
+  await deviceStore.GetDeviceSelections(2, value);
+}, 800);
 </script>
 <template>
   <section>
@@ -99,12 +103,13 @@ async function onSubmitForm() {
                 (item) => {
                   return {
                     title: 'ລະຫັດເຄື່ອງ',
-                    subtitle: item.pos_code,
+                    subtitle: `${item.pos_code} - imei: ${item.imei}`,
                   };
                 }
               "
               item-title="pos_code"
               density="compact"
+              @update:search="debounceSearchDevice"
             >
               <template v-slot:selection="{ item }">
                 {{ item.raw?.pos_code }}

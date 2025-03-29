@@ -9,6 +9,7 @@ const headers = ref([
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ລົງຍອດ", value: "innitial_amount" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
+  { title: "ສະຖານະ", value: "status" },
   { title: "actions", value: "actions" },
 ]);
 
@@ -57,6 +58,10 @@ const response_data = computed(() => {
 
         <template v-slot:item.sale_date="{ item }">
           {{ FormatDate(item.sale_date) }}
+        </template>
+
+        <template v-slot:item.status="{ item }">
+          <GlobalAgencyDebtStatus :status="item.status" />
         </template>
 
         <template v-slot:item.actions="{ item }">

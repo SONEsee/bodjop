@@ -140,8 +140,6 @@ export const UseAgencyStore = defineStore("agency", {
       }
     },
 
-    
-
     onCloseDialogIdentities() {
       let obj = {
         id: null,
@@ -172,6 +170,7 @@ export const UseAgencyStore = defineStore("agency", {
         minimum_amount: 0,
         maximum_amount: 0,
         id: null,
+        active_percentage: 0,
       });
     },
 
@@ -194,7 +193,17 @@ export const UseAgencyStore = defineStore("agency", {
           globalStore.loading_overlay = true;
           const res = await axios.delete(`/api/v1/users/delete/${id}`);
           if (res.status === 200) {
-            return id;
+            const notification = await CallSwal({
+              icon: "success",
+              title: "ສຳເລັດ",
+              text: "ບັນທຶກຂໍ້ມູນສຳເລັດ",
+            });
+
+            if (notification.isConfirmed) {
+              await this.GetListData();
+            } else {
+              await this.GetListData();
+            }
           }
         }
 

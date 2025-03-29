@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "Nuxt3-Starter-Template",
+      title: "32Lottery-Backoffice",
     },
   },
 
@@ -64,6 +64,11 @@ export default defineNuxtConfig({
       path: "@/components/Debts/",
       pathPrefix: true,
       prefix: "Debts",
+    },
+    {
+      path: "@/components/Profile/",
+      pathPrefix: true,
+      prefix: "Profile",
     },
   ],
 

@@ -9,6 +9,8 @@ onMounted(() => {
 });
 </script>
 <template>
-    <DetailManageUser/>
+  <section class="pa-6">
+    <DetailManageUser />
     <GlobalOverlayLoading :loading="globalStore.loading_overlay" />
+  </section>
 </template>

@@ -455,7 +455,7 @@ const expenseTitle = ref([
             class="ma-0 pa-0 pr-3 mt-1 d-flex align-center justify-end card-header"
           >
             <div class="header">
-              {{ formatnumberV2(item.total_amount - item?.total_agency_debt) }}
+              {{ formatnumberV2(item.total_amount + item?.total_agency_debt) }}
             </div>
           </v-card>
         </v-col>
