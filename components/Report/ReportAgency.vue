@@ -106,7 +106,6 @@ const refresh = ref(false);
 const refreshData = () => {
   refresh.value = !refresh.value;
   selectedDate.value = "";
-  
 };
 
 const filteredItems = computed(() => {
@@ -168,60 +167,65 @@ const exportToExcel = () => {
 </script>
 
 <template>
-  <div>
-    <v-col cols="12">
-      <GlobalTextTitleLine :title="title" />
-    </v-col>
-  </div>
-  <div>
-    <v-row>
-      <v-col cols="3">
-        <v-autocomplete
-          density="compact"
-          label="ເລືອກວັນທີ"
-          v-model="selectedDate"
-          :items="uniqueDates"
-          variant="outlined"
-          clearable
-          placeholder="ເລືອກວັນທີເພື່ອກັ່ນຕອງຂໍ້ມູນ"
-          :loading="loading"
-        ></v-autocomplete>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn
-          color="primary"
-          flat
-          prepend-icon="mdi-magnify"
-          @click="refreshData"
-          :loading="loading"
-        >
-          <p>ຄົ້ນຫາ</p>
-        </v-btn>
-      </v-col>
-      <v-col cols="auto">
-        <v-btn
-          color="success"
-          flat
-          prepend-icon="mdi-file-excel"
-          @click="exportToExcel"
-          :loading="loading"
-        >
-          <p>ສ້າງ Excel</p>
-        </v-btn>
-      </v-col>
-    </v-row>
-  </div>
-  <div style="height: 100vh">
-    <div class="d-flex justify-center">
-      <v-data-table
-        :items="filteredItems"
-        :headers="headers"
-        density="compact"
-        class="text-caption text-no-wrap"
-        hide-default-footer
-        hover
-        :loading="loading"
-      ></v-data-table>
-    </div>
-  </div>
+  <v-card>
+    <div class="pa-3">
+      <div>
+        <v-col cols="12">
+          <GlobalTextTitleLine :title="title" />
+        </v-col>
+      </div>
+      <div>
+        <v-row>
+          <v-col cols="3">
+            <v-autocomplete
+              density="compact"
+              label="ເລືອກວັນທີ"
+              v-model="selectedDate"
+              :items="uniqueDates"
+              variant="outlined"
+              clearable
+              placeholder="ເລືອກວັນທີເພື່ອກັ່ນຕອງຂໍ້ມູນ"
+              :loading="loading"
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="4">
+            <v-btn
+              color="primary"
+              flat
+              prepend-icon="mdi-magnify"
+              @click="refreshData"
+              :loading="loading"
+            >
+              <p>ຄົ້ນຫາ</p>
+            </v-btn>
+          </v-col>
+          <v-col cols="5">
+            <div class="d-flex justify-end text-white">
+              <v-btn
+                color="success"
+                flat
+                prepend-icon="mdi-file-excel"
+                @click="exportToExcel"
+                :loading="loading"
+              >
+                <p style="color: white;">ສ້າງ Excel</p>
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
+      <div style="height: 100vh">
+        <div class="d-flex justify-center">
+          <v-data-table
+            :items="filteredItems"
+            :headers="headers"
+            density="compact"
+            class="text-caption text-no-wrap"
+            hide-default-footer
+            hover
+            :loading="loading"
+          ></v-data-table>
+        </div>
+      </div></div
+  ></v-card>
 </template>
