@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+import axios from "@/helpers/axios";
 const expenseTypeStore = UseExpenseTypeStore();
+const saleStore = UseSaleStore();
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
   { title: "ສ້າງວັນທີ", value: "created_at" },
@@ -18,6 +20,10 @@ const response_data = computed(() => {
   return expenseTypeStore.response_get_data;
 });
 
+const sale_periods = computed(() => {
+  return saleStore.sale_periods;
+});
+
 async function onSelectChange(select: number) {
   request.limit = select;
   await expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
@@ -28,8 +34,47 @@ async function onPageChange(page: number) {
   await expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
 }
 
+async function onDeleteTransactions(id: string) {
+  try {
+    const notification = await CallSwal({
+      icon: "warning",
+      text: "ທ່ານຕ້ອງການລົບຂໍ້ມູນນີ້ ທ່ານແນ່ໃຈແລ້ວບໍ່?",
+      title: "ຄຳເຕືອນ",
+      showCancelButton: true,
+      cancelButtonText: "ຍົກເລີກ",
+      confirmButtonText: "ຕົກລົງ",
+    });
+
+    if (notification.isConfirmed) {
+      request.loading = true;
+      const res = await axios.delete(
+        `/api/v1/sale-expense-transactions/delete-data/${id}`
+      );
+      if (res.status === 200) {
+        const successNotification = await CallSwal({
+          icon: "success",
+          title: "ສຳເລັດ",
+          text: "ບັນທຶກຂໍ້ມູນສຳເລັດແລ້ວ",
+        });
+
+        if (successNotification.isConfirmed) {
+          await expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
+        } else {
+          await expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
+        }
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    DefaultSwalError(error);
+  } finally {
+    request.loading = false;
+  }
+}
+
 onMounted(() => {
   expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
+  saleStore.GetSalePeriodListData();
 });
 </script>
 
@@ -41,14 +86,56 @@ onMounted(() => {
           <GlobalTextTitleLine :title="`ຈັດການຂໍ້ມູນການເພີ່ມລາຍຈ່າຍ`" />
         </v-col>
 
-        <v-col cols="12" class="d-flex flex-wrap justify-end">
-          <v-btn
-            color="primary"
-            width="165px"
-            flat
-            @click="goPath(`/sale_expense_transactions/new`)"
-            >+ ເພີ່ມຂໍ້ມູນ</v-btn
-          >
+        <v-col
+          cols="12"
+          class="d-flex flex-wrap justify-space-between align-center"
+        >
+          <div class="d-flex flex-wrap align-center">
+            <div style="width: 250px">
+              <label>ງວດວັນທີ</label>
+              <v-select
+                :items="sale_periods"
+                variant="outlined"
+                density="compact"
+                item-title="sale_date"
+                item-value="sale_date"
+                clearable
+                v-model="request.sale_date"
+              >
+                <template v-slot:item="{ props, item }">
+                  <v-list-item
+                    v-bind="props"
+                    :subtitle="FormatDate(item.title)"
+                    :title="'ງວດວັນທີ'"
+                  ></v-list-item>
+                </template>
+
+                <template v-slot:selection="{ item }">
+                  {{ FormatDate(item.title) }}
+                </template>
+              </v-select>
+            </div>
+
+            <div class="ml-3">
+              <v-btn
+                color="primary"
+                flat
+                :loading="request.loading"
+                @click="expenseTypeStore.GetListDataSaleExpenseTypeTransaction"
+                >ຄົ້ນຫາ</v-btn
+              >
+            </div>
+          </div>
+
+          <div>
+            <v-btn
+              color="primary"
+              width="165px"
+              flat
+              @click="goPath(`/sale_expense_transactions/new`)"
+              >+ ເພີ່ມຂໍ້ມູນ</v-btn
+            >
+          </div>
         </v-col>
 
         <v-col cols="12">
@@ -73,7 +160,7 @@ onMounted(() => {
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <div>
+              <div class="d-flex">
                 <div>
                   <v-btn
                     color="primary"
@@ -83,6 +170,16 @@ onMounted(() => {
                     @click="
                       goPath(`/sale_expense_transactions/detail?id=${item.id}`)
                     "
+                  ></v-btn>
+                </div>
+
+                <div>
+                  <v-btn
+                    color="error"
+                    icon="mdi-delete"
+                    variant="text"
+                    size="small"
+                    @click="onDeleteTransactions(item.id)"
                   ></v-btn>
                 </div>
               </div>

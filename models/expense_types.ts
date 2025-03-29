@@ -74,3 +74,19 @@ export interface GetSaleExpenseTransasctionDetailResponse {
   status: number;
   timestamp: string;
 }
+
+export interface ExpenseTypeTransactionUploadFile {
+  sale_date: number | Date;
+  agency_code: string;
+  amount: number;
+  expense_type: string;
+  note: string;
+}
+
+export interface ExpenseTypeTransactionUploadFileResponse {
+  sale_date: string | Date;
+  agency_code: string;
+  amount: number;
+  expense_type: string;
+  note: string;
+}
