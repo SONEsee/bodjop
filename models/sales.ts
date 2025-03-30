@@ -16,7 +16,7 @@ export interface OnSaleCreateModel {
 export interface WinnerSaleCreateModel {
   pos_code: string;
   sale_amount: number;
-  sale_date: any;
+  // sale_date: any;
   one_digits: number;
   two_digits: number;
   three_digits: number;

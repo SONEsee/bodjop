@@ -1,7 +1,14 @@
 <script lang="ts" setup>
-import { onSaleExportExcel } from "@/helpers/xlsx";
+import { onSaleExportExcelV2, onSaleExportExcel } from "@/helpers/xlsx";
 const title = ref("ລາຍລະອຽດການຂາຍ");
 const saleStore = UseSaleStore();
+
+const items = ref([
+  { title: "Click Me" },
+  { title: "Click Me" },
+  { title: "Click Me" },
+  { title: "Click Me 2" },
+]);
 
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
@@ -24,7 +31,7 @@ const response_data = computed(() => {
 
 const onExportExcel = async () => {
   try {
-    const res = await onSaleExportExcel(
+    const res = await onSaleExportExcelV2(
       response_data.value?.sale_details ?? []
     );
 
@@ -90,13 +97,47 @@ const onExportExcel = async () => {
           </div>
 
           <div>
-            <v-btn
+            <!-- <v-btn
               color="primary"
               variant="flat"
               prepend-icon="mdi-export"
               @click="onExportExcel"
+              :disabled="response_data?.status === 2"
               >Export excel</v-btn
-            >
+            > -->
+
+            <v-menu open-on-hover>
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  color="primary"
+                  variant="flat"
+                  prepend-icon="mdi-export"
+                  :disabled="response_data?.status === 2"
+                  >Export excel</v-btn
+                >
+              </template>
+
+              <v-list>
+                <!-- <v-list-item
+                  v-for="(item, index) in items"
+                  :key="index"
+                  :value="index"
+                >
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item> -->
+
+                <v-list-item
+                  @click="onSaleExportExcel(response_data?.sale_details ?? [])"
+                >
+                  <v-list-item-title> ແບບລວມ </v-list-item-title>
+                </v-list-item>
+
+                <v-list-item @click="onExportExcel">
+                  <v-list-item-title> ແຍກແບບຕົວແທນ </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </div>
         </div>
 

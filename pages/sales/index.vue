@@ -1,5 +1,9 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "auth",
+});
 const saleStore = UseSaleStore();
+const globalStore = UseGlobalStore();
 const title = ref("ຂໍ້ມູນການຂາຍ");
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
@@ -136,6 +140,7 @@ onMounted(() => {
                     icon="mdi-cancel"
                     variant="text"
                     size="small"
+                    :disabled="item.status === 2"
                     @click="saleStore.OnCancelSale(item.id)"
                   ></v-btn>
                 </div>

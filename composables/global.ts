@@ -351,9 +351,11 @@ export const GetCommissionOrExpenseTypeLabel = (label: string) => {
     WINNER_EXPENSE_SALE: "ບິນລາງວັນ",
     BORROW_EXPENSE_SALE: "ຕົວແທນຢືມ",
     COMMITTEE_EXPENSE_SALE: "ຄ່າກຳມະການ",
+    // COMMITTEE_EXPENSE_SALE: "Hello world",
     VAT_EXPENSE_SALE: "ອາກອນ",
     OTHER_EXPENSE_SALE: "ອື່ນໆ",
     TOPUP_CARD: "ບັດເຕີມ",
+    WINNER_EXPENSE_LAST_DIGIT_SALE: "ບິນລາງວັນເລກທ້າຍ",
   } as { [key: string]: string };
 
   return listOfLabel[label] ?? "N/A";
