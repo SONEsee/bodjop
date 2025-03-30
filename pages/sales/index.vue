@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: "auth",
+});
 const saleStore = UseSaleStore();
 const globalStore = UseGlobalStore();
 const title = ref("ຂໍ້ມູນການຂາຍ");

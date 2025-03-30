@@ -1,6 +1,20 @@
 <script lang="ts" setup>
+const dashboardStore = UseDashboardStore();
 definePageMeta({
   middleware: "auth",
+});
+
+const loadingGraph = computed(() => {
+  return dashboardStore.request_graph_data.loading;
+});
+
+const userLocal = computed(() => {
+  return GetUserLocalStorage();
+});
+
+onMounted(() => {
+  dashboardStore.GetMainCardDashboard();
+  dashboardStore.GetGraphDataDashboard();
 });
 </script>
 
@@ -9,7 +23,8 @@ definePageMeta({
     <v-row>
       <v-col cols="12">
         <div style="font-size: 18px" class="font-weight-black">
-          Welcome xayxana MANIVONG
+          Welcome
+          <span class="text-primary"> {{ userLocal?.username ?? "-" }}! </span>
         </div>
       </v-col>
 
@@ -18,11 +33,21 @@ definePageMeta({
       </v-col>
 
       <v-col cols="12" md="6">
-        <DashboardMainSaleCard />
+        <DashboardMainSaleCard v-if="!loadingGraph" />
+        <v-skeleton-loader
+          type="card"
+          height="350px"
+          v-else="loadingGraph"
+        ></v-skeleton-loader>
       </v-col>
 
       <v-col cols="12" md="6">
-        <DashboardMainExpenseCard />
+        <DashboardMainExpenseCard v-if="!loadingGraph" />
+        <v-skeleton-loader
+          type="card"
+          height="350px"
+          v-else="loadingGraph === true"
+        ></v-skeleton-loader>
       </v-col>
     </v-row>
   </section>

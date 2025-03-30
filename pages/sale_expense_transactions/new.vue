@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+definePageMeta({
+  middleware: "auth",
+});
 import axios from "@/helpers/axios";
 import { ExpenseTypeModels } from "@/models";
 import { onExpenseTypeTransactionUpload } from "@/helpers/xlsx";

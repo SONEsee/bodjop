@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+definePageMeta({
+  middleware: "auth",
+});
 import axios from "@/helpers/axios";
 const expenseTypeStore = UseExpenseTypeStore();
 const saleStore = UseSaleStore();

@@ -1,38 +1,47 @@
 <script lang="ts" setup>
-const series = ref([
-  {
-    name: "Desktops",
-    data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
-  },
-]);
+const dashboardStore = UseDashboardStore();
 
-const chartOptions = ref({
-  chart: {
-    height: 350,
-    type: "line",
-    zoom: {
+const responseSaleData = computed(() => {
+  return dashboardStore.response_graph_data.filter((d) => d.type === "sales");
+});
+const series = computed(() => {
+  return [
+    {
+      name: "Sales",
+      data:
+        responseSaleData.value.length > 0 ? responseSaleData.value[0].data : [],
+    },
+  ];
+});
+
+const chartOptions = computed(() => {
+  return {
+    chart: {
+      height: 350,
+      type: "line",
+      zoom: {
+        enabled: false,
+      },
+    },
+    dataLabels: {
       enabled: false,
     },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  stroke: {
-    curve: "straight",
-  },
-  //   title: {
-  //     text: "Product Trends by Month",
-  //     align: "left",
-  //   },
-  grid: {
-    row: {
-      colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-      opacity: 0.5,
+    stroke: {
+      curve: "straight",
     },
-  },
-  xaxis: {
-    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
-  },
+    grid: {
+      row: {
+        colors: ["#f3f3f3", "transparent"],
+        opacity: 0.5,
+      },
+    },
+    xaxis: {
+      categories:
+        responseSaleData.value.length > 0
+          ? responseSaleData.value[0].categories
+          : [],
+    },
+  };
 });
 </script>
 <template>

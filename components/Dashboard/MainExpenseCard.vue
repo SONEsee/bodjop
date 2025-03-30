@@ -1,43 +1,55 @@
 <script lang="ts" setup>
-const series = ref([
-  {
-    data: [21, 22, 10, 28, 16],
-  },
-]);
+const dashboardStore = UseDashboardStore();
 
-const chartOptions = ref({
-  chart: {
-    height: 350,
-    type: "bar",
-    fontFamily: "NotoSansLao",
-    events: {
-      //   click: function (chart, w, e) {
-      //     // console.log(chart, w, e)
-      //   },
+const responseSaleData = computed(() => {
+  return dashboardStore.response_graph_data.filter((d) => d.type === "expense");
+});
+
+const series = computed(() => {
+  return [
+    {
+      data:
+        responseSaleData.value.length > 0 ? responseSaleData.value[0].data : [],
     },
-  },
-  //   colors: colors,
-  plotOptions: {
-    bar: {
-      columnWidth: "45%",
-      distributed: true,
+  ];
+});
+
+const chartOptions = computed(() => {
+  return {
+    chart: {
+      height: 350,
+      type: "bar",
+      fontFamily: "NotoSansLao",
+      events: {},
     },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  legend: {
-    show: false,
-  },
-  xaxis: {
-    categories: ["ອາກອນ", "Jake", "Amber", "Peter", "Lily"],
-    labels: {
-      style: {
-        // colors: colors,
-        fontSize: "12px",
+    //   colors: colors,
+    plotOptions: {
+      bar: {
+        columnWidth: "28%",
+        distributed: true,
       },
     },
-  },
+    dataLabels: {
+      enabled: false,
+    },
+    legend: {
+      show: false,
+    },
+    xaxis: {
+      categories:
+        responseSaleData.value.length > 0
+          ? responseSaleData.value[0].categories.map((d) => {
+              return GetCommissionOrExpenseTypeLabel(d) ?? "N/A";
+            })
+          : [],
+      labels: {
+        style: {
+          // colors: colors,
+          fontSize: "11px",
+        },
+      },
+    },
+  };
 });
 </script>
 <template>
