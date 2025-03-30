@@ -52,15 +52,22 @@ const items = ref([
     title: "ລາຍງານ",
     icon: "mdi-file-document",
     menu: [
-      { text: "ລາຍງານຂໍ້ມູນ",
+      { text: "ລາຍງານຂໍ້ມູນໃບຮຽກເກັບເງິນ",
        icon: "mdi-file-document", 
-       to: "/reports" },
+       to: "/reports/salestotal" },
       {
-        text: "ລາຍງານສະເໜີ",
+        text: "ລາຍງານຂາຍ",
         icon: "mdi-file-document-edit",
         to: "../reports/reports_agency",
       },
-    ],
+     
+     
+      {
+        text: "ລາຍງານການຊຳລະ",
+        icon: "mdi-cash-multiple",
+        to: "../reports/paid",
+      },
+    ], 
   },
 ]);
 

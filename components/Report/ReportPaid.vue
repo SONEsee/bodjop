@@ -1,149 +1,79 @@
 <script setup lang="ts">
-const title = "ຂໍ້ມູນລາຍງານໃບຮຽກເກັບເງິນ";
+const title = "ຂໍ້ມູນລາຍງານການຊຳລະ";
 const headers = [
-  { title: "Date", value: "Date" },
-  { title: "Agency Code", value: "Agency_Code" },
-  { title: "Full Name", value: "FullName" },
-  { title: "Sales", value: "Sales" },
-  { title: "QTY", value: "QTY" },
-  { title: "Avg Sales", value: "AvgSales" },
-  { title: "Target", value: "TarGet" },
-  { title: "Basic Commission", value: "Basic_Commiss" },
-  { title: "On Time Commission", value: "On_Time_Cone" },
-  { title: "Target Commission", value: "Taget_Commis" },
-  { title: "Last Update", value: "LasstUpdate" },
+  { title: "ວັນທີຊຳລະ", value: "Date" },
+  { title: "ງວດວັນທີ", value: "Sale_Date" },
+  { title: "ຮັບ/ຈ່າຍ", value: "Paid" },
+  { title: "ລະຫັດຕົວແທນ", value: "AgencyCode" },
+  { title: "ຈຳນວນເງິນ", value: "Money" },
+ 
 ];
 interface Item {
   Date: string;
-  Agency_Code: string;
-  FullName: string;
-  Sales: number;
-  QTY: number;
-  AvgSales: number;
-  TarGet: string;
-  Basic_Commiss: string;
-  On_Time_Cone: string;
-  Taget_Commis: string;
-  LasstUpdate: string;
+    Sale_Date: string;
+    Paid: string;
+    AgencyCode: string;
+    Money: number;
+   
 }
 
 const item = [
+  
   {
-    Date: "2023-10-01",
+    Date: "2023-10-04",
     Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-01",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-01",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-01",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-01",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-01",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-03",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
-  },
-  {
-    Date: "2023-10-05",
-    Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
   },
   {
     Date: "2023-10-04",
     Agency_Code: "P-14202001",
-    FullName: "Sone SEEDAVANH",
-    Sales: 1000000,
-    QTY: 100,
-    AvgSales: 10000,
-    TarGet: "$1000000",
-    Basic_Commiss: "$0.29",
-    On_Time_Cone: "$0.2",
-    Taget_Commis: "$0.1",
-    LasstUpdate: "2023-10-01",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
+  },
+  {
+    Date: "2023-10-04",
+    Agency_Code: "P-14202001",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
+  },
+  {
+    Date: "2023-10-05",
+    Agency_Code: "P-14202001",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
+  },
+  {
+    Date: "2023-10-05",
+    Agency_Code: "P-14202001",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
+  },
+  {
+    Date: "2023-10-05",
+    Agency_Code: "P-14202001",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
+  },
+  {
+    Date: "2023-10-05",
+    Agency_Code: "P-14202001",
+    Sale_Date: "2023-10-01",
+    Paid: "ຈ່າຍ",
+    AgencyCode: "P-14202001",
+    Money: 1000000,
   },
 ];
 
@@ -272,12 +202,12 @@ const exportToExcel = () => {
         </v-row>
       </div>
       <div style="height: 100vh">
-        <div class="d-flex justify-center">
+        <div class="d-flex justify-center" style="">
           <v-data-table
             :items="filteredItems"
             :headers="headers"
             density="compact"
-            class="text-caption text-no-wrap"
+            class=" text-no-wrap"
             hide-default-footer
             hover
             :loading="loading"

@@ -1,6 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const salesDate = UseSaleStore();
+
+onMounted(() => {
+  salesDate.GetSalePeriodListData();
+});
+</script>
 <template>
-    <div>
-        <ReportAgency />
-    </div>
+  <div>
+   
+
+    <ReportAgency />
+  </div>
 </template>
