@@ -199,7 +199,7 @@ const exportToExcel = () => {
         </v-row>
       </div>
 
-      <div style="height: 100vh">
+      <div style="height: ">
         <div class="d-flex justify-center">
           <v-data-table
             :items="item"
