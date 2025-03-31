@@ -8,6 +8,10 @@ const response_data = computed(() => {
   return expenseTypeStore.response_get_detail;
 });
 
+definePageMeta({
+  middleware: "auth",
+});
+
 onMounted(() => {
   expenseTypeStore.GetDetailData(id);
 });

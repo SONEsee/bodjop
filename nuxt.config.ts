@@ -16,6 +16,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: "@/components/Dashboard",
+      pathPrefix: false,
+      prefix: "Dashboard",
+    },
+    {
       path: "@/components/Global/",
       pathPrefix: true,
       prefix: "Global",

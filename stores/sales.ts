@@ -88,9 +88,9 @@ export const UseSaleStore = defineStore("sales", {
         });
 
         if (notification.isConfirmed) {
-          globalStore.loading_overlay = true;
+          this.request_sale_get_data.loading = true;
           const res = await axios.delete(`/api/v1/sales/cancel/${id}`);
-          globalStore.loading_overlay = false;
+          this.request_sale_get_data.loading = false;
           if (res.status === 200) {
             const successNotification = await CallSwal({
               icon: "success",
@@ -108,7 +108,7 @@ export const UseSaleStore = defineStore("sales", {
         console.error(error);
         DefaultSwalError(error);
       } finally {
-        globalStore.loading_overlay = false;
+        this.request_sale_get_data.loading = false;
       }
     },
 

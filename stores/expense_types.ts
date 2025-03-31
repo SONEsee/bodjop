@@ -8,6 +8,7 @@ export const UseExpenseTypeStore = defineStore("expense_types", {
         limit: 20,
         q: null,
         loading: false,
+        sale_date: null,
       },
 
       response_get_data:
@@ -36,14 +37,22 @@ export const UseExpenseTypeStore = defineStore("expense_types", {
     },
 
     async GetListDataSaleExpenseTypeTransaction() {
+      const dayjs = useDayjs();
       try {
         this.request_get_data.loading = true;
+
         const res =
           await axios.get<ExpenseTypeModels.GetSaleExpenseTransasctionListDataResponse>(
             "/api/v1/sale-expense-transactions/get-data",
             {
               params: {
                 ...this.request_get_data,
+                sale_date:
+                  this.request_get_data.sale_date === null
+                    ? ""
+                    : dayjs(this.request_get_data.sale_date).format(
+                        "YYYY-MM-DD"
+                      ),
               },
             }
           );
