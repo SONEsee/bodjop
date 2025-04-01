@@ -7,10 +7,12 @@ export const UseDeviceStore = defineStore("devices", {
         [] as DeviceModels.DeviceSelectionResponseItem[],
       request_device_movement: {
         window: 1,
+        form_request_option: "2",
         movement_date: new Date(),
         device_id: null as DeviceModels.DeviceSelectionResponseItem | null,
         agency_id: null as UserModel.User | null,
         list_device_id: [] as DeviceModels.DeviceSelectionResponseItem[],
+        device_file_upload: [] as DeviceModels.DeviceMovementFileUpload[],
       },
 
       request_device_option: null,

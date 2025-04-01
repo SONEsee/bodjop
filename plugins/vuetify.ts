@@ -23,7 +23,7 @@ export default defineNuxtPlugin((app) => {
           colors: {
             primary: colors.blue.darken2,
             accent: colors.teal.darken3,
-            secondary: colors.amber.darken3,
+            secondary: "#008CBA",
             info: colors.teal.lighten1,
             warning: colors.amber.base,
             error: colors.deepOrange.accent4,
