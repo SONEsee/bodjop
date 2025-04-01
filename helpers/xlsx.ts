@@ -381,3 +381,33 @@ export const onExpenseTypeTransactionUpload = async (
     throw error;
   }
 };
+
+export const onDeviceMovementUploadFile = async (
+  file: ArrayBuffer | undefined
+): Promise<DeviceModels.DeviceMovementFileUpload[] | Error> => {
+  try {
+    const result: DeviceModels.DeviceMovementFileUpload[] = [];
+
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: DeviceModels.DeviceMovementFileUploadV2[] =
+      XLSX.utils.sheet_to_json(worksheet, { raw: true });
+
+    console.log(`tables`, tables);
+    for (let i = 0; i < tables.length; i++) {
+      let item = tables[i];
+      result.push({
+        movement_date: ReturnDate(item.MOVEMENT_DATE),
+        pos_code: item.POS_CODE?.toString() ?? "",
+        agency_code: item.AGENCY_CODE?.toString() ?? "",
+      });
+    }
+
+    console.log(`reuslt`, result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+definePageMeta({
+  middleware: "auth",
+});
+
 import axios from "@/helpers/axios";
 const deviceMovementStore = UseDeviceMovementStore();
 const request = deviceMovementStore.request_get_device_movement;
