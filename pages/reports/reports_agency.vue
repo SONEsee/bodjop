@@ -6,9 +6,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div>
-   
-
+  <section class="pa-4">
     <ReportAgency />
-  </div>
+  </section>
 </template>

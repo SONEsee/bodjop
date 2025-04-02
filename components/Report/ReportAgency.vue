@@ -73,37 +73,29 @@ const formatDisplayDate = (dateValue: SalePeriod | null): string => {
   return "";
 };
 
-
 const exportToExcel = () => {
   loading.value = true;
   try {
     let csvContent = "";
 
-    
     const headerRow = headers.map((header) => `"${header.title}"`).join(",");
     csvContent += headerRow + "\n";
 
-    
     item.value.forEach((row) => {
       const dataRow = headers
         .map((header) => {
           let value = row[header.value];
-          
-          
-          if (header.value === 'sale_date' && value) {
-            value = dayjs(value).format('YYYY-MM-DD');
+
+          if (header.value === "sale_date" && value) {
+            value = dayjs(value).format("YYYY-MM-DD");
           }
-          
-          
-          if (header.value === 'total_sale_amount' && value) {
-            
+
+          if (header.value === "total_sale_amount" && value) {
             try {
               value = formatnumber(value);
-            } catch (e) {
-              
-            }
+            } catch (e) {}
           }
-          
+
           return typeof value === "string" && value.includes(",")
             ? `"${value}"`
             : `"${value}"`;
@@ -112,20 +104,17 @@ const exportToExcel = () => {
       csvContent += dataRow + "\n";
     });
 
-   
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
     link.setAttribute("href", url);
 
-    
     const date = new Date();
     const formattedDate = `${date.getFullYear()}-${String(
       date.getMonth() + 1
     ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    
-   
+
     const filename = selectedDate.value
       ? `report_${formatDisplayDate(selectedDate.value)}.xlsx`
       : `report_all_data_${formattedDate}.xlsx`;
@@ -192,7 +181,7 @@ const exportToExcel = () => {
                 :disabled="!item || item.length === 0"
                 @click="exportToExcel"
               >
-                <p style="color: white;">ສ້າງໄຟລ Excel</p>
+                <p style="color: white">ສ້າງໄຟລ Excel</p>
               </v-btn>
             </div>
           </v-col>

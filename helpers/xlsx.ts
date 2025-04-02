@@ -3,6 +3,8 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { SaleModels, DeviceModels, ExpenseTypeModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
+import _ from "lodash";
+import axios from "@/helpers/axios";
 
 export const onSaleUploadFile = async (
   file: ArrayBuffer | undefined,
@@ -273,6 +275,8 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
     }
 
     const dayjs = useDayjs();
+    const saleStore = UseSaleStore();
+    const winnerSaleList = saleStore.sale_export_pdf;
     const agencyCode = items.map(
       (d: SaleModels.SaleDetail) => d.agency?.agent_code
     );
@@ -284,30 +288,83 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
 
     const zip = new JSZip();
     let headers = ["No", "Sale Date", "Pos Code", "Sale Amount", "Agency Code"];
+    let headersWinner = [
+      "Pos Code",
+      "ຍອດຂາຍ",
+      "ຖືກ 1 ໂຕ",
+      "ຖືກ 2 ໂຕ",
+      "ຖືກ 3 ໂຕ",
+      "ຖືກ 4 ໂຕ",
+      "ຖືກ 5 ໂຕ",
+      "ຖືກ 6 ໂຕ",
+      "ຍອດຖືກລວມ",
+    ];
+
     for (let i = 0; i < uniqueAgencyCode.length; i++) {
       let code = uniqueAgencyCode[i];
       let ws_data: any[] = [headers];
+      let winner_data: any[] = [headersWinner];
       const salesFilterByAgencyCode = items.filter(
         (d: SaleModels.SaleDetail) => d.agency?.agent_code === code
+      );
+
+      const winnerSaleByAgencyCode = winnerSaleList.filter(
+        (d: SaleModels.GetSaleForPrintPDFResponseItem) => d.agency_code === code
       );
 
       for (let j = 0; j < salesFilterByAgencyCode.length; j++) {
         let item = salesFilterByAgencyCode[j];
         ws_data.push([
-          i + 1,
+          j + 1,
           dayjs(item.sale_date).format("DD-MM-YYYY"),
           item.pos_code ?? "-",
-          item.amount ?? 0,
+          formatnumber(item.amount ?? 0),
           item.agency?.agent_code ?? "N/A",
         ]);
+
+        if (winnerSaleByAgencyCode.length > 0) {
+          const winnerSaleItem = winnerSaleByAgencyCode[0].items.filter(
+            (d: SaleModels.GetSaleForPrintPDFResponseItemSale) =>
+              d.pos_code === item.pos_code
+          );
+
+          if (winnerSaleItem.length > 0) {
+            let itemWinnerSale = winnerSaleItem[0];
+            winner_data.push([
+              itemWinnerSale?.pos_code ?? "-",
+              formatnumber(itemWinnerSale?.sale_amount ?? 0),
+              formatnumber(itemWinnerSale?.one_digit ?? 0),
+              formatnumber(itemWinnerSale?.two_digit ?? 0),
+              formatnumber(itemWinnerSale?.three_digit ?? 0),
+              formatnumber(itemWinnerSale?.four_digit ?? 0),
+              formatnumber(itemWinnerSale?.five_digit ?? 0),
+              formatnumber(itemWinnerSale?.six_digit ?? 0),
+              formatnumber(itemWinnerSale?.total_winner_amount),
+            ]);
+          } else {
+            winner_data.push(["", 0, 0, 0, 0, 0, 0, 0, 0]);
+          }
+        }
       }
+
+      ws_data.push([
+        "",
+        "",
+        "ຍອດລວມ",
+        formatnumber(_.sumBy(salesFilterByAgencyCode, "amount")),
+        "",
+      ]);
+
+      //TODO append sheet about winner_sales
 
       const sale_date = dayjs(salesFilterByAgencyCode[0].sale_date).format(
         "DD-MM-YYYY"
       );
       const workBooks = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      const ws_winner = XLSX.utils.aoa_to_sheet(winner_data);
       XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
+      XLSX.utils.book_append_sheet(workBooks, ws_winner, "ຂໍ້ມູນຖືກລາງວັນ");
       const excelBuffer = XLSX.write(workBooks, {
         bookType: "xlsx",
         type: "array",

@@ -1,14 +1,10 @@
 <script lang="ts" setup>
 import { onSaleExportExcelV2, onSaleExportExcel } from "@/helpers/xlsx";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+const loading = ref(false);
 const title = ref("ລາຍລະອຽດການຂາຍ");
 const saleStore = UseSaleStore();
-
-const items = ref([
-  { title: "Click Me" },
-  { title: "Click Me" },
-  { title: "Click Me" },
-  { title: "Click Me 2" },
-]);
 
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
@@ -31,6 +27,8 @@ const response_data = computed(() => {
 
 const onExportExcel = async () => {
   try {
+    loading.value = true;
+    await saleStore.GetSalePrintPDf(response_data.value?.id ?? null);
     const res = await onSaleExportExcelV2(
       response_data.value?.sale_details ?? []
     );
@@ -41,6 +39,36 @@ const onExportExcel = async () => {
   } catch (error) {
     console.error(error);
     DefaultSwalError(error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const onExportPDF = async () => {
+  try {
+    const dayjs = useDayjs();
+    loading.value = true;
+    await saleStore.GetSalePrintPDf(response_data.value?.id ?? null);
+
+    if (saleStore.sale_export_pdf.length > 0) {
+      const zip = new JSZip();
+      for (let i = 0; i < saleStore.sale_export_pdf.length; i++) {
+        const item = saleStore.sale_export_pdf[i];
+        const sale_date = dayjs(item.sale_date).format("DD-MM-YYYY");
+        const res: Blob = await GeneratePDF(item);
+        zip.file(`Daily Sale Report ${item.agency_code} ${sale_date}.pdf`, res);
+      }
+      const sale_date = dayjs(response_data.value?.sale_date).format(
+        "DD-MM-YYYY"
+      );
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      saveAs(zipBlob, `Daily Sale Reports ${sale_date} .zip`);
+    }
+  } catch (error) {
+    console.error(error);
+    DefaultSwalError(error);
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -96,48 +124,48 @@ const onExportExcel = async () => {
             </h4>
           </div>
 
-          <div>
-            <!-- <v-btn
-              color="primary"
-              variant="flat"
-              prepend-icon="mdi-export"
-              @click="onExportExcel"
-              :disabled="response_data?.status === 2"
-              >Export excel</v-btn
-            > -->
+          <div class="d-flex flex-wrap">
+            <div>
+              <v-menu open-on-hover>
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    color="primary"
+                    variant="flat"
+                    prepend-icon="mdi-export"
+                    :disabled="response_data?.status === 2"
+                    class="mr-4"
+                    :loading="loading"
+                    >Export excel</v-btn
+                  >
+                </template>
 
-            <v-menu open-on-hover>
-              <template v-slot:activator="{ props }">
-                <v-btn
-                  v-bind="props"
-                  color="primary"
-                  variant="flat"
-                  prepend-icon="mdi-export"
-                  :disabled="response_data?.status === 2"
-                  >Export excel</v-btn
-                >
-              </template>
+                <v-list>
+                  <v-list-item
+                    @click="
+                      onSaleExportExcel(response_data?.sale_details ?? [])
+                    "
+                  >
+                    <v-list-item-title> ແບບລວມ </v-list-item-title>
+                  </v-list-item>
 
-              <v-list>
-                <!-- <v-list-item
-                  v-for="(item, index) in items"
-                  :key="index"
-                  :value="index"
-                >
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item> -->
+                  <v-list-item @click="onExportExcel">
+                    <v-list-item-title> ແຍກແບບຕົວແທນ </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </div>
 
-                <v-list-item
-                  @click="onSaleExportExcel(response_data?.sale_details ?? [])"
-                >
-                  <v-list-item-title> ແບບລວມ </v-list-item-title>
-                </v-list-item>
-
-                <v-list-item @click="onExportExcel">
-                  <v-list-item-title> ແຍກແບບຕົວແທນ </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
+            <div>
+              <v-btn
+                color="info"
+                flat
+                @click="onExportPDF"
+                :loading="loading"
+                prepend-icon="mdi-cloud-download"
+                >Download PDF</v-btn
+              >
+            </div>
           </div>
         </div>
 
