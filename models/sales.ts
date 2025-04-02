@@ -152,3 +152,37 @@ export interface UploadSaleBody {
   sale_date: string;
   items: UploadSaleItemBody[];
 }
+
+export interface GetSaleForPrintPDFResponse {
+  error: null;
+  items: GetSaleForPrintPDFResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetSaleForPrintPDFResponseItem {
+  sale_date: Date;
+  agency_code: string;
+  agency_name: string;
+  total_device: number;
+  items: GetSaleForPrintPDFResponseItemSale[];
+}
+
+export interface GetSaleForPrintPDFResponseItemSale {
+  pos_code: string;
+  sale_amount: number;
+  one_digit: number;
+  two_digit: number;
+  three_digit: number;
+  four_digit: number;
+  five_digit: number;
+  six_digit: number;
+  total_winner_amount: number;
+}
+
+export interface GetWinnerSaleByIDResponse {
+  error: null;
+  items: GetSaleForPrintPDFResponseItemSale;
+  status: number;
+  timestamp: string;
+}
