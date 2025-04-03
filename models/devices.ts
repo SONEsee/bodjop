@@ -29,3 +29,10 @@ export interface DeviceUploadFileRequest {
   pos_code: string;
   imei: string;
 }
+
+export interface DeviceAgencyUploadFile {
+  agency_code: string;
+  imei: string;
+  pos_code: string;
+  device_id: string;
+}
