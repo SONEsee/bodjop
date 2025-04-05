@@ -4,6 +4,9 @@ const globalStore = UseGlobalStore();
 const route = useRoute();
 const id = route.query?.id?.toString() ?? null;
 
+definePageMeta({
+  middleware: "auth",
+});
 onMounted(() => {
   saleStore.GetSaleDetail(id);
 });

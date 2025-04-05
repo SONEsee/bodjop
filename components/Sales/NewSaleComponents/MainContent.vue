@@ -135,6 +135,37 @@ async function onCreateSale() {
         if (result.length > 0) {
           await ExportErrorSale(result);
         }
+      } else {
+        const [_, data] = response_message_data.split(":");
+        const response_data = data.replace(/,\s*$/, "");
+        const result: any[] = JSON.parse(`[${response_data}]`);
+        if (result.length > 0) {
+          await ExportErrorSale(result);
+        }
+      }
+    } else if (response_message_data.includes("ERROR_DEVICE_NOT_OWNER:")) {
+      const notification = await CallSwal({
+        icon: "error",
+        title: "ຜິດພາດ",
+        text: "ຂໍ້ມູນອຸປະກອນບາງເຄື່ອງບໍ່ພົບຂໍ້ມູນຕົວແທນທີ່ບໍ່ໄດ້ເປັນເຈົ້າຂອງ",
+        confirmButtonText: "ດາວໂຫຼດຟາຍ Excel",
+      });
+
+      if (notification.isConfirmed) {
+        //prepate download excel
+        const [_, data] = response_message_data.split(":");
+        const response_data = data.replace(/,\s*$/, "");
+        const result: any[] = JSON.parse(`[${response_data}]`);
+        if (result.length > 0) {
+          await ExportErrorSale(result);
+        }
+      } else {
+        const [_, data] = response_message_data.split(":");
+        const response_data = data.replace(/,\s*$/, "");
+        const result: any[] = JSON.parse(`[${response_data}]`);
+        if (result.length > 0) {
+          await ExportErrorSale(result);
+        }
       }
     } else {
       DefaultSwalError(error);
@@ -267,15 +298,16 @@ async function onDateSelect(date: Date | null) {
 
           <template v-slot:item.actions="{ item, index }">
             <div class="d-flex flex-wrap">
-              <div class="mr-1">
+              <!-- <div class="mr-1">
                 <v-btn
                   color="primary"
                   icon="mdi-eye"
                   variant="text"
                   size="small"
+
                   :disabled="item.winner_sales.length === 0"
                 ></v-btn>
-              </div>
+              </div> -->
 
               <div>
                 <v-btn

@@ -20,6 +20,7 @@ export const UseSaleStore = defineStore("sales", {
       response_sale_get_data:
         null as SaleModels.GetSaleListDataResponseItems | null,
       response_sale_detail: null as SaleModels.GetSaleDetailResponseItem | null,
+      sale_export_pdf: [] as SaleModels.GetSaleForPrintPDFResponseItem[],
     };
   },
 
@@ -88,9 +89,9 @@ export const UseSaleStore = defineStore("sales", {
         });
 
         if (notification.isConfirmed) {
-          globalStore.loading_overlay = true;
+          this.request_sale_get_data.loading = true;
           const res = await axios.delete(`/api/v1/sales/cancel/${id}`);
-          globalStore.loading_overlay = false;
+          this.request_sale_get_data.loading = false;
           if (res.status === 200) {
             const successNotification = await CallSwal({
               icon: "success",
@@ -108,7 +109,7 @@ export const UseSaleStore = defineStore("sales", {
         console.error(error);
         DefaultSwalError(error);
       } finally {
-        globalStore.loading_overlay = false;
+        this.request_sale_get_data.loading = false;
       }
     },
 
@@ -149,6 +150,46 @@ export const UseSaleStore = defineStore("sales", {
         }
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    async GetSalePrintPDf(id: string | null) {
+      try {
+        const res = await axios.get<SaleModels.GetSaleForPrintPDFResponse>(
+          `/api/v1/sales/print-pdf/${id}`
+        );
+        if (res.status == 200) {
+          this.sale_export_pdf = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async GetWinnerSaleBySaleDetailID(id: string) {
+      let req = {
+        pos_code: "",
+        sale_amount: 0,
+        one_digit: 0,
+        two_digit: 0,
+        three_digit: 0,
+        four_digit: 0,
+        five_digit: 0,
+        six_digit: 0,
+        total_winner_amount: 0,
+      };
+
+      try {
+        const res = await axios.get<SaleModels.GetWinnerSaleByIDResponse>(
+          `/api/v1/sales/winner-sale/${id}`
+        );
+
+        if (res.status === 200) {
+          return res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+        return req;
       }
     },
   },

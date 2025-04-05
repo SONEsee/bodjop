@@ -85,3 +85,8 @@ export interface DeviceDetailidResponse {
     };
   };
 }
+
+export interface DeviceUploadFile {
+  pos_old_no: string;
+  pos_new_no: string;
+}

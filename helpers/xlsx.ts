@@ -1,6 +1,10 @@
 import * as XLSX from "xlsx";
-import { SaleModels, DeviceModels } from "@/models/";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import { SaleModels, DeviceModels, ExpenseTypeModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
+import _ from "lodash";
+import axios from "@/helpers/axios";
 
 export const onSaleUploadFile = async (
   file: ArrayBuffer | undefined,
@@ -24,26 +28,16 @@ export const onSaleUploadFile = async (
 
     const sheetWinnerSales = workbook.SheetNames[1];
     const worksheetWinner = workbook.Sheets[sheetWinnerSales];
-    const dataWinnerSales: SaleModels.WinnerSaleCreateModel[] =
+    const dataWinnerSales: SaleModels.OnSaleCreateModel[] =
       XLSX.utils.sheet_to_json(worksheetWinner, { raw: true }) ?? [];
 
     const result: SaleModels.OnSaleCreateModelAndWinnerSale[] = [];
-    const dayjs = useDayjs();
     for (let i = 0; i < tables.length; i++) {
       let item = tables[i];
       //filter winner sales and group data
-      let winnerSales: SaleModels.WinnerSaleCreateModel[] | Error = [];
-      if (sale_date !== null) {
-        winnerSales = await GetFilterWinnerSale(
-          item.pos_code?.toString() ?? "N/A",
-          dayjs(sale_date).format("YYYY-MM-DD"),
-          dataWinnerSales
-        );
-
-        if (winnerSales instanceof Error) {
-          throw new Error(winnerSales.message);
-        }
-      }
+      let winnerSales = dataWinnerSales.filter(
+        (d) => d.pos_code === item.pos_code
+      );
 
       result.push({
         pos_code: item.pos_code?.toString() ?? "N/A",
@@ -56,7 +50,21 @@ export const onSaleUploadFile = async (
         six_digits: item.six_digits ?? 0,
         province_name: item.province_name ?? "N/A",
         unit: item.unit ?? "N/A",
-        winner_sales: winnerSales,
+        winner_sales: winnerSales.map((d: SaleModels.OnSaleCreateModel) => {
+          return {
+            pos_code: d.pos_code?.toString() ?? "N/A",
+            sale_amount: d.sale_amount,
+            // sale_date: any;
+            one_digits: d.one_digits,
+            two_digits: d.two_digits,
+            three_digits: d.three_digits,
+            four_digits: d.four_digits,
+            five_digits: d.five_digits,
+            six_digits: d.six_digits,
+            province_name: d.province_name,
+            unit: d.unit,
+          };
+        }),
       });
     }
 
@@ -178,50 +186,50 @@ export const onSaleUploadFileRecover = async (
   }
 };
 
-export const GetFilterWinnerSale = async (
-  pos_code_main: string,
-  sale_date: string,
-  winner_sales: SaleModels.WinnerSaleCreateModel[]
-): Promise<SaleModels.WinnerSaleCreateModel[] | Error> => {
-  try {
-    const dayjs = useDayjs();
-    if (winner_sales.length < 1) {
-      return [];
-    }
-    const saleDateMain = new Date(sale_date);
-    const winnerSaleFilter: SaleModels.WinnerSaleCreateModel[] = [];
-    for (let i = 0; i < winner_sales.length; i++) {
-      let sale = winner_sales[i];
-      const saleDate = new Date(
-        dayjs(ReturnDate(sale.sale_date)).format("YYYY-MM-DD")
-      );
-      const pos_code = sale?.pos_code?.toString() ?? "N/A";
-      if (
-        saleDateMain.getTime() === saleDate.getTime() &&
-        pos_code_main === pos_code
-      ) {
-        winnerSaleFilter.push({
-          pos_code: sale.pos_code?.toString() ?? "N/A",
-          sale_date: dayjs(saleDate).format("YYYY-MM-DD"),
-          sale_amount: sale.sale_amount ?? 0,
-          one_digits: sale.one_digits ?? 0,
-          two_digits: sale.two_digits ?? 0,
-          three_digits: sale.three_digits ?? 0,
-          four_digits: sale.four_digits ?? 0,
-          five_digits: sale.five_digits ?? 0,
-          six_digits: sale.six_digits ?? 0,
-          province_name: sale.province_name ?? "N/A",
-          unit: sale.unit ?? "N/A",
-        });
-      }
-    }
+// export const GetFilterWinnerSale = async (
+//   pos_code_main: string,
+//   sale_date: string,
+//   winner_sales: SaleModels.WinnerSaleCreateModel[]
+// ): Promise<SaleModels.WinnerSaleCreateModel[] | Error> => {
+//   try {
+//     const dayjs = useDayjs();
+//     if (winner_sales.length < 1) {
+//       return [];
+//     }
+//     const saleDateMain = new Date(sale_date);
+//     const winnerSaleFilter: SaleModels.WinnerSaleCreateModel[] = [];
+//     for (let i = 0; i < winner_sales.length; i++) {
+//       let sale = winner_sales[i];
+//       const saleDate = new Date(
+//         dayjs(ReturnDate(sale.sale_date)).format("YYYY-MM-DD")
+//       );
+//       const pos_code = sale?.pos_code?.toString() ?? "N/A";
+//       if (
+//         saleDateMain.getTime() === saleDate.getTime() &&
+//         pos_code_main === pos_code
+//       ) {
+//         winnerSaleFilter.push({
+//           pos_code: sale.pos_code?.toString() ?? "N/A",
+//           sale_date: dayjs(saleDate).format("YYYY-MM-DD"),
+//           sale_amount: sale.sale_amount ?? 0,
+//           one_digits: sale.one_digits ?? 0,
+//           two_digits: sale.two_digits ?? 0,
+//           three_digits: sale.three_digits ?? 0,
+//           four_digits: sale.four_digits ?? 0,
+//           five_digits: sale.five_digits ?? 0,
+//           six_digits: sale.six_digits ?? 0,
+//           province_name: sale.province_name ?? "N/A",
+//           unit: sale.unit ?? "N/A",
+//         });
+//       }
+//     }
 
-    return winnerSaleFilter;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+//     return winnerSaleFilter;
+//   } catch (error) {
+//     console.error(error);
+//     throw error;
+//   }
+// };
 
 export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
   try {
@@ -260,6 +268,123 @@ export const onSaleExportExcel = async (items: SaleModels.SaleDetail[]) => {
   }
 };
 
+export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
+  try {
+    if (items.length < 1) {
+      return [];
+    }
+
+    const dayjs = useDayjs();
+    const saleStore = UseSaleStore();
+    const winnerSaleList = saleStore.sale_export_pdf;
+    const agencyCode = items.map(
+      (d: SaleModels.SaleDetail) => d.agency?.agent_code
+    );
+
+    const uniqueAgencyCode = [...new Set(agencyCode)];
+    if (uniqueAgencyCode.length < 1) {
+      return [];
+    }
+
+    const zip = new JSZip();
+    let headers = ["No", "Sale Date", "Pos Code", "Sale Amount", "Agency Code"];
+    let headersWinner = [
+      "Pos Code",
+      "ຍອດຂາຍ",
+      "ຖືກ 1 ໂຕ",
+      "ຖືກ 2 ໂຕ",
+      "ຖືກ 3 ໂຕ",
+      "ຖືກ 4 ໂຕ",
+      "ຖືກ 5 ໂຕ",
+      "ຖືກ 6 ໂຕ",
+      "ຍອດຖືກລວມ",
+    ];
+
+    for (let i = 0; i < uniqueAgencyCode.length; i++) {
+      let code = uniqueAgencyCode[i];
+      let ws_data: any[] = [headers];
+      let winner_data: any[] = [headersWinner];
+      const salesFilterByAgencyCode = items.filter(
+        (d: SaleModels.SaleDetail) => d.agency?.agent_code === code
+      );
+
+      const winnerSaleByAgencyCode = winnerSaleList.filter(
+        (d: SaleModels.GetSaleForPrintPDFResponseItem) => d.agency_code === code
+      );
+
+      for (let j = 0; j < salesFilterByAgencyCode.length; j++) {
+        let item = salesFilterByAgencyCode[j];
+        ws_data.push([
+          j + 1,
+          dayjs(item.sale_date).format("DD-MM-YYYY"),
+          item.pos_code ?? "-",
+          formatnumber(item.amount ?? 0),
+          item.agency?.agent_code ?? "N/A",
+        ]);
+
+        if (winnerSaleByAgencyCode.length > 0) {
+          const winnerSaleItem = winnerSaleByAgencyCode[0].items.filter(
+            (d: SaleModels.GetSaleForPrintPDFResponseItemSale) =>
+              d.pos_code === item.pos_code
+          );
+
+          if (winnerSaleItem.length > 0) {
+            let itemWinnerSale = winnerSaleItem[0];
+            winner_data.push([
+              itemWinnerSale?.pos_code ?? "-",
+              formatnumber(itemWinnerSale?.sale_amount ?? 0),
+              formatnumber(itemWinnerSale?.one_digit ?? 0),
+              formatnumber(itemWinnerSale?.two_digit ?? 0),
+              formatnumber(itemWinnerSale?.three_digit ?? 0),
+              formatnumber(itemWinnerSale?.four_digit ?? 0),
+              formatnumber(itemWinnerSale?.five_digit ?? 0),
+              formatnumber(itemWinnerSale?.six_digit ?? 0),
+              formatnumber(itemWinnerSale?.total_winner_amount),
+            ]);
+          } else {
+            winner_data.push(["", 0, 0, 0, 0, 0, 0, 0, 0]);
+          }
+        }
+      }
+
+      ws_data.push([
+        "",
+        "",
+        "ຍອດລວມ",
+        formatnumber(_.sumBy(salesFilterByAgencyCode, "amount")),
+        "",
+      ]);
+
+      //TODO append sheet about winner_sales
+
+      const sale_date = dayjs(salesFilterByAgencyCode[0].sale_date).format(
+        "DD-MM-YYYY"
+      );
+      const workBooks = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      const ws_winner = XLSX.utils.aoa_to_sheet(winner_data);
+      XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
+      XLSX.utils.book_append_sheet(workBooks, ws_winner, "ຂໍ້ມູນຖືກລາງວັນ");
+      const excelBuffer = XLSX.write(workBooks, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      zip.file(
+        `Daily Sale Report ${code} ${sale_date}.xlsx`,
+        new Blob([excelBuffer])
+      );
+    }
+
+    const sale_date = dayjs(items[0].sale_date).format("DD-MM-YYYY");
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, `Daily Sale Reports ${sale_date} .zip`);
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
 export const ExportErrorSale = async (items: any[]) => {
   try {
     const ws_data: any[] = [];
@@ -277,5 +402,69 @@ export const ExportErrorSale = async (items: any[]) => {
     XLSX.writeFile(workBooks, `ERROR_SALE_DEVICE_UPLOAD.xlsx`);
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const onExpenseTypeTransactionUpload = async (
+  file: ArrayBuffer | undefined
+): Promise<
+  ExpenseTypeModels.ExpenseTypeTransactionUploadFileResponse[] | Error
+> => {
+  try {
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: ExpenseTypeModels.ExpenseTypeTransactionUploadFile[] =
+      XLSX.utils.sheet_to_json(worksheet, { raw: true });
+
+    const result: ExpenseTypeModels.ExpenseTypeTransactionUploadFileResponse[] =
+      [];
+    for (let i = 0; i < tables.length; i++) {
+      let item = tables[i];
+      const sale_date = ReturnDate(item.sale_date);
+      console.log(`sale_date`, sale_date);
+      result.push({
+        sale_date: sale_date,
+        agency_code: item.agency_code,
+        amount: item.amount,
+        expense_type: item.expense_type,
+        note: item.note,
+      });
+    }
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const onDeviceMovementUploadFile = async (
+  file: ArrayBuffer | undefined
+): Promise<DeviceModels.DeviceMovementFileUpload[] | Error> => {
+  try {
+    const result: DeviceModels.DeviceMovementFileUpload[] = [];
+
+    const workbook = XLSX.read(file, { type: "array" });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const tables: DeviceModels.DeviceMovementFileUploadV2[] =
+      XLSX.utils.sheet_to_json(worksheet, { raw: true });
+
+    console.log(`tables`, tables);
+    for (let i = 0; i < tables.length; i++) {
+      let item = tables[i];
+      result.push({
+        movement_date: ReturnDate(item.MOVEMENT_DATE),
+        pos_code: item.POS_CODE?.toString() ?? "",
+        agency_code: item.AGENCY_CODE?.toString() ?? "",
+      });
+    }
+
+    console.log(`reuslt`, result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };

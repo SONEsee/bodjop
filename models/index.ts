@@ -19,6 +19,7 @@ import * as DeviceMovementModels from "./device_movements";
 import * as PrintsModels from "./prints";
 import * as UserGetdataModel from "./user_getdata";
 import * as DetailUserModel from "./detailuser";
+import * as DashboardModel from "./dashboard";
 import * as RaportSaleModel from "./reportsale";
 export {
   UserModel,
@@ -42,5 +43,6 @@ export {
   PrintsModels,
   UserGetdataModel,
   DetailUserModel,
+  DashboardModel,
   RaportSaleModel,
 };

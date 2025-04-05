@@ -2,6 +2,10 @@
 const agencyStore = UseAgencyStore();
 const deviceStore = UseDeviceStore();
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const request = deviceStore.request_device_movement;
 
 onMounted(() => {
