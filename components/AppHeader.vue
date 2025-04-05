@@ -60,6 +60,11 @@ const items = ref([
         icon: "mdi-file-document-edit",
         to: "../reports/reports_agency",
       },
+      {
+        text: "ລາຍງານອຸປະກອນ",
+        icon: "mdi-cellphone-link",
+        to: "../reports/equipment",
+      },
      
      
       // {
