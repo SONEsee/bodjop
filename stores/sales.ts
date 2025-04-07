@@ -166,6 +166,19 @@ export const UseSaleStore = defineStore("sales", {
       }
     },
 
+    async GetSalePrintPDfV2(id: string | null) {
+      try {
+        const res = await axios.get<SaleModels.GetSaleForPrintPDFResponse>(
+          `/api/v1/sales/print-pdf-v2/${id}`
+        );
+        if (res.status == 200) {
+          this.sale_export_pdf = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     async GetWinnerSaleBySaleDetailID(id: string) {
       let req = {
         pos_code: "",
