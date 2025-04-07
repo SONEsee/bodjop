@@ -262,13 +262,19 @@ async function onSubmitFileUpload() {
       <v-row>
         <v-col cols="12" class="d-flex flex-wrap justify-end">
           <div class="mr-4">
-            <v-btn
-              color="secondary"
-              flat
-              prepend-icon="mdi-cloud-download"
-              :loading="loading"
-              >ດາວໂຫຼດຟາຍອັບໂຫຼດ</v-btn
+            <a
+              href="/uploads/UPLOAD_DEVICE_MOVEMENT_OUT_FILE.xlsx"
+              download="DEVICE_MOVEMENT_OUT.xlsx"
+              target="_blank"
             >
+              <v-btn
+                color="secondary"
+                flat
+                prepend-icon="mdi-cloud-download"
+                :loading="loading"
+                >ດາວໂຫຼດຟາຍອັບໂຫຼດ</v-btn
+              >
+            </a>
           </div>
 
           <div class="mr-4">
