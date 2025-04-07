@@ -340,6 +340,17 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
             formatnumber(itemWinnerSaleList?.total_winner_amount),
           ]);
         }
+
+        winner_data.push([
+          "ຍອດລວມ",
+          formatnumber(_.sumBy(itemWinnerSale.items, "one_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "two_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "three_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "four_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "five_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "six_digit")),
+          formatnumber(_.sumBy(itemWinnerSale.items, "total_winner_amount")),
+        ]);
       }
 
       ws_data.push([
