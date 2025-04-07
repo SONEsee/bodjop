@@ -26,6 +26,7 @@ export const onSaleUploadFile = async (
       return [];
     }
 
+    console.log(`print`, tables);
     const sheetWinnerSales = workbook.SheetNames[1];
     const worksheetWinner = workbook.Sheets[sheetWinnerSales];
     const dataWinnerSales: SaleModels.OnSaleCreateModel[] =
@@ -290,7 +291,7 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
     let headers = ["No", "Sale Date", "Pos Code", "Sale Amount", "Agency Code"];
     let headersWinner = [
       "Pos Code",
-      "ຍອດຂາຍ",
+      // "ຍອດຂາຍ",
       "ຖືກ 1 ໂຕ",
       "ຖືກ 2 ໂຕ",
       "ຖືກ 3 ໂຕ",
@@ -321,29 +322,23 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
           formatnumber(item.amount ?? 0),
           item.agency?.agent_code ?? "N/A",
         ]);
+      }
 
-        if (winnerSaleByAgencyCode.length > 0) {
-          const winnerSaleItem = winnerSaleByAgencyCode[0].items.filter(
-            (d: SaleModels.GetSaleForPrintPDFResponseItemSale) =>
-              d.pos_code === item.pos_code
-          );
-
-          if (winnerSaleItem.length > 0) {
-            let itemWinnerSale = winnerSaleItem[0];
-            winner_data.push([
-              itemWinnerSale?.pos_code ?? "-",
-              formatnumber(itemWinnerSale?.sale_amount ?? 0),
-              formatnumber(itemWinnerSale?.one_digit ?? 0),
-              formatnumber(itemWinnerSale?.two_digit ?? 0),
-              formatnumber(itemWinnerSale?.three_digit ?? 0),
-              formatnumber(itemWinnerSale?.four_digit ?? 0),
-              formatnumber(itemWinnerSale?.five_digit ?? 0),
-              formatnumber(itemWinnerSale?.six_digit ?? 0),
-              formatnumber(itemWinnerSale?.total_winner_amount),
-            ]);
-          } else {
-            winner_data.push(["", 0, 0, 0, 0, 0, 0, 0, 0]);
-          }
+      if (winnerSaleByAgencyCode.length > 0) {
+        let itemWinnerSale = winnerSaleByAgencyCode[0];
+        for (let e = 0; e < itemWinnerSale.items.length; e++) {
+          let itemWinnerSaleList = itemWinnerSale.items[e];
+          winner_data.push([
+            itemWinnerSaleList?.pos_code ?? "-",
+            // formatnumber(itemWinnerSaleList?.sale_amount ?? 0),
+            formatnumber(itemWinnerSaleList?.one_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.two_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.three_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.four_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.five_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.six_digit ?? 0),
+            formatnumber(itemWinnerSaleList?.total_winner_amount),
+          ]);
         }
       }
 
