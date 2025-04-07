@@ -288,10 +288,21 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
     }
 
     const zip = new JSZip();
-    let headers = ["No", "Sale Date", "Pos Code", "Sale Amount", "Agency Code"];
+    let headers = [
+      "Sale Date",
+      "Agent Code",
+      "POS Code",
+      "Sale Amount",
+      "1D",
+      "2D",
+      "3D",
+      "4D",
+      "5D",
+      "6D",
+      "Total Won",
+    ];
     let headersWinner = [
       "Pos Code",
-      // "ຍອດຂາຍ",
       "ຖືກ 1 ໂຕ",
       "ຖືກ 2 ໂຕ",
       "ຖືກ 3 ໂຕ",
@@ -305,7 +316,7 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
       let code = uniqueAgencyCode[i];
       let ws_data: any[] = [headers];
       let winner_data: any[] = [headersWinner];
-      const salesFilterByAgencyCode = items.filter(
+      let salesFilterByAgencyCode = items.filter(
         (d: SaleModels.SaleDetail) => d.agency?.agent_code === code
       );
 
@@ -313,43 +324,68 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
         (d: SaleModels.GetSaleForPrintPDFResponseItem) => d.agency_code === code
       );
 
+      let winnerSaleItem =
+        winnerSaleByAgencyCode.length > 0
+          ? winnerSaleByAgencyCode[0].items
+          : [];
+
+      salesFilterByAgencyCode = salesFilterByAgencyCode.sort((a, b) => {
+        const posCodeA = a.pos_code || "";
+        const posCodeB = b.pos_code || "";
+
+        return posCodeA.localeCompare(posCodeB, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
+      });
+
       for (let j = 0; j < salesFilterByAgencyCode.length; j++) {
         let item = salesFilterByAgencyCode[j];
+        const winnerSaleByPos = winnerSaleItem.filter(
+          (d) => d.pos_code === item.pos_code
+        );
+
         ws_data.push([
-          j + 1,
           dayjs(item.sale_date).format("DD-MM-YYYY"),
-          item.pos_code ?? "-",
-          formatnumber(item.amount ?? 0),
           item.agency?.agent_code ?? "N/A",
+          item.pos_code ?? "-",
+          item.amount === 0 ? "-" : item.amount,
+          _.sumBy(winnerSaleByPos, "one_digit"),
+          _.sumBy(winnerSaleByPos, "two_digit"),
+          _.sumBy(winnerSaleByPos, "three_digit"),
+          _.sumBy(winnerSaleByPos, "four_digit"),
+          _.sumBy(winnerSaleByPos, "five_digit"),
+          _.sumBy(winnerSaleByPos, "six_digit"),
+          _.sumBy(winnerSaleByPos, "total_winner_amount"),
         ]);
       }
 
       if (winnerSaleByAgencyCode.length > 0) {
         let itemWinnerSale = winnerSaleByAgencyCode[0];
-        for (let e = 0; e < itemWinnerSale.items.length; e++) {
-          let itemWinnerSaleList = itemWinnerSale.items[e];
+        let wonSaleItems = itemWinnerSale.items;
+        for (let e = 0; e < wonSaleItems.length; e++) {
+          let itemWinnerSaleList = wonSaleItems[e];
           winner_data.push([
             itemWinnerSaleList?.pos_code ?? "-",
-            // formatnumber(itemWinnerSaleList?.sale_amount ?? 0),
-            formatnumber(itemWinnerSaleList?.one_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.two_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.three_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.four_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.five_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.six_digit ?? 0),
-            formatnumber(itemWinnerSaleList?.total_winner_amount),
+            itemWinnerSaleList?.one_digit ?? 0,
+            itemWinnerSaleList?.two_digit ?? 0,
+            itemWinnerSaleList?.three_digit ?? 0,
+            itemWinnerSaleList?.four_digit ?? 0,
+            itemWinnerSaleList?.five_digit ?? 0,
+            itemWinnerSaleList?.six_digit ?? 0,
+            itemWinnerSaleList?.total_winner_amount,
           ]);
         }
 
         winner_data.push([
           "ຍອດລວມ",
-          formatnumber(_.sumBy(itemWinnerSale.items, "one_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "two_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "three_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "four_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "five_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "six_digit")),
-          formatnumber(_.sumBy(itemWinnerSale.items, "total_winner_amount")),
+          _.sumBy(itemWinnerSale.items, "one_digit"),
+          _.sumBy(itemWinnerSale.items, "two_digit"),
+          _.sumBy(itemWinnerSale.items, "three_digit"),
+          _.sumBy(itemWinnerSale.items, "four_digit"),
+          _.sumBy(itemWinnerSale.items, "five_digit"),
+          _.sumBy(itemWinnerSale.items, "six_digit"),
+          _.sumBy(itemWinnerSale.items, "total_winner_amount"),
         ]);
       }
 
@@ -357,18 +393,54 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
         "",
         "",
         "ຍອດລວມ",
-        formatnumber(_.sumBy(salesFilterByAgencyCode, "amount")),
+        _.sumBy(salesFilterByAgencyCode, "amount"),
+        _.sumBy(winnerSaleItem, "one_digit"),
+        _.sumBy(winnerSaleItem, "two_digit"),
+        _.sumBy(winnerSaleItem, "three_digit"),
+        _.sumBy(winnerSaleItem, "four_digit"),
+        _.sumBy(winnerSaleItem, "five_digit"),
+        _.sumBy(winnerSaleItem, "six_digit"),
+        _.sumBy(winnerSaleItem, "total_winner_amount"),
         "",
       ]);
 
       //TODO append sheet about winner_sales
-
       const sale_date = dayjs(salesFilterByAgencyCode[0].sale_date).format(
         "DD-MM-YYYY"
       );
       const workBooks = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(ws_data);
       const ws_winner = XLSX.utils.aoa_to_sheet(winner_data);
+
+      const numColsWs = ["D", "E", "F", "G", "H", "I", "J", "K"];
+      for (let col of numColsWs) {
+        for (let i = 2; i <= ws_data.length; i++) {
+          const cellRef = col + i;
+          if (!ws[cellRef]) continue;
+          if (!ws[cellRef].s) ws[cellRef].s = {};
+          ws[cellRef].z = "#,##0"; // With decimal places for total
+        }
+      }
+
+      const numCols = ["B", "C", "D", "E", "F", "G", "H"];
+      for (let col of numCols) {
+        for (let i = 2; i <= winner_data.length; i++) {
+          // Start from row 2 (skip header)
+          const cellRef = col + i;
+          if (!ws_winner[cellRef]) continue;
+
+          // Apply number format
+          if (!ws_winner[cellRef].s) ws_winner[cellRef].s = {};
+
+          // Use different format for the total amount column
+          if (col === "H") {
+            ws_winner[cellRef].z = "#,##0.00"; // With decimal places for total
+          } else {
+            ws_winner[cellRef].z = "#,##0"; // Just thousands separator for counts
+          }
+        }
+      }
+
       XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນການຂາຍ");
       XLSX.utils.book_append_sheet(workBooks, ws_winner, "ຂໍ້ມູນຖືກລາງວັນ");
       const excelBuffer = XLSX.write(workBooks, {
