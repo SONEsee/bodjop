@@ -21,6 +21,8 @@ import * as UserGetdataModel from "./user_getdata";
 import * as DetailUserModel from "./detailuser";
 import * as DashboardModel from "./dashboard";
 import * as RaportSaleModel from "./reportsale";
+import *as AgentModel from "./agent";
+import * as EquipmentModel from "./equipment";
 export {
   UserModel,
   UsermeModel,
@@ -45,4 +47,7 @@ export {
   DetailUserModel,
   DashboardModel,
   RaportSaleModel,
+  AgentModel,
+  EquipmentModel,
+  
 };
