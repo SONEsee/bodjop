@@ -350,13 +350,33 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
           item.agency?.agent_code ?? "N/A",
           item.pos_code ?? "-",
           item.amount === 0 ? "-" : item.amount,
-          _.sumBy(winnerSaleByPos, "one_digit"),
-          _.sumBy(winnerSaleByPos, "two_digit"),
-          _.sumBy(winnerSaleByPos, "three_digit"),
-          _.sumBy(winnerSaleByPos, "four_digit"),
-          _.sumBy(winnerSaleByPos, "five_digit"),
-          _.sumBy(winnerSaleByPos, "six_digit"),
-          _.sumBy(winnerSaleByPos, "total_winner_amount"),
+          _.sumBy(winnerSaleByPos, "one_digit") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "one_digit"),
+
+          _.sumBy(winnerSaleByPos, "two_digit") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "two_digit"),
+
+          _.sumBy(winnerSaleByPos, "three_digit") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "three_digit"),
+
+          _.sumBy(winnerSaleByPos, "four_digit") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "four_digit"),
+
+          _.sumBy(winnerSaleByPos, "five_digit") == 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "five_digit"),
+
+          _.sumBy(winnerSaleByPos, "six_digit") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "six_digit"),
+
+          _.sumBy(winnerSaleByPos, "total_winner_amount") === 0
+            ? "-"
+            : _.sumBy(winnerSaleByPos, "total_winner_amount"),
         ]);
       }
 
@@ -367,25 +387,65 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
           let itemWinnerSaleList = wonSaleItems[e];
           winner_data.push([
             itemWinnerSaleList?.pos_code ?? "-",
-            itemWinnerSaleList?.one_digit ?? 0,
-            itemWinnerSaleList?.two_digit ?? 0,
-            itemWinnerSaleList?.three_digit ?? 0,
-            itemWinnerSaleList?.four_digit ?? 0,
-            itemWinnerSaleList?.five_digit ?? 0,
-            itemWinnerSaleList?.six_digit ?? 0,
-            itemWinnerSaleList?.total_winner_amount,
+            itemWinnerSaleList?.one_digit === 0
+              ? "-"
+              : itemWinnerSaleList.one_digit,
+
+            itemWinnerSaleList?.two_digit === 0
+              ? "-"
+              : itemWinnerSaleList.two_digit,
+
+            itemWinnerSaleList?.three_digit === 0
+              ? "-"
+              : itemWinnerSaleList.three_digit,
+
+            itemWinnerSaleList?.four_digit === 0
+              ? "-"
+              : itemWinnerSaleList.four_digit,
+
+            itemWinnerSaleList?.five_digit === 0
+              ? "-"
+              : itemWinnerSaleList.five_digit,
+
+            itemWinnerSaleList?.six_digit === 0
+              ? "-"
+              : itemWinnerSaleList.six_digit,
+
+            itemWinnerSaleList?.total_winner_amount === 0
+              ? "-"
+              : itemWinnerSaleList.total_winner_amount,
           ]);
         }
 
         winner_data.push([
           "ຍອດລວມ",
-          _.sumBy(itemWinnerSale.items, "one_digit"),
-          _.sumBy(itemWinnerSale.items, "two_digit"),
-          _.sumBy(itemWinnerSale.items, "three_digit"),
-          _.sumBy(itemWinnerSale.items, "four_digit"),
-          _.sumBy(itemWinnerSale.items, "five_digit"),
-          _.sumBy(itemWinnerSale.items, "six_digit"),
-          _.sumBy(itemWinnerSale.items, "total_winner_amount"),
+          _.sumBy(itemWinnerSale.items, "one_digit") === 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "one_digit"),
+
+          _.sumBy(itemWinnerSale.items, "two_digit") == 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "two_digit"),
+
+          _.sumBy(itemWinnerSale.items, "three_digit") == 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "three_digit"),
+
+          _.sumBy(itemWinnerSale.items, "four_digit") === 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "four_digit"),
+
+          _.sumBy(itemWinnerSale.items, "five_digit") === 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "five_digit"),
+
+          _.sumBy(itemWinnerSale.items, "six_digit") === 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "six_digit"),
+
+          _.sumBy(itemWinnerSale.items, "total_winner_amount") === 0
+            ? "-"
+            : _.sumBy(itemWinnerSale.items, "total_winner_amount"),
         ]);
       }
 
@@ -393,14 +453,36 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
         "",
         "",
         "ຍອດລວມ",
-        _.sumBy(salesFilterByAgencyCode, "amount"),
-        _.sumBy(winnerSaleItem, "one_digit"),
-        _.sumBy(winnerSaleItem, "two_digit"),
-        _.sumBy(winnerSaleItem, "three_digit"),
-        _.sumBy(winnerSaleItem, "four_digit"),
-        _.sumBy(winnerSaleItem, "five_digit"),
-        _.sumBy(winnerSaleItem, "six_digit"),
-        _.sumBy(winnerSaleItem, "total_winner_amount"),
+        _.sumBy(salesFilterByAgencyCode, "amount") === 0
+          ? "-"
+          : _.sumBy(salesFilterByAgencyCode, "amount"),
+        _.sumBy(winnerSaleItem, "one_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "one_digit"),
+
+        _.sumBy(winnerSaleItem, "two_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "two_digit"),
+
+        _.sumBy(winnerSaleItem, "three_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "three_digit"),
+
+        _.sumBy(winnerSaleItem, "four_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "four_digit"),
+
+        _.sumBy(winnerSaleItem, "five_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "five_digit"),
+
+        _.sumBy(winnerSaleItem, "six_digit") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "six_digit"),
+
+        _.sumBy(winnerSaleItem, "total_winner_amount") === 0
+          ? "-"
+          : _.sumBy(winnerSaleItem, "total_winner_amount"),
         "",
       ]);
 
@@ -411,6 +493,31 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
       const workBooks = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(ws_data);
       const ws_winner = XLSX.utils.aoa_to_sheet(winner_data);
+
+      // Auto-size columns based on content
+      function autosizeColumns(worksheet: any, data: any) {
+        const colWidths: any[] = [];
+
+        data.forEach((row: any) => {
+          row.forEach((cell: any, colIndex: any) => {
+            const cellValue =
+              cell !== null && cell !== undefined ? String(cell) : "";
+            const cellWidth = cellValue.length;
+
+            if (!colWidths[colIndex] || cellWidth > colWidths[colIndex]) {
+              colWidths[colIndex] = cellWidth;
+            }
+          });
+        });
+
+        worksheet["!cols"] = colWidths.map((width) => {
+          return { wch: Math.max(6, Math.ceil(width * 1.2)) };
+        });
+      }
+
+      // Apply auto-sizing to both worksheets
+      autosizeColumns(ws, ws_data);
+      autosizeColumns(ws_winner, winner_data);
 
       const numColsWs = ["D", "E", "F", "G", "H", "I", "J", "K"];
       for (let col of numColsWs) {
