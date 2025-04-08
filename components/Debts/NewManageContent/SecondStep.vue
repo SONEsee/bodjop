@@ -7,6 +7,7 @@ const headers = ref([
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
   { title: "ລົງຍອດ", value: "amount" },
+  { title: "ຍອດສຸດທິ", value: "left_amount" },
   { title: "actions", value: "actions" },
 ]);
 
@@ -136,6 +137,10 @@ const onSubmitForm = async () => {
                 "
               ></v-btn>
             </div>
+          </template>
+
+          <template v-slot:item.left_amount="{ item }">
+            {{ formatnumber(item.debt_amount - item.amount) }}
           </template>
         </v-data-table>
       </v-col>

@@ -120,6 +120,12 @@ const expenseTitle = ref([
             :key="`data-${index}`"
           >
             {{ `${index + 1}. ${data.name} ` }}
+            <span style="color: red" class="ml-3">
+              ({{
+                FilterObjectOfEachTypeInvoice(item.sales, data.type)
+                  ?.percentage ?? 0
+              }}%)
+            </span>
           </v-card>
 
           <v-card

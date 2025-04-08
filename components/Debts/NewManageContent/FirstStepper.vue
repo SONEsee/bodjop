@@ -40,7 +40,14 @@ const response_data = computed(() => {
               v-model="request.agency"
             >
               <template v-slot:selection="{ item }">
-                {{ item.title }}
+                {{ item.title }} - {{ item.raw?.agent_code ?? "N/A" }}
+              </template>
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                  v-bind="props"
+                  :subtitle="item.raw.agent_code"
+                  :title="item.raw.fullname"
+                ></v-list-item>
               </template>
             </v-autocomplete>
           </v-col>

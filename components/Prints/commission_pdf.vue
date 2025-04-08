@@ -385,7 +385,7 @@ const expenseTitle = ref([
               formatnumber(
                 FilterAmountOfEachTypeInvoiceV2(
                   invoice_detail.invoice_calculations ?? [],
-                  COMMISSION_OR_EXPENSES.BORROW_EXPENSE_SALE
+                  COMMISSION_OR_EXPENSES.TOPUP_CARD
                 )
               )
             }}
@@ -517,5 +517,6 @@ const expenseTitle = ref([
   pointer-events: none;
   z-index: 1;
   text-align: center;
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 </style>

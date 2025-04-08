@@ -388,6 +388,33 @@ export const FilterAmountOfEachTypeInvoice = (
   }
 };
 
+export const FilterObjectOfEachTypeInvoice = (
+  sales: InvoiceModels.Sale[],
+  label: string | null
+): InvoiceModels.Sale | null => {
+  try {
+    if (sales.length < 1) {
+      return null;
+    }
+
+    if (label == null) {
+      return null;
+    }
+
+    const filterSale = sales.filter(
+      (d: InvoiceModels.Sale) => d.type === label
+    );
+
+    if (filterSale.length < 1) {
+      return null;
+    }
+    return filterSale[0];
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const FilterAmountOfEachTypeInvoiceV2 = (
   sales: PrintsModels.InvoiceCalculation[],
   label: string | null
