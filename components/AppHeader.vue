@@ -52,27 +52,22 @@ const items = ref([
     title: "ລາຍງານ",
     icon: "mdi-file-document",
     menu: [
-      // { text: "ລາຍງານຂໍ້ມູນໃບຮຽກເກັບເງິນ",
-      //  icon: "mdi-file-document", 
-      //  to: "/reports/salestotal" },
       {
-        text: "ລາຍງານຂາຍ",
-        icon: "mdi-file-document-edit",
-        to: "../reports/reports_agency",
+        text: "ລາຍງານຂໍ້ມູນໃບຮຽກເກັບເງິນ",
+        icon: "mdi-account-credit-card",
+        to: "/reports/invoices",
+      },
+      {
+        text: "ລາຍງານການຂາຍ",
+        icon: "mdi-printer-pos",
+        to: "/reports/reports_agency",
       },
       {
         text: "ລາຍງານອຸປະກອນ",
-        icon: "mdi-cellphone-link",
-        to: "../reports/equipment",
+        icon: "mdi-monitor-cellphone-star",
+        to: "/reports/equipment",
       },
-     
-     
-      // {
-      //   text: "ລາຍງານການຊຳລະ",
-      //   icon: "mdi-cash-multiple",
-      //   to: "../reports/paid",
-      // },
-    ], 
+    ],
   },
 ]);
 
@@ -122,7 +117,9 @@ const rail = ref(false);
   <v-navigation-drawer v-model="drawer" permanent :rail="rail" order="1">
     <v-list nav density="comfortable">
       <div v-for="(item, i) in items" :key="`item-${i}`">
-        <v-list-subheader>{{ item.title }}</v-list-subheader>
+        <v-list-subheader class="font-weight-black">{{
+          item.title
+        }}</v-list-subheader>
 
         <v-list-item
           color="primary"
