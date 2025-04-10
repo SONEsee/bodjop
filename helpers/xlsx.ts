@@ -4,7 +4,6 @@ import { saveAs } from "file-saver";
 import { SaleModels, DeviceModels, ExpenseTypeModels } from "@/models/";
 import { ReturnDate } from "@/composables/global";
 import _ from "lodash";
-import axios from "@/helpers/axios";
 
 export const onSaleUploadFile = async (
   file: ArrayBuffer | undefined,
@@ -651,5 +650,43 @@ export const onDeviceMovementUploadFile = async (
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const onExcelSaleExpenseTransactions = async (
+  items: ExpenseTypeModels.GetSaleExpenseTransactionExcelItem[]
+) => {
+  try {
+    if (items.length > 0) {
+      let headers = [
+        "ງວດວັນທີ",
+        "ລະຫັດຕົວແທນ",
+        "ຊື່ຕົວແທນ",
+        "ປະເພດລາຍຈ່າຍ",
+        "ຈຳນວນເງີນ",
+        "ຄົນເພີ່ມຂໍ້ມູນ",
+        "ລົງຂໍ້ມູນວັນທີ",
+      ];
+      let ws_data: any[] = [headers];
+      const dayjs = useDayjs();
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        ws_data.push([
+          dayjs(item.sale_date).format("DD-MM-YYYY"),
+          item.agency_code,
+          item.agency_name,
+          item.expense_name,
+          item.amount,
+          item.create_fullname,
+          dayjs(item.expense_create_at).format("DD-MM-YYYY HH:mm:ss"),
+        ]);
+      }
+      const workBooks = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນລາຍຈ່າຍ");
+      XLSX.writeFile(workBooks , "Sale Expense Transactions.xlsx");
+    }
+  } catch (error) {
+    console.error(error);
   }
 };

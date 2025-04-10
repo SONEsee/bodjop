@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import _ from "lodash";
+
 const agencyStore = UseAgencyStore();
 const debtStore = UseDebtsStore();
 const headers = ref([
@@ -16,6 +18,10 @@ const debounceOfSearchAgency = useDebounceFn((value: string | null) => {
 
 const response_data = computed(() => {
   return request.invoices;
+});
+
+const sumAmount = computed(() => {
+  return _.sumBy(response_data.value, "debt_amount");
 });
 </script>
 
@@ -77,6 +83,24 @@ const response_data = computed(() => {
                 >ຄົ້ນຫາ</v-btn
               >
             </div>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col cols="12">
+        <v-row>
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ຈຳນວນໃບເກັບເງິນ'"
+              :text="formatnumber(response_data.length)"
+            />
+          </v-col>
+
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ລວມເງິນທີ່ຄາດວ່າຈະໄດ້ຮັບ'"
+              :text="formatnumber(sumAmount)"
+            />
           </v-col>
         </v-row>
       </v-col>

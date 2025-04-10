@@ -45,13 +45,35 @@ const headers = ref([
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-btn
-              color="primary"
-              variant="text"
-              icon="mdi-file-pdf-box"
-              size="small"
-              @click="openPath(`/prints/commission_pdf?id=${item.id}`)"
-            />
+            <v-tooltip text="ພິມເອກະສານແບບ PDF" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  icon="mdi-file-pdf-box"
+                  size="small"
+                  v-bind="props"
+                  @click="openPath(`/prints/commission_pdf?id=${item.id}`)"
+                />
+              </template>
+            </v-tooltip>
+
+            <v-tooltip text="ພິມເອກະສານແບບຮູບ" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="info"
+                  variant="text"
+                  icon="mdi-image"
+                  size="small"
+                  v-bind="props"
+                  @click="
+                    openPath(
+                      `/prints/commission_pdf?id=${item.id}&&print_type=image`
+                    )
+                  "
+                />
+              </template>
+            </v-tooltip>
           </template>
         </v-data-table>
       </v-col>

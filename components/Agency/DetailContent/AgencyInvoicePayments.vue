@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 const invoiceStore = UseInvoiceStore();
+const globalStore = UseGlobalStore();
 const route = useRoute();
 const loading = ref(false);
 const id = route?.query?.id?.toString() ?? null;
@@ -9,6 +10,7 @@ const headers = ref([
   { title: "ລົງຍອດ", value: "payment_amount" },
   { title: "ລົງວັນທີ", value: "created_at" },
   { title: "ຜູ້ລົງ", value: "username" },
+  { title: "Actions", value: "actions" },
 ]);
 
 const request = invoiceStore.request_invoice_payment_transactions;
@@ -35,6 +37,20 @@ async function onSelectionChange(selection: number) {
 async function onPageChange(page: number) {
   request.page = page;
   await onLoading();
+}
+
+async function onImageLoad(imageLink: string) {
+  try {
+    globalStore.request_dialog_image.loading = true;
+    const imageUrl = await globalStore.GetFileData(imageLink);
+    globalStore.response_dialog_image.file = imageUrl;
+    globalStore.request_dialog_image.loading = false;
+    globalStore.request_dialog_image.dialog = true;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    globalStore.request_dialog_image.loading = false;
+  }
 }
 
 // async function onDebounceSet(input: string | null) {
@@ -74,6 +90,23 @@ async function onPageChange(page: number) {
           {{ FormatDatetime(item.created_at) }}
         </template>
 
+        <template v-slot:item.actions="{ item }">
+          <v-tooltip text="ເບິ່ງຮູບພາບ" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                class="ma-1"
+                v-bind="props"
+                icon="mdi-image-search"
+                variant="flat"
+                color="primary"
+                size="small"
+                :disabled="item.image_url == 'N/A' || item.image_url === ''"
+                @click="onImageLoad(item.image_url)"
+              ></v-btn>
+            </template>
+          </v-tooltip>
+        </template>
+
         <template v-slot:bottom>
           <GlobalTablePaginations
             :page="request.page"
@@ -84,6 +117,8 @@ async function onPageChange(page: number) {
           />
         </template>
       </v-data-table>
+
+      <GlobalDialogImage />
     </v-row>
   </section>
 </template>
