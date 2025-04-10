@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-const agencyStore = UseAgencyStore();
 const invoiceStore = UseInvoiceStore();
-const route = useRoute();
 const loading = ref(false);
-const id = route?.query?.id?.toString() ?? null;
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
   { title: "ງວດວັນທີ", value: "sale_date" },
@@ -65,17 +62,39 @@ const response_data = computed(() => {
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <div>
-            <v-btn
-              color="primary"
-              variant="text"
-              icon="mdi-file-pdf-box"
-              size="small"
-              @click="
-                openPath(`/prints/commission_pdf?id=${item.invoice_detail_id}`)
-              "
-            ></v-btn>
-          </div>
+          <v-tooltip text="ພິມເອກະສານແບບ PDF" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="primary"
+                variant="text"
+                icon="mdi-file-pdf-box"
+                size="small"
+                v-bind="props"
+                @click="
+                  openPath(
+                    `/prints/commission_pdf?id=${item.invoice_detail_id}`
+                  )
+                "
+              />
+            </template>
+          </v-tooltip>
+
+          <v-tooltip text="ພິມເອກະສານແບບຮູບ" location="top">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                color="info"
+                variant="text"
+                icon="mdi-image"
+                size="small"
+                v-bind="props"
+                @click="
+                  openPath(
+                    `/prints/commission_pdf?id=${item.invoice_detail_id}&&print_type=image`
+                  )
+                "
+              />
+            </template>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-row>
