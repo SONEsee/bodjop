@@ -1,7 +1,12 @@
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { SaleModels, DeviceModels, ExpenseTypeModels } from "@/models/";
+import {
+  SaleModels,
+  DeviceModels,
+  ExpenseTypeModels,
+  ReportModel,
+} from "@/models/";
 import { ReturnDate } from "@/composables/global";
 import _ from "lodash";
 
@@ -496,25 +501,6 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
       const ws_winner = XLSX.utils.aoa_to_sheet(winner_data);
 
       // Auto-size columns based on content
-      function autosizeColumns(worksheet: any, data: any) {
-        const colWidths: any[] = [];
-
-        data.forEach((row: any) => {
-          row.forEach((cell: any, colIndex: any) => {
-            const cellValue =
-              cell !== null && cell !== undefined ? String(cell) : "";
-            const cellWidth = cellValue.length;
-
-            if (!colWidths[colIndex] || cellWidth > colWidths[colIndex]) {
-              colWidths[colIndex] = cellWidth;
-            }
-          });
-        });
-
-        worksheet["!cols"] = colWidths.map((width) => {
-          return { wch: Math.max(6, Math.ceil(width * 1.2)) };
-        });
-      }
 
       // Apply auto-sizing to both worksheets
       autosizeColumns(ws, ws_data);
@@ -692,3 +678,111 @@ export const onExcelSaleExpenseTransactions = async (
     console.error(error);
   }
 };
+
+export const onExportExcelInvoiceReport = (
+  items: ReportModel.GetInvoiceReportResponseItem[]
+) => {
+  try {
+    if (items.length === 0) {
+      return;
+    }
+    const dayjs = useDayjs();
+    const headers: any[] = [
+      "Sales Date",
+      "Agent Code",
+      "Full Name",
+      "Sales",
+      "basic percent",
+      "basic_com",
+      "ontime percent",
+      "ontime_com",
+      "normal_prize",
+      "bill_prize",
+      "borrow_amount",
+      "prize_com",
+      "refill_card",
+      "other_expenses",
+      "Settlement Amount",
+      "Check",
+    ];
+
+    const ws_data: any[] = [headers];
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      ws_data.push([
+        dayjs(item.sale_date).format("DD-MM-YYYY"),
+        item.agency_code,
+        item.agency_name,
+        item.sales,
+        item.basic_com_percent,
+        item.basic_com,
+        item.ontime_percent,
+        item.ontime_com,
+        item.normal_prize,
+        item.bill_prize,
+        item.borrow_amount,
+        item.prize_com,
+        item.refill_card,
+        item.other_expense,
+        item.settle_amount,
+        item.check_amount,
+      ]);
+    }
+
+    const sale_date = dayjs(items[0].sale_date).format("DD-MM-YYYY");
+    const workBooks = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    autosizeColumns(ws, ws_data);
+
+    const numCols = [
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "M",
+      "N",
+      "O",
+      "P",
+    ];
+    for (let col of numCols) {
+      for (let i = 2; i <= ws_data.length; i++) {
+        // Start from row 2 (skip header)
+        const cellRef = col + i;
+        if (!ws[cellRef]) continue;
+
+        // Apply number format
+        if (!ws[cellRef].s) ws[cellRef].s = {};
+        ws[cellRef].z = "#,##0";
+      }
+    }
+
+    XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນໃບເກັບເງິນ");
+    XLSX.writeFile(workBooks, `Invoice Report ${sale_date} .xlsx`);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+function autosizeColumns(worksheet: any, data: any) {
+  const colWidths: any[] = [];
+
+  data.forEach((row: any) => {
+    row.forEach((cell: any, colIndex: any) => {
+      const cellValue = cell !== null && cell !== undefined ? String(cell) : "";
+      const cellWidth = cellValue.length;
+
+      if (!colWidths[colIndex] || cellWidth > colWidths[colIndex]) {
+        colWidths[colIndex] = cellWidth;
+      }
+    });
+  });
+
+  worksheet["!cols"] = colWidths.map((width) => {
+    return { wch: Math.max(6, Math.ceil(width * 1.2)) };
+  });
+}
