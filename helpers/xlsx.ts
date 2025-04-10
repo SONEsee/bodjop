@@ -381,7 +381,9 @@ export const onSaleExportExcelV2 = async (items: SaleModels.SaleDetail[]) => {
 
       if (winnerSaleByAgencyCode.length > 0) {
         let itemWinnerSale = winnerSaleByAgencyCode[0];
-        let wonSaleItems = itemWinnerSale.items;
+        let wonSaleItems = itemWinnerSale.items.filter(
+          (d) => d.total_winner_amount > 0
+        );
         for (let e = 0; e < wonSaleItems.length; e++) {
           let itemWinnerSaleList = wonSaleItems[e];
           winner_data.push([
@@ -684,7 +686,7 @@ export const onExcelSaleExpenseTransactions = async (
       const workBooks = XLSX.utils.book_new();
       const ws = XLSX.utils.aoa_to_sheet(ws_data);
       XLSX.utils.book_append_sheet(workBooks, ws, "ຂໍ້ມູນລາຍຈ່າຍ");
-      XLSX.writeFile(workBooks , "Sale Expense Transactions.xlsx");
+      XLSX.writeFile(workBooks, "Sale Expense Transactions.xlsx");
     }
   } catch (error) {
     console.error(error);
