@@ -2,14 +2,16 @@
 definePageMeta({
   middleware: "auth",
 });
+
 import axios from "@/helpers/axios";
+import { onExcelSaleExpenseTransactions } from "@/helpers/xlsx";
 const expenseTypeStore = UseExpenseTypeStore();
 const saleStore = UseSaleStore();
 const headers = ref([
   { title: "ລ/ດ", value: "no" },
   { title: "ສ້າງວັນທີ", value: "created_at" },
   { title: "ງວດວັນທີ", value: "sale_date" },
-  { title: "ຕົວແທນ", value: "agency.fullname" },
+  { title: "ຕົວແທນ", value: "agency" },
   { title: "ປະເພດລາຍຈ່າຍ", value: "expense_type.name" },
   { title: "ຈຳນວນເງິນ", value: "amount" },
   { title: "ຄົນສ້າງ", value: "user.fullname" },
@@ -75,6 +77,18 @@ async function onDeleteTransactions(id: string) {
   }
 }
 
+async function onExportExcel() {
+  try {
+    await expenseTypeStore.GetExportSaleExpenseData();
+    const response_data = expenseTypeStore.response_sale_expense_data;
+    if (response_data.length > 0) {
+      await onExcelSaleExpenseTransactions(response_data);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 onMounted(() => {
   expenseTypeStore.GetListDataSaleExpenseTypeTransaction();
   saleStore.GetSalePeriodListData();
@@ -130,14 +144,28 @@ onMounted(() => {
             </div>
           </div>
 
-          <div>
-            <v-btn
-              color="primary"
-              width="165px"
-              flat
-              @click="goPath(`/sale_expense_transactions/new`)"
-              >+ ເພີ່ມຂໍ້ມູນ</v-btn
-            >
+          <div class="d-flex flex-wrap">
+            <div class="mr-3">
+              <v-btn
+                color="primary"
+                width="165px"
+                flat
+                :loading="request.loading"
+                @click="goPath(`/sale_expense_transactions/new`)"
+                >+ ເພີ່ມຂໍ້ມູນ</v-btn
+              >
+            </div>
+
+            <div>
+              <v-btn
+                color="info"
+                prepend-icon="mdi-export"
+                flat
+                :loading="request.loading"
+                @click="onExportExcel()"
+                >Export Excel</v-btn
+              >
+            </div>
           </div>
         </v-col>
 
@@ -152,6 +180,10 @@ onMounted(() => {
           >
             <template v-slot:item.no="{ index }">
               {{ index + 1 }}
+            </template>
+
+            <template v-slot:item.agency="{ item }">
+              {{ item.agency?.agent_code }} - {{ item.agency?.fullname }}
             </template>
 
             <template v-slot:item.sale_date="{ item }">

@@ -90,3 +90,22 @@ export interface ExpenseTypeTransactionUploadFileResponse {
   expense_type: string;
   note: string;
 }
+
+export interface GetSaleExpenseTransactionExcel {
+  error: null;
+  items: GetSaleExpenseTransactionExcelItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetSaleExpenseTransactionExcelItem {
+  sale_date: Date;
+  agency_code: string;
+  agency_name: string;
+  expense_code: string;
+  expense_name: string;
+  exponse_name_en: string;
+  amount: number;
+  expense_create_at: Date;
+  create_fullname: string;
+}

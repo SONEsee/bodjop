@@ -12,6 +12,7 @@ export const UseDebtsStore = defineStore("debts", {
           2: "ກຳນົດວົງເງິນຕັດໜີ້",
         } as { [key: number]: string },
         amount: null as number | null,
+        file_image: null as File | null,
         invoices: [] as InvoiceModels.NewGetListInvoiceDebtResponseItem[],
       },
     };

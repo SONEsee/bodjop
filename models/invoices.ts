@@ -148,6 +148,7 @@ export interface GetInvoicePaymentTransactionResponseItemListdata {
   username: string;
   fullname: string;
   created_at: Date;
+  image_url: string;
 }
 
 export interface Pagination {
