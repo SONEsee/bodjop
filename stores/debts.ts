@@ -38,6 +38,7 @@ export const UseDebtsStore = defineStore("debts", {
             this.request_new_debts.invoices.push({
               ...item,
               amount: 0,
+              payment_type: 1,
             });
           }
         }

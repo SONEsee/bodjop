@@ -9,6 +9,12 @@ export const UseReportStore = defineStore("reports", {
         loading: false,
       },
       response_invoice_report: [] as ReportModel.GetInvoiceReportResponseItem[],
+      response_payment_transactions:
+        [] as ReportModel.GetPaymentInvoiceTransactionReportResponseItem[],
+      request_payment_transaction: {
+        sale_date: null,
+        loading: false,
+      },
     };
   },
 
@@ -38,6 +44,39 @@ export const UseReportStore = defineStore("reports", {
         console.error(error);
       } finally {
         this.request_invoice_report.loading = false;
+      }
+    },
+
+    async GetReportPaymentTransaction() {
+      const dayjs = useDayjs();
+      try {
+        if (this.request_payment_transaction.sale_date == null) {
+          return;
+        }
+
+        this.request_payment_transaction.loading = true;
+        const res =
+          await axios.get<ReportModel.GetPaymentInvoiceTransactionReportResponse>(
+            "/api/v1/reports/invoices/payment-transactions",
+            {
+              params: {
+                sale_date:
+                  this.request_payment_transaction.sale_date != null
+                    ? dayjs(this.request_payment_transaction.sale_date).format(
+                        "YYYY-MM-DD"
+                      )
+                    : null,
+              },
+            }
+          );
+
+        if (res.status === 200) {
+          this.response_payment_transactions = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_payment_transaction.loading = false;
       }
     },
   },

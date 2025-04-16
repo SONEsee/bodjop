@@ -58,6 +58,11 @@ const items = ref([
         to: "/reports/invoices",
       },
       {
+        text: "ລາຍງານຂໍ້ມູນການຕັດຍອດ",
+        icon: "mdi-credit-card",
+        to: "/reports/payment-transactions",
+      },
+      {
         text: "ລາຍງານການຂາຍ",
         icon: "mdi-printer-pos",
         to: "/reports/reports_agency",

@@ -117,6 +117,7 @@ export interface NewGetListInvoiceDebtResponseItem {
   innitial_amount: number;
   debt_amount: number;
   amount: number;
+  payment_type: number;
 }
 
 export interface GetListInvoiceDebtResponseItem {
