@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import axios from "@/helpers/axios";
-import { InvoiceModels } from "@/models";
 import _ from "lodash";
 const debtStore = UseDebtsStore();
 const file = ref();
@@ -9,6 +8,7 @@ const headers = ref([
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
   { title: "ລົງຍອດ", value: "amount" },
+  { title: "ປະເພດລາຍຈ່າຍ", value: "payment_type" },
   { title: "ຍອດສຸດທິ", value: "left_amount" },
   { title: "actions", value: "actions" },
 ]);
@@ -21,6 +21,18 @@ const response_data = computed(() => {
 
 function onOpenFileUpload() {
   file.value.click();
+}
+
+function DisplayNetAmount(
+  debt_amount: number,
+  payment_type: number,
+  amount: number
+) {
+  if (payment_type === 1) {
+    return debt_amount - amount;
+  } else {
+    return debt_amount + amount;
+  }
 }
 
 function onFileUploadChange(event: Event) {
@@ -64,7 +76,8 @@ const onSubmitForm = async () => {
           invoices.map((d) => {
             return {
               invoice_detail_id: d.invoice_detail_id,
-              amount: d.amount,
+              amount: d.payment_type === 1 ? d.amount : -d.amount,
+              payment_type: d.payment_type,
             };
           })
         )
@@ -165,15 +178,34 @@ const sumLeftAmount = computed(() => {
                 {{ FormatDate(item.sale_date) }}
               </template>
 
-              <template v-slot:item.amount="{ item, index }">
-                <div style="width: 180px" class="py-2">
-                  <GlobalTextFieldNumber
-                    :number="item.amount"
-                    @input_number="item.amount = $event"
-                    :hide="'auto'"
-                    :rules="[]"
-                    :density="'comfortable'"
-                  />
+              <template v-slot:item.payment_type="{ item }">
+                <v-switch
+                  v-model="item.payment_type"
+                  color="indigo"
+                  hide-details
+                  :false-value="1"
+                  :true-value="2"
+                ></v-switch>
+              </template>
+
+              <template v-slot:item.amount="{ item }">
+                <div class="d-flex flex-wrap align-center">
+                  <div
+                    style="font-size: 28px"
+                    class="px-2"
+                    v-if="item.payment_type === 2"
+                  >
+                    -
+                  </div>
+                  <div style="width: 180px" class="py-2">
+                    <GlobalTextFieldNumber
+                      :number="item.amount"
+                      @input_number="item.amount = $event"
+                      :hide="'auto'"
+                      :rules="[]"
+                      :density="'comfortable'"
+                    />
+                  </div>
                 </div>
               </template>
 
@@ -194,7 +226,15 @@ const sumLeftAmount = computed(() => {
               </template>
 
               <template v-slot:item.left_amount="{ item }">
-                {{ formatnumber(item.debt_amount - item.amount) }}
+                {{
+                  formatnumber(
+                    DisplayNetAmount(
+                      item.debt_amount,
+                      item.payment_type,
+                      item.amount
+                    )
+                  )
+                }}
               </template>
             </v-data-table>
           </v-col>
