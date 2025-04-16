@@ -25,3 +25,23 @@ export interface GetInvoiceReportResponseItem {
   settle_amount: number;
   check_amount: number;
 }
+
+export interface GetPaymentInvoiceTransactionReportResponse {
+  error: null;
+  items: GetPaymentInvoiceTransactionReportResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetPaymentInvoiceTransactionReportResponseItem {
+  id: string;
+  invoice_detail_id: string;
+  invoice_code: string;
+  sale_date: Date;
+  payment_type: number;
+  payment_amount: number;
+  image_url: string;
+  agency_code: string;
+  fullname: string;
+  total_settle_amount: number;
+}
