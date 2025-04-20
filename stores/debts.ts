@@ -1,4 +1,5 @@
 import { UserModel, InvoiceModels } from "@/models";
+import { INVOICE_DEBT_STATUS } from "@/enum/invoice_debts";
 import axios from "@/helpers/axios";
 export const UseDebtsStore = defineStore("debts", {
   state() {
@@ -28,7 +29,7 @@ export const UseDebtsStore = defineStore("debts", {
 
         const res =
           await axios.get<InvoiceModels.NewGetListInvoiceDebtResponse>(
-            `/api/v1/agency/get-debts/${id}`
+            `/api/v1/agency/get-debts-payment/${id}`
           );
         if (res.status === 200) {
           let items = res.data.items;
