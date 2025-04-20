@@ -26,6 +26,7 @@ const headers = ref([
   { title: "ຊື່ ແລະ ນາມສະກຸນ", key: "fullname", sortable: false },
   { title: "ເບີໂທລະສັບ", key: "phone_number", sortable: false },
   { title: "ບ້ານ ເມືອງ ແຂວງ", key: "villages", sortable: false },
+  { title: "ຍອດເງິນຍັງເຫຼືອ", key: "money_outstanding", sortable: false },
   { title: "ສະຖານະ", key: "status", sortable: false },
   { title: "Actions", key: "actions", sortable: false },
 ]);
@@ -127,6 +128,10 @@ function onCloseDialog(value: boolean) {
 
             <template v-slot:item.status="{ item }">
               <GlobalDefaultStatusChip :status="item.status" />
+            </template>
+
+            <template v-slot:item.money_outstanding="{ item }">
+              {{ formatnumber(item.money_outstanding) }}
             </template>
 
             <template v-slot:item.actions="{ item }">
