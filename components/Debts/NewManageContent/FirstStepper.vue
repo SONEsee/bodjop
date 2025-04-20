@@ -4,7 +4,8 @@ import _ from "lodash";
 const agencyStore = UseAgencyStore();
 const debtStore = UseDebtsStore();
 const headers = ref([
-  { title: "ລ/ດ", value: "no" },
+  { title: "actions", value: "prints" },
+  // { title: "ລ/ດ", value: "no" },
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ລົງຍອດ", value: "innitial_amount" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
@@ -112,6 +113,41 @@ const sumAmount = computed(() => {
           density="comfortable"
           :loading="request.loading"
         >
+          <template v-slot:item.prints="{ item }">
+            <v-tooltip text="ພິມເອກະສານແບບ PDF" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  icon="mdi-file-pdf-box"
+                  size="small"
+                  v-bind="props"
+                  @click="
+                    openPath(
+                      `/prints/commission_pdf?id=${item.invoice_detail_id}`
+                    )
+                  "
+                />
+              </template>
+            </v-tooltip>
+
+            <v-tooltip text="ພິມເອກະສານແບບຮູບ" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="info"
+                  variant="text"
+                  icon="mdi-image"
+                  size="small"
+                  v-bind="props"
+                  @click="
+                    openPath(
+                      `/prints/commission_pdf?id=${item.invoice_detail_id}&&print_type=image`
+                    )
+                  "
+                />
+              </template>
+            </v-tooltip>
+          </template>
           <template v-slot:item.no="{ index }">
             {{ index + 1 }}
           </template>
