@@ -15,6 +15,18 @@ export const UseReportStore = defineStore("reports", {
         sale_date: null,
         loading: false,
       },
+
+      request_get_sales: {
+        date: {
+          month: new Date().getMonth(),
+          year: new Date().getFullYear(),
+        },
+        loading: false,
+      },
+
+      response_get_sales:
+        null as ReportModel.GetReportSaleTotalResponseItem | null,
+      response_list_data: [] as Array<number | string>,
     };
   },
 
@@ -77,6 +89,29 @@ export const UseReportStore = defineStore("reports", {
         console.error(error);
       } finally {
         this.request_payment_transaction.loading = false;
+      }
+    },
+
+    async GetReportSaleData() {
+      try {
+        this.request_get_sales.loading = true;
+        const res = await axios.get<ReportModel.GetReportSaleTotalResponse>(
+          "/api/v1/reports/sales/get-total",
+          {
+            params: {
+              month: this.request_get_sales.date.month + 1,
+              year: this.request_get_sales.date.year,
+            },
+          }
+        );
+
+        if (res.status === 200) {
+          this.response_get_sales = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_get_sales.loading = false;
       }
     },
   },

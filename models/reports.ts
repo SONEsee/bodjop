@@ -45,3 +45,24 @@ export interface GetPaymentInvoiceTransactionReportResponseItem {
   fullname: string;
   total_settle_amount: number;
 }
+
+export interface GetReportSaleTotalResponse {
+  error: null;
+  items: GetReportSaleTotalResponseItem;
+  status: number;
+  timestamp: string;
+}
+
+export interface GetReportSaleTotalResponseItem {
+  agencycode_group: string[];
+  headers: string[];
+  list_data: GetReportSaleTotalResponseItemListData[];
+}
+
+export interface GetReportSaleTotalResponseItemListData {
+  agency_id: string;
+  agency_code: string;
+  agency_main_group: string;
+  is_main_group: boolean;
+  xaxis: Array<number | string>;
+}
