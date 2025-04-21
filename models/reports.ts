@@ -66,3 +66,20 @@ export interface GetReportSaleTotalResponseItemListData {
   is_main_group: boolean;
   xaxis: Array<number | string>;
 }
+
+export interface GetDebtReportResponse {
+  error: null;
+  items: GetDebtReportResponseItem[];
+  status: number;
+  timestamp: string;
+}
+
+export interface GetDebtReportResponseItem {
+  invoice_detail_id: string;
+  sale_date: Date;
+  commit_amount: number;
+  agency_code: string;
+  agency_name: string;
+  debt_amount: number;
+  status: number;
+}
