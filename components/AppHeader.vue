@@ -63,6 +63,11 @@ const items = ref([
         to: "/reports/payment-transactions",
       },
       {
+        text: "ລາຍງານການຂາຍແບບລວມ",
+        icon: "mdi-printer-pos-check-outline",
+        to: "/reports/sales",
+      },
+      {
         text: "ລາຍງານການຂາຍ",
         icon: "mdi-printer-pos",
         to: "/reports/reports_agency",
