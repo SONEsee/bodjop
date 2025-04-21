@@ -27,6 +27,13 @@ export const UseReportStore = defineStore("reports", {
       response_get_sales:
         null as ReportModel.GetReportSaleTotalResponseItem | null,
       response_list_data: [] as Array<number | string>,
+      request_get_debts: {
+        sale_date: null,
+        loading: false,
+        agency_id: null,
+      },
+
+      response_get_debts: [] as ReportModel.GetDebtReportResponseItem[],
     };
   },
 
@@ -112,6 +119,32 @@ export const UseReportStore = defineStore("reports", {
         console.error(error);
       } finally {
         this.request_get_sales.loading = false;
+      }
+    },
+
+    async GetDebtReportData() {
+      try {
+        this.request_get_debts.loading = true;
+        const dayjs = useDayjs();
+        const res = await axios.get<ReportModel.GetDebtReportResponse>(
+          "/api/v1/reports/debts/get-data",
+          {
+            params: {
+              ...this.request_get_debts,
+              sale_date:
+                this.request_get_debts.sale_date != null
+                  ? dayjs(this.request_get_debts.sale_date).format("YYYY-MM-DD")
+                  : "",
+            },
+          }
+        );
+        if (res.status === 200) {
+          this.response_get_debts = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_get_debts.loading = false;
       }
     },
   },

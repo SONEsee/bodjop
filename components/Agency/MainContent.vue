@@ -111,7 +111,7 @@ function onCloseDialog(value: boolean) {
             :items-per-page="request.limit"
           >
             <template v-slot:item.no="{ item, index }">
-              {{ index + 1 }}
+              {{ index + (request.page - 1) * request.limit + 1 }}
             </template>
 
             <template v-slot:item.image="{ item }">

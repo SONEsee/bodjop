@@ -68,6 +68,11 @@ const items = ref([
         to: "/reports/sales",
       },
       {
+        text: "ລາຍງານການໜີ້ຄ້າງ",
+        icon: "mdi-account-file-text",
+        to: "/reports/debts",
+      },
+      {
         text: "ລາຍງານການຂາຍ",
         icon: "mdi-printer-pos",
         to: "/reports/reports_agency",
@@ -91,7 +96,7 @@ const rail = ref(false);
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
 
-    <v-app-bar-title>Application Bar</v-app-bar-title>
+    <v-app-bar-title>32Lottery App Bar</v-app-bar-title>
     <v-menu width="220px">
       <template v-slot:activator="{ props }">
         <v-btn icon v-bind="props">
