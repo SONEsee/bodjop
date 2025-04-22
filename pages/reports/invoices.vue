@@ -15,6 +15,11 @@ const response_data = computed(() => {
 
 const headers = ref([
   {
+    title: "ລຳດັບ",
+    value: "no",
+  },
+
+  {
     title: "Actions",
     value: "actions",
     minWidth: "150",
@@ -195,8 +200,11 @@ onMounted(() => {
           <v-data-table
             :headers="headers"
             :items="response_data"
-            :items-per-page="100"
+            :items-per-page="-1"
           >
+            <template v-slot:item.no="{ index }">
+              {{ index + 1 }}
+            </template>
             <template v-slot:item.actions="{ item }">
               <v-tooltip text="ພິມເອກະສານແບບ PDF" location="top">
                 <template v-slot:activator="{ props }">
