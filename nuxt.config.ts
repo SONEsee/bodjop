@@ -4,6 +4,12 @@ export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: "2024-04-03",
 
+  runtimeConfig: {
+    public: {
+      app_version: "1.0.0",
+      build_at: process.env.VITE_BUILD_DATE ?? "",
+    },
+  },
   app: {
     head: {
       title: "32Lottery-Backoffice",
