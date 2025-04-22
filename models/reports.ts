@@ -44,6 +44,7 @@ export interface GetPaymentInvoiceTransactionReportResponseItem {
   agency_code: string;
   fullname: string;
   total_settle_amount: number;
+  payment_date: string;
 }
 
 export interface GetReportSaleTotalResponse {

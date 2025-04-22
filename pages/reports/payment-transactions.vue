@@ -34,6 +34,10 @@ const headers = ref([
     value: "payment_type",
   },
   {
+    title: "ໂອນເງິນວັນທີ",
+    value: "payment_date",
+  },
+  {
     title: "ຈຳນວນເງີນ",
     value: "payment_amount",
   },
@@ -105,7 +109,7 @@ onMounted(() => {
             :items="response_data"
             :headers="headers"
             :loading="request.loading"
-            :items-per-page="200"
+            :items-per-page="-1"
           >
             <template v-slot:item.no="{ index }">
               {{ index + 1 }}
@@ -113,6 +117,10 @@ onMounted(() => {
 
             <template v-slot:item.sale_date="{ item }">
               {{ FormatDate(item.sale_date) }}
+            </template>
+
+            <template v-slot:item.payment_date="{ item }">
+              {{ FormatDate(item.payment_date) }}
             </template>
 
             <template v-slot:item.payment_type="{ item }">

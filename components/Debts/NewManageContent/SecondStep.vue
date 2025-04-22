@@ -8,9 +8,9 @@ const headers = ref([
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
   { title: "ລົງຍອດ", value: "amount" },
+  { title: "ມື້ຈ່າຍເງິນ", value: "payment_date" },
   { title: "ປະເພດລາຍຈ່າຍ", value: "payment_type" },
   { title: "ຍອດສຸດທິ", value: "left_amount" },
-  { title: "actions", value: "actions" },
 ]);
 
 const request = debtStore.request_new_debts;
@@ -68,6 +68,7 @@ const onSubmitForm = async () => {
     });
 
     if (notification.isConfirmed) {
+      const dayjs = useDayjs();
       var formData = new FormData();
       request.loading = true;
       formData.append(
@@ -78,6 +79,10 @@ const onSubmitForm = async () => {
               invoice_detail_id: d.invoice_detail_id,
               amount: d.payment_type === 1 ? d.amount : -d.amount,
               payment_type: d.payment_type,
+              payment_date:
+                d.payment_date === null
+                  ? ""
+                  : dayjs(d.payment_date).format("YYYY-MM-DD"),
             };
           })
         )
@@ -197,15 +202,24 @@ const sumLeftAmount = computed(() => {
                   >
                     -
                   </div>
-                  <div style="width: 180px" class="py-2">
+                  <div style="width: 150px" class="py-2">
                     <GlobalTextFieldNumber
                       :number="item.amount"
                       @input_number="item.amount = $event"
                       :hide="'auto'"
                       :rules="[]"
-                      :density="'comfortable'"
+                      :density="'compact'"
                     />
                   </div>
+                </div>
+              </template>
+
+              <template v-slot:item.payment_date="{ item }">
+                <div style="width: 160px">
+                  <DatePicker
+                    :date="item.payment_date"
+                    @on-set-date="item.payment_date = $event"
+                  />
                 </div>
               </template>
 

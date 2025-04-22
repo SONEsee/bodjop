@@ -199,6 +199,6 @@ th {
 } */
 
 tr:nth-child(even) {
-  background-color: #dddddd;
+  background-color: #f9f9f9;
 }
 </style>

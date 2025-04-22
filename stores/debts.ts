@@ -40,6 +40,7 @@ export const UseDebtsStore = defineStore("debts", {
               ...item,
               amount: 0,
               payment_type: 1,
+              payment_date: null,
             });
           }
         }
@@ -62,7 +63,6 @@ export const UseDebtsStore = defineStore("debts", {
             let invoice = this.request_new_debts.invoices[i];
             if (leftAmount > 0) {
               const maxiumAmount = Math.min(leftAmount, invoice.debt_amount);
-              console.log(`maximum_amount`, maxiumAmount);
               invoice.amount = maxiumAmount;
               leftAmount = leftAmount - maxiumAmount;
             }
