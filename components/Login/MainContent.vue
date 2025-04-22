@@ -63,7 +63,9 @@
           </v-col>
 
           <v-col cols="12" class="py-0 my-0">
-            <div style="font-size: 10px">{{ build_date }}</div>
+            <div style="font-size: 10px">
+              version: {{ app_version }}{{ build_date }}
+            </div>
           </v-col>
         </v-row>
       </v-card>
@@ -81,10 +83,15 @@ const password = ref(null);
 const visible = ref(false);
 const loading = ref(false);
 const isRemember = ref(false);
+const runtimeConfig = useRuntimeConfig();
 const form = ref();
 
 const build_date = computed(() => {
-  return import.meta.env.VITE_BUILD_DATE ?? "";
+  return runtimeConfig.public.build_at;
+});
+
+const app_version = computed(() => {
+  return runtimeConfig.public.app_version;
 });
 
 const onLoginRefetch = async () => {
