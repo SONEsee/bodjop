@@ -118,6 +118,7 @@ export interface NewGetListInvoiceDebtResponseItem {
   debt_amount: number;
   amount: number;
   payment_type: number;
+  payment_date: Date | null;
 }
 
 export interface GetListInvoiceDebtResponseItem {

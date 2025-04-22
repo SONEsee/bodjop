@@ -61,6 +61,10 @@
               ເຂົ້າສູ່ລະບົບ
             </v-btn>
           </v-col>
+
+          <v-col cols="12" class="py-0 my-0">
+            <div style="font-size: 10px">{{ build_date }}</div>
+          </v-col>
         </v-row>
       </v-card>
     </v-form>
@@ -78,6 +82,10 @@ const visible = ref(false);
 const loading = ref(false);
 const isRemember = ref(false);
 const form = ref();
+
+const build_date = computed(() => {
+  return import.meta.env.VITE_BUILD_DATE ?? "";
+});
 
 const onLoginRefetch = async () => {
   try {
