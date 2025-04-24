@@ -1,4 +1,5 @@
 import { UserModel, InvoiceModels } from "@/models";
+import { INVOICE_DEBT_STATUS } from "@/enum/invoice_debts";
 import axios from "@/helpers/axios";
 export const UseDebtsStore = defineStore("debts", {
   state() {
@@ -12,6 +13,7 @@ export const UseDebtsStore = defineStore("debts", {
           2: "ກຳນົດວົງເງິນຕັດໜີ້",
         } as { [key: number]: string },
         amount: null as number | null,
+        file_image: null as File | null,
         invoices: [] as InvoiceModels.NewGetListInvoiceDebtResponseItem[],
       },
     };
@@ -27,7 +29,7 @@ export const UseDebtsStore = defineStore("debts", {
 
         const res =
           await axios.get<InvoiceModels.NewGetListInvoiceDebtResponse>(
-            `/api/v1/agency/get-debts/${id}`
+            `/api/v1/agency/get-debts-payment/${id}`
           );
         if (res.status === 200) {
           let items = res.data.items;
@@ -37,6 +39,8 @@ export const UseDebtsStore = defineStore("debts", {
             this.request_new_debts.invoices.push({
               ...item,
               amount: 0,
+              payment_type: 1,
+              payment_date: null,
             });
           }
         }
@@ -59,7 +63,6 @@ export const UseDebtsStore = defineStore("debts", {
             let invoice = this.request_new_debts.invoices[i];
             if (leftAmount > 0) {
               const maxiumAmount = Math.min(leftAmount, invoice.debt_amount);
-              console.log(`maximum_amount`, maxiumAmount);
               invoice.amount = maxiumAmount;
               leftAmount = leftAmount - maxiumAmount;
             }

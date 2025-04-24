@@ -52,27 +52,37 @@ const items = ref([
     title: "ລາຍງານ",
     icon: "mdi-file-document",
     menu: [
-      // { text: "ລາຍງານຂໍ້ມູນໃບຮຽກເກັບເງິນ",
-      //  icon: "mdi-file-document", 
-      //  to: "/reports/salestotal" },
       {
-        text: "ລາຍງານຂາຍ",
-        icon: "mdi-file-document-edit",
-        to: "../reports/reports_agency",
+        text: "ລາຍງານຂໍ້ມູນໃບຮຽກເກັບເງິນ",
+        icon: "mdi-account-credit-card",
+        to: "/reports/invoices",
+      },
+      {
+        text: "ລາຍງານຂໍ້ມູນການຕັດຍອດ",
+        icon: "mdi-credit-card",
+        to: "/reports/payment-transactions",
+      },
+      {
+        text: "ລາຍງານການຂາຍແບບລວມ",
+        icon: "mdi-printer-pos-check-outline",
+        to: "/reports/sales",
+      },
+      {
+        text: "ລາຍງານການໜີ້ຄ້າງ",
+        icon: "mdi-account-file-text",
+        to: "/reports/debts",
+      },
+      {
+        text: "ລາຍງານການຂາຍ",
+        icon: "mdi-printer-pos",
+        to: "/reports/reports_agency",
       },
       {
         text: "ລາຍງານອຸປະກອນ",
-        icon: "mdi-cellphone-link",
-        to: "../reports/equipment",
+        icon: "mdi-monitor-cellphone-star",
+        to: "/reports/equipment",
       },
-     
-     
-      // {
-      //   text: "ລາຍງານການຊຳລະ",
-      //   icon: "mdi-cash-multiple",
-      //   to: "../reports/paid",
-      // },
-    ], 
+    ],
   },
 ]);
 
@@ -86,7 +96,7 @@ const rail = ref(false);
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
 
-    <v-app-bar-title>Application Bar</v-app-bar-title>
+    <v-app-bar-title>32Lottery App Bar</v-app-bar-title>
     <v-menu width="220px">
       <template v-slot:activator="{ props }">
         <v-btn icon v-bind="props">
@@ -122,7 +132,9 @@ const rail = ref(false);
   <v-navigation-drawer v-model="drawer" permanent :rail="rail" order="1">
     <v-list nav density="comfortable">
       <div v-for="(item, i) in items" :key="`item-${i}`">
-        <v-list-subheader>{{ item.title }}</v-list-subheader>
+        <v-list-subheader class="font-weight-black">{{
+          item.title
+        }}</v-list-subheader>
 
         <v-list-item
           color="primary"

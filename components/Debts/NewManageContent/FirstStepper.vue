@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import _ from "lodash";
+
 const agencyStore = UseAgencyStore();
 const debtStore = UseDebtsStore();
 const headers = ref([
-  { title: "ລ/ດ", value: "no" },
+  { title: "actions", value: "prints" },
+  // { title: "ລ/ດ", value: "no" },
   { title: "ງວດວັນທີ", value: "sale_date" },
   { title: "ລົງຍອດ", value: "innitial_amount" },
   { title: "ຍອດຍັງເຫຼືອ", value: "debt_amount" },
@@ -16,6 +19,10 @@ const debounceOfSearchAgency = useDebounceFn((value: string | null) => {
 
 const response_data = computed(() => {
   return request.invoices;
+});
+
+const sumAmount = computed(() => {
+  return _.sumBy(response_data.value, "debt_amount");
 });
 </script>
 
@@ -40,7 +47,14 @@ const response_data = computed(() => {
               v-model="request.agency"
             >
               <template v-slot:selection="{ item }">
-                {{ item.title }}
+                {{ item.title }} - {{ item.raw?.agent_code ?? "N/A" }}
+              </template>
+              <template v-slot:item="{ props, item }">
+                <v-list-item
+                  v-bind="props"
+                  :subtitle="item.raw.agent_code"
+                  :title="item.raw.fullname"
+                ></v-list-item>
               </template>
             </v-autocomplete>
           </v-col>
@@ -75,12 +89,65 @@ const response_data = computed(() => {
       </v-col>
 
       <v-col cols="12">
+        <v-row>
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ຈຳນວນໃບເກັບເງິນ'"
+              :text="formatnumber(response_data.length)"
+            />
+          </v-col>
+
+          <v-col cols="3">
+            <GlobalCardTitle
+              :title="'ລວມເງິນທີ່ຄາດວ່າຈະໄດ້ຮັບ'"
+              :text="formatnumber(sumAmount)"
+            />
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col cols="12">
         <v-data-table
           :headers="headers"
           :items="response_data"
           density="comfortable"
           :loading="request.loading"
         >
+          <template v-slot:item.prints="{ item }">
+            <v-tooltip text="ພິມເອກະສານແບບ PDF" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="primary"
+                  variant="text"
+                  icon="mdi-file-pdf-box"
+                  size="small"
+                  v-bind="props"
+                  @click="
+                    openPath(
+                      `/prints/commission_pdf?id=${item.invoice_detail_id}`
+                    )
+                  "
+                />
+              </template>
+            </v-tooltip>
+
+            <v-tooltip text="ພິມເອກະສານແບບຮູບ" location="top">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  color="info"
+                  variant="text"
+                  icon="mdi-image"
+                  size="small"
+                  v-bind="props"
+                  @click="
+                    openPath(
+                      `/prints/commission_pdf?id=${item.invoice_detail_id}&&print_type=image`
+                    )
+                  "
+                />
+              </template>
+            </v-tooltip>
+          </template>
           <template v-slot:item.no="{ index }">
             {{ index + 1 }}
           </template>

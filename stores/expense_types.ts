@@ -18,6 +18,8 @@ export const UseExpenseTypeStore = defineStore("expense_types", {
         [] as ExpenseTypeModels.GetExpenseSelectionResponseItem[],
       response_get_detail:
         null as ExpenseTypeModels.GetSaleExpenseTransasctionListDataResponseItemsListData | null,
+      response_sale_expense_data:
+        [] as ExpenseTypeModels.GetSaleExpenseTransactionExcelItem[],
     };
   },
 
@@ -83,6 +85,24 @@ export const UseExpenseTypeStore = defineStore("expense_types", {
         console.error(error);
       } finally {
         globalStore.loading_overlay = false;
+      }
+    },
+
+    async GetExportSaleExpenseData() {
+      try {
+        this.request_get_data.loading = true;
+        const res =
+          await axios.get<ExpenseTypeModels.GetSaleExpenseTransactionExcel>(
+            "/api/v1/sale-expense-transactions/get-export-data"
+          );
+
+        if (res.status === 200) {
+          this.response_sale_expense_data = res.data.items;
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.request_get_data.loading = false;
       }
     },
   },

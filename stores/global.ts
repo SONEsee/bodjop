@@ -10,6 +10,14 @@ export const UseGlobalStore = defineStore("global", {
       districts: [] as DistrictModel.GetDistrictResponseItem[],
       villages: [] as VillageModel.GetVillageResponseItem[],
       loading_overlay: false,
+      request_dialog_image: {
+        loading: false,
+        dialog: false,
+      },
+
+      response_dialog_image: {
+        file: null as string | null,
+      },
     };
   },
   actions: {

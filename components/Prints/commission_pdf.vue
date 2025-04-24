@@ -1,10 +1,64 @@
 <script lang="ts" setup>
 import { COMMISSION_OR_EXPENSES } from "@/enum/commissions";
+import { toPng } from "html-to-image";
 const printStore = UsePrintStore();
+const route = useRoute();
+const dayjs = useDayjs();
+
+const printType = route.query?.print_type?.toString() ?? null;
 
 const invoice_detail = computed(() => {
   return printStore.invoice_detail;
 });
+
+useHead({
+  title: `Invoice ${dayjs(invoice_detail?.value?.sale_date).format(
+    "DD-MM-YYYY"
+  )} ${invoice_detail?.value?.agency?.agent_code}`,
+});
+
+const targetElement = ref<HTMLElement | null>(null);
+
+const onExportImage = async () => {
+  try {
+    if (printType === "image") {
+      if (targetElement.value != null) {
+        const dataUrl = await toPng(targetElement.value, {
+          backgroundColor: "#ffffff",
+          style: {
+            fontFamily: "NotoSansLao",
+          },
+        });
+        const link = document.createElement("a");
+        const filename = `Invoice ${dayjs(
+          invoice_detail?.value?.sale_date
+        ).format("DD-MM-YYYY")} ${invoice_detail?.value?.agency?.agent_code}`;
+        link.download = `${filename}.png`;
+        link.href = dataUrl;
+        link.click();
+      }
+    } else {
+      window.print();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Use this in your watcher
+watch(
+  invoice_detail,
+  async (newVal) => {
+    if (newVal !== null) {
+      // Small delay to ensure DOM is fully rendered
+      await nextTick();
+      setTimeout(async () => {
+        await onExportImage();
+      }, 1200);
+    }
+  },
+  { immediate: true, deep: true }
+);
 
 const acencyTitle = ref([
   {
@@ -61,7 +115,11 @@ const expenseTitle = ref([
 ]);
 </script>
 <template>
-  <div class="box-container ma-0 pa-5" v-if="invoice_detail !== null">
+  <div
+    class="box-container ma-0 pa-5"
+    v-if="invoice_detail !== null"
+    ref="targetElement"
+  >
     <div class="watermark">
       <div v-if="invoice_detail.invoice_debt?.status === 1">ຍັງບໍ່ໄດ້ຊຳລະ</div>
       <div v-else-if="invoice_detail.invoice_debt?.status === 2">
@@ -385,7 +443,7 @@ const expenseTitle = ref([
               formatnumber(
                 FilterAmountOfEachTypeInvoiceV2(
                   invoice_detail.invoice_calculations ?? [],
-                  COMMISSION_OR_EXPENSES.BORROW_EXPENSE_SALE
+                  COMMISSION_OR_EXPENSES.TOPUP_CARD
                 )
               )
             }}
@@ -476,6 +534,11 @@ const expenseTitle = ref([
 </template>
 
 <style scoped>
+@font-face {
+  font-family: "NotoSansLao";
+  src: url("/fonts/NotoSansLao-Regular.ttf") format("truetype");
+}
+
 .box-container {
   page-break-before: always;
   width: 21cm;
@@ -509,7 +572,7 @@ const expenseTitle = ref([
 .watermark {
   position: absolute;
   top: 40%;
-  left: 50%;
+  left: 25%;
   transform: translate(-50%, -50%);
   color: rgba(0, 0, 0, 0.2);
   font-size: 60px;
@@ -517,5 +580,22 @@ const expenseTitle = ref([
   pointer-events: none;
   z-index: 1;
   text-align: center;
+  transform: translate(-50%, -50%) rotate(-40deg);
+}
+
+@media print {
+  .watermark {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(0, 0, 0, 0.2);
+    font-size: 60px;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1;
+    text-align: center;
+    transform: translate(-50%, -50%) rotate(-40deg);
+  }
 }
 </style>

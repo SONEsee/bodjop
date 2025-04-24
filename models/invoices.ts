@@ -117,6 +117,8 @@ export interface NewGetListInvoiceDebtResponseItem {
   innitial_amount: number;
   debt_amount: number;
   amount: number;
+  payment_type: number;
+  payment_date: Date | null;
 }
 
 export interface GetListInvoiceDebtResponseItem {
@@ -148,6 +150,7 @@ export interface GetInvoicePaymentTransactionResponseItemListdata {
   username: string;
   fullname: string;
   created_at: Date;
+  image_url: string;
 }
 
 export interface Pagination {

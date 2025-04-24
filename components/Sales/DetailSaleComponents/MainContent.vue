@@ -28,7 +28,7 @@ const response_data = computed(() => {
 const onExportExcel = async () => {
   try {
     loading.value = true;
-    await saleStore.GetSalePrintPDf(response_data.value?.id ?? null);
+    await saleStore.GetSalePrintPDfV2(response_data.value?.id ?? null);
     const res = await onSaleExportExcelV2(
       response_data.value?.sale_details ?? []
     );
