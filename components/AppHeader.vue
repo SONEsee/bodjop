@@ -82,6 +82,11 @@ const items = ref([
         icon: "mdi-monitor-cellphone-star",
         to: "/reports/equipment",
       },
+      {
+        text: "ລາຍງານການນຳສົ່ງອຸປະກອນ",
+        icon: "mdi-printer-3d",
+        to: "/material_transport_document",
+      },
     ],
   },
 ]);
